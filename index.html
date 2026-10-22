@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Photomatic ☆ Retro Photobooth</title>
+  <meta name="description" content="Photomatic is a retro photobooth in your browser. Snap a strip, add frames, filters, stickers and doodles, then download it. Photos never leave your device.">
+  <meta name="theme-color" content="#6B1420">
+  <meta name="color-scheme" content="light">
+
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Photomatic">
+  <meta property="og:title" content="Photomatic ☆ Retro Photobooth">
+  <meta property="og:description" content="Insert smile. Pose like you mean it. A retro photobooth that runs entirely in your browser.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Photomatic ☆ Retro Photobooth">
+  <meta name="twitter:description" content="Insert smile. Pose like you mean it. A retro photobooth that runs entirely in your browser.">
+
+  <!-- Favicon: cherry-red booth camera -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='20' y='7' width='18' height='10' rx='3' fill='%231A1012'/%3E%3Crect x='4' y='13' width='56' height='42' rx='9' fill='%23B3122E' stroke='%231A1012' stroke-width='4'/%3E%3Ccircle cx='32' cy='34' r='13' fill='%23F6EEDC' stroke='%231A1012' stroke-width='4'/%3E%3Ccircle cx='32' cy='34' r='6' fill='%236B1420'/%3E%3Ccircle cx='50' cy='22' r='3.5' fill='%23F3E3A0'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Pinyon+Script&family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;700&family=UnifrakturMaguntia&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-screen="landing">
+
+  <!-- Reusable SVG symbols for page decorations -->
+  <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="s-heart" viewBox="0 0 100 100">
+        <path d="M50 88 C20 66 6 48 10 30 C14 14 36 10 50 28 C64 10 86 14 90 30 C94 48 80 66 50 88Z" fill="#B3122E" stroke="#1A1012" stroke-width="5" stroke-linejoin="round"/>
+        <ellipse cx="30" cy="32" rx="7" ry="4" fill="#F6EEDC" transform="rotate(-35 30 32)"/>
+      </symbol>
+      <symbol id="s-star" viewBox="0 0 100 100">
+        <polygon points="50,6 61,36 93,36 67,55 77,86 50,67 23,86 33,55 7,36 39,36" fill="#E77FA4" stroke="#1A1012" stroke-width="5" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="s-sparkle" viewBox="0 0 100 100">
+        <path d="M50 4 Q56 44 96 50 Q56 56 50 96 Q44 56 4 50 Q44 44 50 4Z" fill="#F6EEDC" stroke="#1A1012" stroke-width="5" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="s-bow" viewBox="0 0 100 100">
+        <g stroke="#1A1012" stroke-width="5" stroke-linejoin="round">
+          <path d="M46 54 L34 92 L44 86 L50 94 L52 56Z" fill="#B3122E"/>
+          <path d="M54 54 L66 92 L56 86 L50 94Z" fill="#B3122E"/>
+          <path d="M50 50 L12 24 Q4 50 12 76Z" fill="#E77FA4"/>
+          <path d="M50 50 L88 24 Q96 50 88 76Z" fill="#E77FA4"/>
+          <rect x="40" y="39" width="20" height="22" rx="6" fill="#B3122E"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- Scrolling marquee (decorative) -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>PHOTOMATIC ☆ INSERT SMILE ☆ POSE LIKE YOU MEAN IT ☆ EST. 2026 ☆&nbsp;</span>
+      <span>PHOTOMATIC ☆ INSERT SMILE ☆ POSE LIKE YOU MEAN IT ☆ EST. 2026 ☆&nbsp;</span>
+      <span>PHOTOMATIC ☆ INSERT SMILE ☆ POSE LIKE YOU MEAN IT ☆ EST. 2026 ☆&nbsp;</span>
+      <span>PHOTOMATIC ☆ INSERT SMILE ☆ POSE LIKE YOU MEAN IT ☆ EST. 2026 ☆&nbsp;</span>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- ============ 1. LANDING ============ -->
+    <section id="screen-landing" class="screen" aria-labelledby="landing-title">
+      <div class="decor" aria-hidden="true">
+        <svg class="deco" style="--x:3%;--y:14%;--r:-18deg;--s:64px"><use href="#s-heart"/></svg>
+        <svg class="deco" style="--x:90%;--y:36%;--r:14deg;--s:52px"><use href="#s-star"/></svg>
+        <svg class="deco" style="--x:5%;--y:62%;--r:10deg;--s:72px"><use href="#s-bow"/></svg>
+        <svg class="deco" style="--x:88%;--y:78%;--r:-12deg;--s:44px"><use href="#s-sparkle"/></svg>
+        <svg class="deco" style="--x:48%;--y:1%;--r:20deg;--s:36px"><use href="#s-sparkle"/></svg>
+      </div>
+
+      <header class="masthead">
+        <div class="logo-lockup">
+          <span class="badge stamp-edge" aria-hidden="true"><small>EST.</small><b>2026</b></span>
+          <h1 class="logo" id="landing-title" tabindex="-1">Photomatic</h1>
+          <!-- Soda-shop seal (decorative) -->
+          <svg class="seal" viewBox="0 0 200 200" aria-hidden="true">
+            <defs>
+              <path id="seal-ring" d="M100,100 m-68,0 a68,68 0 1,1 136,0 a68,68 0 1,1 -136,0"/>
+            </defs>
+            <g class="seal-spin">
+              <circle cx="100" cy="100" r="88" fill="#B3122E"/>
+              <circle cx="100" cy="100" r="88" fill="none" stroke="#B3122E" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 17.28"/>
+              <circle cx="100" cy="100" r="82" fill="none" stroke="#6B1420" stroke-width="3" stroke-dasharray="4 4"/>
+              <text font-family="Silkscreen, monospace" font-size="16" font-weight="700" fill="#F6EEDC">
+                <textPath href="#seal-ring" textLength="420" lengthAdjust="spacing">PHOTOMATIC ★ INSERT SMILE ★</textPath>
+              </text>
+            </g>
+            <circle cx="100" cy="100" r="50" fill="#F6EEDC" stroke="#6B1420" stroke-width="4"/>
+            <path d="M86 114 Q92 86 108 72 M114 110 Q112 90 108 72" stroke="#6B1420" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M108 72 Q122 62 134 70 Q120 80 108 72Z" fill="#5E8C3A" stroke="#1A1012" stroke-width="2.5"/>
+            <circle cx="85" cy="118" r="14" fill="#B3122E" stroke="#1A1012" stroke-width="3"/>
+            <circle cx="115" cy="114" r="14" fill="#B3122E" stroke="#1A1012" stroke-width="3"/>
+            <circle cx="80" cy="113" r="3.5" fill="#F6EEDC"/><circle cx="110" cy="109" r="3.5" fill="#F6EEDC"/>
+          </svg>
+        </div>
+        <p class="tagline">insert smile, get strip</p>
+      </header>
+
+      <form class="card card-stack settings" id="settings-form" aria-labelledby="settings-title">
+        <h2 class="card-ribbon scallop-b" id="settings-title">Booth settings</h2>
+
+        <div class="settings-body">
+          <div class="settings-row">
+            <fieldset class="field">
+              <legend class="label">Timer</legend>
+              <div class="segmented">
+                <label class="seg"><input type="radio" name="timer" value="3" checked><span>3s</span></label>
+                <label class="seg"><input type="radio" name="timer" value="5"><span>5s</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="field">
+              <legend class="label">Photos</legend>
+              <div class="segmented">
+                <label class="seg"><input type="radio" name="shots" value="3"><span>3</span></label>
+                <label class="seg"><input type="radio" name="shots" value="4" checked><span>4</span></label>
+              </div>
+            </fieldset>
+          </div>
+
+          <fieldset class="field">
+            <legend class="label">Strip layout</legend>
+            <div class="layout-picker" id="landing-layouts"></div>
+            <p class="hint" id="landing-layout-hint" aria-live="polite"></p>
+          </fieldset>
+
+          <div class="switch-list">
+            <label class="switch-row">
+              <span class="switch-text"><b>Pose roulette</b><small>Random pose prompts before each shot</small></span>
+              <input type="checkbox" role="switch" id="opt-pose" checked>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+            <label class="switch-row">
+              <span class="switch-text"><b>Chaos mode</b><small>Random filter and tilt on every shot</small></span>
+              <input type="checkbox" role="switch" id="opt-chaos">
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+          </div>
+        </div>
+      </form>
+
+      <div class="cta">
+        <button type="submit" form="settings-form" id="btn-start" class="btn btn-primary btn-xl btn-throb">Start booth ☆</button>
+        <p class="privacy">Photos never leave your device ☆</p>
+      </div>
+    </section>
+
+    <!-- ============ 2. BOOTH ============ -->
+    <section id="screen-booth" class="screen" aria-labelledby="booth-title" hidden>
+      <h2 class="heading" id="booth-title" tabindex="-1">Strike a pose</h2>
+
+      <div class="booth">
+        <div class="booth-frame" id="booth-frame" data-state="loading">
+          <video id="video" playsinline muted autoplay aria-label="Camera preview"></video>
+
+          <!-- Loading skeleton while the camera wakes up -->
+          <div class="booth-skeleton" id="booth-skeleton">
+            <svg class="booth-skeleton-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="20" y="8" width="18" height="10" rx="3"/><rect x="4" y="14" width="56" height="40" rx="8"/><circle cx="32" cy="34" r="12" class="lens"/></svg>
+            <p id="booth-skeleton-text">Starting camera<span class="dots" aria-hidden="true"></span></p>
+          </div>
+
+          <div class="hud">
+            <div class="shot-counter" id="shot-counter"><i class="rec" aria-hidden="true"></i><span id="shot-counter-text">Ready</span></div>
+          </div>
+          <div class="pose-prompt" id="pose-prompt" aria-hidden="true"></div>
+          <div class="countdown" id="countdown" aria-hidden="true"><span class="countdown-num" id="countdown-num"></span></div>
+          <div class="flash" id="flash"></div>
+        </div>
+
+        <div class="card cam-error" id="cam-error" role="alert" hidden>
+          <h3 class="cam-error-title">Camera's not cooperating</h3>
+          <p id="cam-error-msg">We couldn't reach your camera.</p>
+          <div class="btn-row">
+            <button type="button" class="btn btn-secondary" id="btn-retry">Try again</button>
+            <button type="button" class="btn btn-primary" data-action="upload">Upload photos</button>
+          </div>
+        </div>
+
+        <ol class="tray" id="tray" aria-label="Captured photos"></ol>
+
+        <div class="booth-actions">
+          <button type="button" id="btn-snap" class="btn btn-primary btn-xl" disabled>Snap! ☆</button>
+          <div class="btn-row">
+            <button type="button" id="btn-booth-back" class="btn btn-ghost">← Back</button>
+            <button type="button" id="btn-upload" class="btn btn-secondary" data-action="upload">Upload photos</button>
+          </div>
+          <p class="kbd-hint"><kbd>Space</kbd> to snap <span aria-hidden="true">·</span> <kbd>Esc</kbd> to go back</p>
+          <input type="file" id="file-input" accept="image/*" multiple class="visually-hidden" tabindex="-1" aria-hidden="true">
+        </div>
+        <p class="visually-hidden" id="booth-live" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- ============ 3. EDITOR ============ -->
+    <section id="screen-editor" class="screen" aria-labelledby="editor-title" hidden>
+      <header class="editor-head">
+        <h2 class="heading" id="editor-title" tabindex="-1">Make it cute</h2>
+        <p class="accent-script">drag it, doodle it, love it</p>
+      </header>
+
+      <div class="editor">
+        <div class="stage" id="stage">
+          <canvas id="strip" role="img" aria-label="Your Photomatic photo strip"></canvas>
+        </div>
+
+        <aside class="panel" id="panel" aria-label="Editing tools">
+          <button type="button" class="sheet-handle" id="sheet-handle" aria-expanded="true" aria-controls="tabpanels">
+            <span class="sheet-grip" aria-hidden="true"></span>
+            <span class="visually-hidden">Show or hide tool options</span>
+          </button>
+
+          <div class="tabs" role="tablist" aria-label="Editing sections" id="tabs">
+            <button type="button" class="tab" role="tab" id="tab-layout" aria-controls="tp-layout" aria-selected="true"><span class="tab-icon" aria-hidden="true">▦</span>Layout</button>
+            <button type="button" class="tab" role="tab" id="tab-frame" aria-controls="tp-frame" aria-selected="false" tabindex="-1"><span class="tab-icon" aria-hidden="true">◫</span>Frame</button>
+            <button type="button" class="tab" role="tab" id="tab-filter" aria-controls="tp-filter" aria-selected="false" tabindex="-1"><span class="tab-icon" aria-hidden="true">◐</span>Filter</button>
+            <button type="button" class="tab" role="tab" id="tab-stickers" aria-controls="tp-stickers" aria-selected="false" tabindex="-1"><span class="tab-icon" aria-hidden="true">★</span>Stickers</button>
+            <button type="button" class="tab" role="tab" id="tab-draw" aria-controls="tp-draw" aria-selected="false" tabindex="-1"><span class="tab-icon" aria-hidden="true">✎</span>Draw</button>
+            <button type="button" class="tab" role="tab" id="tab-text" aria-controls="tp-text" aria-selected="false" tabindex="-1"><span class="tab-icon" aria-hidden="true">Aa</span>Text</button>
+            <button type="button" class="tab" role="tab" id="tab-music" aria-controls="tp-music" aria-selected="false" tabindex="-1"><span class="tab-icon" aria-hidden="true">♪</span>Music</button>
+          </div>
+
+          <div class="tabpanels" id="tabpanels">
+            <section class="tabpanel" role="tabpanel" id="tp-layout" aria-labelledby="tab-layout" tabindex="0">
+              <h3 class="section-title">Layout</h3>
+              <p class="tip">Switch layouts any time. No retakes needed.</p>
+              <fieldset class="field">
+                <legend class="visually-hidden">Strip layout</legend>
+                <div class="layout-picker" id="editor-layouts"></div>
+                <p class="hint" id="editor-layout-hint" aria-live="polite"></p>
+              </fieldset>
+            </section>
+
+            <section class="tabpanel" role="tabpanel" id="tp-frame" aria-labelledby="tab-frame" tabindex="0" hidden>
+              <h3 class="section-title">Frame</h3>
+              <div class="chips" id="frame-chips" role="group" aria-label="Frame style"></div>
+              <div class="field">
+                <span class="label" id="bg-label">Background</span>
+                <div class="swatches" id="bg-swatches" role="group" aria-labelledby="bg-label"></div>
+              </div>
+              <label class="field field-inline">
+                <span class="label">Custom colour</span>
+                <input type="color" id="bg-custom" value="#F6EEDC">
+              </label>
+            </section>
+
+            <section class="tabpanel" role="tabpanel" id="tp-filter" aria-labelledby="tab-filter" tabindex="0" hidden>
+              <h3 class="section-title">Filter</h3>
+              <p class="tip">Applies to every photo on the strip.</p>
+              <div class="chips" id="filter-chips" role="group" aria-label="Photo filter"></div>
+            </section>
+
+            <section class="tabpanel" role="tabpanel" id="tp-stickers" aria-labelledby="tab-stickers" tabindex="0" hidden>
+              <h3 class="section-title">Stickers</h3>
+              <p class="tip">Tap to add, drag to move. Handles resize, spin and delete. Arrow keys nudge the selected sticker.</p>
+              <div class="sticker-grid" id="sticker-grid"></div>
+            </section>
+
+            <section class="tabpanel" role="tabpanel" id="tp-draw" aria-labelledby="tab-draw" tabindex="0" hidden>
+              <h3 class="section-title">Draw</h3>
+              <button type="button" class="btn btn-secondary btn-block" id="btn-pen" aria-pressed="false">✎ Pen off</button>
+              <div class="field">
+                <span class="label" id="pen-label">Pen colour</span>
+                <div class="swatches" id="pen-swatches" role="group" aria-labelledby="pen-label"></div>
+              </div>
+              <label class="field">
+                <span class="label">Pen size <output id="pen-size-out" class="num">8</output></span>
+                <input type="range" id="pen-size" min="2" max="30" value="8">
+              </label>
+              <button type="button" class="btn btn-ghost btn-block" id="btn-clear-doodles">Clear doodles</button>
+            </section>
+
+            <section class="tabpanel" role="tabpanel" id="tp-text" aria-labelledby="tab-text" tabindex="0" hidden>
+              <h3 class="section-title">Text</h3>
+              <label class="field">
+                <span class="label">Caption</span>
+                <input type="text" id="caption" maxlength="42" placeholder="insert smile" autocomplete="off">
+              </label>
+              <div class="field">
+                <span class="label" id="font-label">Caption font</span>
+                <div class="chips" id="font-chips" role="group" aria-labelledby="font-label"></div>
+              </div>
+              <label class="switch-row">
+                <span class="switch-text"><b>Date stamp</b></span>
+                <input type="checkbox" role="switch" id="opt-date" checked>
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+            </section>
+
+            <section class="tabpanel" role="tabpanel" id="tp-music" aria-labelledby="tab-music" tabindex="0" hidden>
+              <h3 class="section-title">Music</h3>
+              <p class="tip">Adds a little "now playing" card to your strip ♪</p>
+              <label class="field">
+                <span class="label">Song title</span>
+                <input type="text" id="song-title" maxlength="48" placeholder="e.g. Cherry Bomb" autocomplete="off">
+              </label>
+              <label class="field">
+                <span class="label">Artist</span>
+                <input type="text" id="song-artist" maxlength="48" placeholder="e.g. The Runaways" autocomplete="off">
+              </label>
+            </section>
+          </div>
+
+          <div class="panel-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-undo">↶ Undo</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-shuffle">Shuffle</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-retake">↺ Retake</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-finish">Done ☆</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ 4. DOWNLOAD ============ -->
+    <section id="screen-final" class="screen" aria-labelledby="final-title" hidden>
+      <div class="decor" aria-hidden="true">
+        <svg class="deco" style="--x:4%;--y:8%;--r:-14deg;--s:56px"><use href="#s-star"/></svg>
+        <svg class="deco" style="--x:90%;--y:70%;--r:12deg;--s:60px"><use href="#s-heart"/></svg>
+      </div>
+      <div class="final" id="final">
+        <figure class="final-preview">
+          <img id="final-img" alt="Your finished Photomatic photo strip">
+        </figure>
+        <div class="card card-stack final-card">
+          <h2 class="heading" id="final-title" tabindex="-1">Lookin' sweet</h2>
+          <p class="accent-script">your strip is ready, darling</p>
+          <button type="button" class="btn btn-primary btn-xl btn-block btn-throb" id="btn-download">Download strip ☆</button>
+          <button type="button" class="btn btn-ghost btn-block" id="btn-back-edit">← Edit more</button>
+          <p class="privacy">Photos never leave your device ☆</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Download confirmation -->
+  <dialog class="modal" id="modal" aria-labelledby="modal-title">
+    <div class="modal-card stamp-edge">
+      <p class="accent-script">xoxo</p>
+      <h2 id="modal-title">Strip secured ☆</h2>
+      <p class="modal-sub">Your Photomatic strip is saved. Go show it off.</p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-butter" id="btn-again">Take another</button>
+        <button type="button" class="btn btn-ghost" id="btn-edit-more">Edit more</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
