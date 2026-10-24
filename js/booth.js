@@ -1,0 +1,348 @@
+/* Booth: the menu card, camera, countdown capture, per-shot retakes,
+   upload fallback and the "developing" moment. */
+import { $, $$, el, wait, pick, makeCanvas, restartAnimation, reducedMotion, pad2 } from './utils.js';
+import { state } from './state.js';
+import { createLayoutPicker, LAYOUTS } from './layouts.js';
+import { audio, countBeep, shutter, whirr, flashPop, punch, switchClick, thunk } from './sound.js';
+import { show, toast, confirmDialog } from './ui.js';
+import { icon } from './icons.js';
+import { startCamera, stopCamera as stopStream, capture, cropToCanvas } from './camera.js';
+import { faceHere } from './placeholders.js';
+import { newDesign, openEditor } from './editor.js';
+import { computeLayout, render, eachPhotoFrame } from './render.js';
+
+const ASPECT = 4 / 3;            // every layout uses 4:3 photo slots
+const PREVIEW_W = 640;           // review thumbnails
+
+const PROMPTS = [
+  'Look away, then back', 'Chin up, eyes soft', 'Laugh like you mean it', 'Lean in a little closer',
+  'Eyes to the lens', 'Your best side, please', 'A little mischief', 'Over the shoulder',
+  'Think of someone you love', 'Shoulders down, breathe out', 'Now a serious one', 'Close your eyes, then open',
+];
+
+const CAMERA_ERRORS = {
+  NotAllowedError: 'Camera access is switched off for this site. Allow it from the camera icon in the address bar, or upload photos instead.',
+  SecurityError: 'Your browser blocked the camera for this page. You can upload photos instead.',
+  NotFoundError: "We couldn't find a camera on this device. You can upload photos instead.",
+  NotReadableError: 'Your camera is busy in another app. Close it and try again, or upload photos instead.',
+  OverconstrainedError: "Your camera doesn't support the settings we asked for. Try again, or upload photos instead.",
+  InsecureContext: 'The camera only works over https:// or on localhost. You can upload photos instead.',
+  NotSupportedError: "This browser doesn't support camera access. You can upload photos instead.",
+};
+
+const dom = {
+  setup: $('#booth-setup'), live: $('#booth-live'), review: $('#booth-review'), develop: $('#booth-develop'),
+  form: $('#booth-form'), frame: $('#camera'), video: $('#video'), status: $('#camera-status'),
+  counter: $('#shot-counter'), prompt: $('#pose-line'), countdown: $('#countdown'), countNum: $('#countdown-num'),
+  flash: $('#flash'), snap: $('#btn-snap'), error: $('#cam-error'), errorMsg: $('#cam-error-msg'),
+  announcer: $('#booth-announce'), thumbs: $('#review-grid'), file: $('#file-input'),
+};
+
+export const stopCamera = () => stopStream(dom.video);
+window.addEventListener('pagehide', stopCamera);
+
+/* =========================================================
+   Phases
+   ========================================================= */
+function setPhase(phase) {
+  state.booth.phase = phase;
+  dom.frame.dataset.state = phase;
+  dom.setup.hidden = phase !== 'setup';
+  dom.live.hidden = !['loading', 'live', 'shooting', 'error'].includes(phase);
+  dom.review.hidden = phase !== 'review';
+  dom.develop.hidden = phase !== 'developing';
+  dom.snap.disabled = phase !== 'live';
+  dom.error.hidden = phase !== 'error';
+  dom.frame.hidden = phase === 'error';
+  if (phase === 'loading') dom.status.textContent = 'Warming up the camera…';
+  if (phase === 'live') dom.counter.textContent = `${state.settings.shots} shots · ${state.settings.timer}s timer`;
+}
+const announce = msg => { dom.announcer.textContent = msg; };
+
+/* =========================================================
+   Menu card
+   ========================================================= */
+const picker = createLayoutPicker($('#booth-layouts'), 'layout', id => { state.settings.layout = id; refreshPicker(); });
+
+function refreshPicker(note = '') {
+  picker.update(state.settings.shots, state.settings.layout);
+  $('#booth-layout-hint').textContent = note;
+}
+
+function readForm() {
+  const s = state.settings, f = dom.form;
+  s.shots = +$('input[name="shots"]:checked', f).value;
+  s.timer = +$('input[name="timer"]:checked', f).value;
+  s.prompts = $('#opt-prompts').checked;
+  s.mirror = $('#opt-mirror').checked;
+  dom.frame.classList.toggle('is-unmirrored', !s.mirror);
+  syncMenu();
+}
+
+// switches say On/Off in words and to assistive tech; the brass plate shows the choice
+function syncMenu() {
+  $$('.brass-row input', dom.form).forEach(i => {
+    i.setAttribute('aria-checked', String(i.checked));
+    i.closest('.brass-row').querySelector('.brass-state').textContent = i.checked ? '· On' : '· Off';
+  });
+  const s = state.settings;
+  $('#coin-plate').textContent = `${s.shots} photos · ${s.timer}s timer`;
+}
+// Enter flips a switch too (Space already does)
+$$('.brass-row input', dom.form).forEach(i => i.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); i.click(); }
+}));
+
+dom.form.addEventListener('change', e => {
+  const t = e.target, s = state.settings;
+  if (t.type === 'checkbox') switchClick(); else if (t.name === 'shots' || t.name === 'timer') punch();
+  if (t.name === 'timer') s.timer = +t.value;
+  else if (t.id === 'opt-prompts') s.prompts = t.checked;
+  else if (t.id === 'opt-mirror') { s.mirror = t.checked; dom.frame.classList.toggle('is-unmirrored', !s.mirror); }
+  else if (t.name === 'shots') {
+    s.shots = +t.value;
+    let note = '';
+    if (!LAYOUTS[s.layout].supports(s.shots)) {
+      note = `${LAYOUTS[s.layout].name} needs 4 photos, so we've switched to ${LAYOUTS.strip.name}.`;
+      s.layout = 'strip';
+    }
+    refreshPicker(note);
+  }
+  syncMenu();
+});
+dom.form.addEventListener('submit', e => { e.preventDefault(); audio(); thunk(); startLive(); });
+
+/* =========================================================
+   Entering / leaving
+   ========================================================= */
+export function openBooth({ via = 'curtain' } = {}) {
+  cancelCountdown();
+  stopCamera();
+  readForm();
+  refreshPicker();
+  setPhase('setup');
+  return show('booth', { via });
+}
+
+async function startLive() {
+  state.design.photos = [];
+  setPhase('loading');
+  try {
+    await startCamera(dom.video);
+    if (state.screen !== 'booth') return stopCamera();
+    setPhase('live');
+    dom.snap.focus();
+  } catch (err) {
+    if (err.name === 'Superseded' || state.screen !== 'booth') return;
+    stopCamera();
+    dom.errorMsg.textContent = CAMERA_ERRORS[err.name] || "We couldn't reach your camera. Try again, or upload photos instead.";
+    setPhase('error');
+  }
+}
+
+export async function boothBack() {
+  const p = state.booth.phase;
+  if (p === 'developing') return finishDeveloping();
+  if (p === 'setup') return show('home');
+  if (p === 'review' && !(await confirmDialog({ title: 'Discard these photos?', body: "You'll go back to the booth menu.", ok: 'Discard' }))) return;
+  cancelCountdown();
+  stopCamera();
+  setPhase('setup');
+}
+
+/* =========================================================
+   Capture
+   ========================================================= */
+const makePhoto = src => ({ src, seed: Math.floor(Math.random() * 1e9) });
+// A shot the camera couldn't deliver: never silently blank, it asks for a retake
+const failedPhoto = i => ({ src: faceHere(1440, 1080, i), seed: i + 1, failed: true });
+
+function cancelCountdown() {
+  state.booth.session++;
+  dom.countdown.classList.remove('is-on');
+  dom.prompt.classList.remove('is-on');
+}
+
+// One countdown + flash. Resolves to a promise of the photo, or null if cancelled.
+async function shoot(i, total) {
+  const my = state.booth.session;
+  const alive = () => my === state.booth.session && state.booth.stream;
+  dom.counter.innerHTML = `Shot <span class="num">${i + 1}</span> of <span class="num">${total}</span>`;
+  announce(`Shot ${i + 1} of ${total}`);
+  if (state.settings.prompts) {
+    dom.prompt.textContent = pick(PROMPTS);
+    restartAnimation(dom.prompt, 'is-on');
+  }
+  dom.countdown.classList.add('is-on');
+  for (let c = state.settings.timer; c >= 1; c--) {
+    dom.countNum.textContent = c;
+    restartAnimation(dom.countNum, 'pop');
+    countBeep(c === 1);
+    await wait(1000);
+    if (!alive()) return null;
+  }
+  dom.countdown.classList.remove('is-on');
+  dom.prompt.classList.remove('is-on');
+  restartAnimation(dom.flash, 'go');
+  shutter();
+  flashPop();
+  // the still develops in the background so the next countdown isn't held up
+  const pending = capture(dom.video, { aspect: ASPECT, mirror: state.settings.mirror })
+    .then(c => (c ? makePhoto(c) : failedPhoto(i)))
+    .catch(() => failedPhoto(i));
+  announce(`Photo ${i + 1} taken`);
+  await wait(700);
+  return alive() ? pending : null;
+}
+
+async function runAll() {
+  if (state.booth.phase !== 'live') return;
+  audio();
+  const my = ++state.booth.session;
+  setPhase('shooting');
+  const total = state.settings.shots;
+  const pending = [];
+  for (let i = 0; i < total; i++) {
+    const p = await shoot(i, total);
+    if (!p || my !== state.booth.session) return;
+    pending.push(p);
+  }
+  dom.counter.textContent = 'Developing…';
+  state.design.photos = await Promise.all(pending);
+  if (my === state.booth.session) showReview();
+}
+
+async function retakeOne(i) {
+  const my = ++state.booth.session;
+  setPhase('shooting');
+  await wait(400);
+  const p = await shoot(i, state.design.photos.length);
+  if (!p || my !== state.booth.session) return;
+  state.design.photos[i] = await p;
+  showReview(i);
+}
+
+export function snapKey() {
+  if (state.booth.phase === 'live') runAll();
+}
+
+dom.snap.addEventListener('click', runAll);
+$('#btn-live-back').addEventListener('click', boothBack);
+$('#btn-retry').addEventListener('click', startLive);
+
+/* =========================================================
+   Review: retake any single shot
+   ========================================================= */
+function showReview(focusIndex = 0) {
+  setPhase('review');
+  const photos = state.design.photos;
+  dom.thumbs.style.setProperty('--cols', Math.min(4, photos.length));
+  dom.thumbs.replaceChildren(...photos.map((p, i) => {
+    const h = Math.round(PREVIEW_W / ASPECT);
+    const thumb = makeCanvas(PREVIEW_W, h);
+    const tx = thumb.getContext('2d');
+    tx.imageSmoothingQuality = 'high';
+    tx.drawImage(p.src, 0, 0, PREVIEW_W, h);
+    thumb.setAttribute('role', 'img');
+    thumb.setAttribute('aria-label', p.failed ? `Photo ${i + 1} didn't come out, retake needed` : `Photo ${i + 1}`);
+    return el('li', { className: `contact-frame${p.failed ? ' is-failed' : ''}` }, [
+      el('figure', {}, [
+        el('span', { className: 'contact-print' }, [thumb]),
+        el('figcaption', { className: 'num' }, [
+          el('span', { text: `No. ${pad2(i + 1)}` }),
+          ...(p.failed ? [el('span', { className: 'retake-needed', text: 'Retake needed' })] : []),
+        ]),
+      ]),
+      el('button', {
+        className: 'btn btn-paper btn-sm', attrs: { type: 'button', 'aria-label': `Retake photo ${i + 1}` },
+        html: `${icon('retake', { size: 16 })}<span>Retake</span>`, on: { click: () => retakeOne(i) },
+      }),
+    ]);
+  }));
+  // carry on only once every frame came out
+  const failed = photos.filter(p => p.failed).length;
+  $('#btn-continue').disabled = failed > 0;
+  $('#review-note').textContent = failed ? `${failed === 1 ? 'One frame' : `${failed} frames`} didn't come out. Retake ${failed === 1 ? 'it' : 'them'} to carry on.` : 'Retake any frame, or carry on and make it yours.';
+  const firstFailed = photos.findIndex(p => p.failed);
+  const btn = dom.thumbs.querySelectorAll('button')[firstFailed >= 0 ? firstFailed : focusIndex];
+  (btn || $('#btn-continue')).focus({ preventScroll: true });
+}
+
+$('#btn-retake-all').addEventListener('click', () => { setPhase('live'); runAll(); });
+$('#btn-continue').addEventListener('click', () => { stopCamera(); develop(); });
+
+/* =========================================================
+   Upload fallback
+   ========================================================= */
+$$('[data-action="upload"]').forEach(b => b.addEventListener('click', () => dom.file.click()));
+
+dom.file.addEventListener('change', async () => {
+  const want = state.settings.shots;
+  const files = [...dom.file.files].filter(f => f.type.startsWith('image/')).slice(0, want);
+  dom.file.value = '';
+  if (!files.length) return;
+  cancelCountdown();
+  const photos = [];
+  for (const f of files) {
+    try {
+      const bmp = await createImageBitmap(f);
+      photos.push(makePhoto(cropToCanvas(bmp, bmp.width, bmp.height, ASPECT, false)));
+      bmp.close && bmp.close();
+    } catch { toast(`We couldn't read ${f.name}.`); }
+  }
+  if (!photos.length) return;
+  if (photos.length < want) toast(`Using ${photos.length} photo${photos.length > 1 ? 's' : ''}.`);
+  stopCamera();
+  state.design.photos = photos;
+  develop();
+});
+
+/* =========================================================
+   Developing: the strip prints out of the slot while the photos
+   come up from grey paper, then a strip of film advances to the editor
+   ========================================================= */
+let developTimer = 0;
+
+async function develop() {
+  await newDesign();
+  const L = computeLayout();
+  const scale = 1.25;
+  const full = makeCanvas(L.W * scale, L.H * scale);
+  render(full.getContext('2d'), scale, { L });
+  const blank = makeCanvas(full.width, full.height);
+  const b = blank.getContext('2d');
+  b.drawImage(full, 0, 0);
+  b.setTransform(scale, 0, 0, scale, 0, 0);
+  eachPhotoFrame(b, L, (box, s) => { b.fillStyle = '#B9B2A8'; b.fillRect(-s.w / 2, -s.h / 2, s.w, s.h); });
+
+  // a grey, low-contrast print in between, so the photos "come up" in the tray
+  const grey = makeCanvas(full.width, full.height);
+  const g = grey.getContext('2d');
+  if ('filter' in g) g.filter = 'grayscale(1) contrast(.65) brightness(1.12)';
+  g.drawImage(full, 0, 0);
+
+  const wrap = $('#develop-strip');
+  wrap.style.setProperty('--ar', `${L.W} / ${L.H}`);
+  wrap.style.setProperty('--arn', (L.W / L.H).toFixed(4));
+  wrap.classList.toggle('is-wide', L.W > L.H);
+  blank.className = 'develop-paper';
+  grey.className = 'develop-grey';
+  full.className = 'develop-photo';
+  wrap.replaceChildren(blank, grey, full);
+  setPhase('developing');
+  $('#develop-skip').focus({ preventScroll: true });
+
+  const quick = reducedMotion();
+  restartAnimation(wrap, 'is-printing');
+  if (!quick) whirr(2.4);
+  clearTimeout(developTimer);
+  developTimer = setTimeout(finishDeveloping, quick ? 1200 : 4300);
+}
+
+function finishDeveloping() {
+  if (state.booth.phase !== 'developing') return;
+  clearTimeout(developTimer);
+  state.booth.phase = 'leaving';
+  openEditor({ via: 'film' }).then(() => setPhase('setup'));
+}
+$('#develop-skip').addEventListener('click', finishDeveloping);
