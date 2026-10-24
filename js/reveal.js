@@ -5,7 +5,7 @@
    and into the 1080×1920 video, so they always match. */
 import { C, $, el, clamp, lerp, rrect, reducedMotion, mulberry32, dateTypewriter } from './utils.js';
 import { state } from './state.js';
-import { show, toast } from './ui.js';
+import { show, onScreen, toast } from './ui.js';
 import { click, whirr, chime } from './sound.js';
 import { exportStrip } from './export.js';
 import { IMG, drawSafetyPin, drawWaxSeal, grainOver } from './textures.js';
@@ -262,14 +262,14 @@ function frame(now) {
 function done() {
   const { W, H } = size();
   alignActions(W, H);
-  actions.classList.add('is-visible');
+  actions.classList.add('is-done');
   if (!done.played) { chime(); done.played = true; }
   $('#btn-download').focus({ preventScroll: true });
 }
 
 export function play() {
   cancelAnimationFrame(raf);
-  actions.classList.remove('is-visible');
+  actions.classList.remove('is-done');
   done.played = false;
   lastStep = -1;
   pinned = reducedMotion();
@@ -283,7 +283,7 @@ export function play() {
 // choose which photo goes on the little polaroid
 export function swapPolaroid() {
   state.output.polaroid = (state.output.polaroid + 1) % Math.max(1, state.design.photos.length);
-  if (actions.classList.contains('is-visible')) drawAt(REVEAL_END);
+  if (actions.classList.contains('is-done')) drawAt(REVEAL_END);
 }
 
 export async function openReveal() {
@@ -303,11 +303,19 @@ export async function openReveal() {
   await show('reveal', { via: 'desk' });
   play();
 }
+// the screen is uncovered complete: the letter and the slot are drawn and the actions placed in the
+// swap; only the strip itself (printing, landing, the pin) moves afterwards
+onScreen('reveal', () => {
+  if (!state.output.canvas) return;
+  const { W, H } = size();
+  alignActions(W, H);
+  drawAt(0);
+});
 
 // redraw the settled frame at the new size
 new ResizeObserver(() => {
   if (state.screen !== 'reveal' || !state.output.canvas) return;
   const { W, H } = size();
   alignActions(W, H);
-  if (actions.classList.contains('is-visible')) drawAt(REVEAL_END);
+  if (actions.classList.contains('is-done')) drawAt(REVEAL_END);
 }).observe(canvas);

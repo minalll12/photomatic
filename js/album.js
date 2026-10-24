@@ -76,8 +76,8 @@ export async function renderAlbum() {
         className: 'album-open', attrs: { type: 'button', 'aria-label': `Open strip from ${prettyDate(item.created)}` },
         on: { click: () => openItem(item, url) },
       }, [
-        el('img', { attrs: { src: url, alt: '', loading: 'lazy', width: item.width, height: item.height } }),
-        ...(faveUrl ? [el('span', { className: 'album-fave' }, [el('img', { attrs: { src: faveUrl, alt: '', loading: 'lazy', width: 160, height: 120 } })])] : []),
+        el('img', { attrs: { src: url, alt: '', width: item.width, height: item.height } }),
+        ...(faveUrl ? [el('span', { className: 'album-fave' }, [el('img', { attrs: { src: faveUrl, alt: '', width: 160, height: 120 } })])] : []),
       ]),
       el('div', { className: 'album-meta' }, [
         el('span', { className: 'num', text: prettyDate(item.created) }),
@@ -88,6 +88,7 @@ export async function renderAlbum() {
       ]),
     ]);
   }));
+  await Promise.all([...grid.querySelectorAll('img')].map(img => img.decode().catch(() => {})));
 }
 
 function openItem(item, url) {

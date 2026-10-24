@@ -1,7 +1,7 @@
 /* Editor: Frame · Filter · Stickers · Text, undo/redo, sticker gestures. */
 import { $, $$, el, clamp, pick, rand, fontsReady, dateTypewriter, dateSerif, dateDigital, isCoarse, makeCanvas } from './utils.js';
 import { state } from './state.js';
-import { show, confirmDialog } from './ui.js';
+import { show, onScreen, confirmDialog } from './ui.js';
 import { icon } from './icons.js';
 import { LAYOUTS, createLayoutPicker, fitLayout } from './layouts.js';
 import { FRAMES, FRAME_GROUPS, variantOf } from './frames.js';
@@ -47,10 +47,13 @@ export function openEditor({ via = 'fade' } = {}) {
   selectTab($('#tab-frame'));
   if (window.innerWidth <= 860) setSheetCollapsed(true);
   buildProps();
+  // everything is drawn before the screen is uncovered: the frame thumbnails here, the strip in the swap
+  frameButtons.forEach((_, id) => renderThumb(id));
   const shown = show('editor', { via });
   syncUI();
   return shown;
 }
+onScreen('editor', () => { cancelAnimationFrame(E.rafId); E.rafId = 0; drawDisplay(); });
 
 /* =========================================================
    Rendering (dirty flag: one frame per change, nothing while idle)

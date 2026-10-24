@@ -326,7 +326,7 @@ main {
 .sub { color: var(--fg); text-align: center; }
 
 /* the heading system: a typewriter kicker, then a roman + italic title
-   with a red-pencil swash that draws itself under the italic word */
+   with a red-pencil swash under the italic word (drawn from the start, never animated in) */
 .heading-block { display: grid; justify-items: center; gap: var(--s1); text-align: center; }
 .heading-left { justify-items: start; text-align: left; }
 .kicker {
@@ -346,11 +346,9 @@ main {
 }
 .title em { position: relative; display: inline-block; font-style: italic; font-weight: 500; color: var(--accent); padding-right: .05em; }
 .swash { position: absolute; left: -3%; bottom: -.2em; width: 108%; height: .24em; overflow: visible; pointer-events: none; }
-.swash path { fill: none; stroke: var(--cherry); stroke-width: 2.8; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .9; }
+.swash path { fill: none; stroke: var(--cherry); stroke-width: 2.8; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: .9; }
 .swash path + path { stroke-width: 1.4; opacity: .55; }
 body[data-screen="booth"] .swash path { stroke: var(--blush); }
-.title em.is-drawn .swash path { stroke-dashoffset: 0; transition: stroke-dashoffset var(--dur-4) var(--ease-out) 200ms; }
-.title em.is-drawn .swash path + path { transition-delay: 450ms; }
 
 /* ---------------------------------------------------------
    5. Top bar + marquee
@@ -1772,7 +1770,7 @@ html:not(.js-develop) .develop-veil { display: none; }
 /* ---------------------------------------------------------
    9. Booth
    --------------------------------------------------------- */
-/* the navy room, framed by red velvet that parts a little on arrival */
+/* the navy room, framed by red velvet (already in place when the screen is uncovered) */
 .room-curtains .rc {
   position: fixed;
   top: var(--header-h); bottom: 0;
@@ -1788,8 +1786,6 @@ html:not(.js-develop) .develop-veil { display: none; }
 /* the inner edge of each curtain falls into shadow, with a soft shadow on the wall beside it */
 .rc-l { left: 0; transform-origin: 0 0; box-shadow: inset -18px 0 22px -6px rgb(10 2 4 / .55), 10px 0 30px rgb(8 10 20 / .55); }
 .rc-r { right: 0; transform-origin: 100% 0; box-shadow: inset 18px 0 22px -6px rgb(10 2 4 / .55), -10px 0 30px rgb(8 10 20 / .55); }
-body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) both; }
-@keyframes part { from { transform: scaleX(1.7); } }
 .booth-setup, .booth-live, .booth-review, .booth-develop { position: relative; z-index: 1; }
 
 .booth-setup { display: grid; justify-items: center; gap: var(--s3); }
@@ -1964,6 +1960,8 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   filter: drop-shadow(0 1px 1px rgb(60 40 10 / .4));
 }
 .preview-stage canvas.is-shown { opacity: 1; }
+/* the first drawing after the menu appears is already in place: no crossfade, no growing mount */
+.preview-stage.is-instant canvas, .preview-stage.is-instant .preview-mount, .preview-stage.is-instant .preview-corners { transition: none; }
 .preview-timer {
   position: absolute;
   left: 50%; top: 0;
@@ -2785,11 +2783,7 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   gap: var(--s3);
   width: min(100%, 360px);
   margin-top: var(--strip-top, 0px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--dur-2) var(--ease-out), visibility 0s linear var(--dur-2);
 }
-.reveal-actions.is-visible { opacity: 1; visibility: visible; transition-delay: 0s; }
 .dev-label {
   position: relative;
   padding: var(--s1) var(--s2);
@@ -2846,14 +2840,7 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   background: var(--img-bulldog) center / contain no-repeat;
   filter: var(--drop);
 }
-/* tags swing in one by one from the clip */
 .tag { filter: drop-shadow(3px 6px 5px rgb(14 2 4 / .5)); }
-/* (backwards fill: once in, the tag's own transform takes over, so hover never restarts anything) */
-.reveal-actions.is-visible .tag {
-  animation:
-    tag-in var(--dur-3) var(--spring) calc(var(--i) * 120ms + 200ms) backwards;
-}
-@keyframes tag-in { from { opacity: 0; transform: translateY(-24px) rotate(-28deg); } to { opacity: 1; transform: rotate(var(--tilt)); } }
 /* the small links: one line of DM Sans, cream at 75%, a gold underline on hover */
 .link-row {
   display: flex;
@@ -3470,6 +3457,9 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   }
   .tag-note { position: relative; right: auto; top: auto; width: auto; max-width: 240px; margin: var(--s6) auto 0; transform: rotate(-2deg); }
 }
+
+/* the moment a screen or booth step appears, nothing on it transitions into place (see settleNow) */
+.is-settling, .is-settling *, .is-settling *::before, .is-settling *::after { transition: none !important; }
 
 /* ---------------------------------------------------------
    16. Motion preferences + idle pausing

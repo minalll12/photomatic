@@ -12,7 +12,9 @@ const SHORT = { strip: 'classic', grid: '2×2 grid', film: 'film row', polaroid:
 // the four "your face here" prints, drawn the first time the menu is shown (not on page load)
 let photos = null;
 const prints = () => photos || (photos = [0, 1, 2, 3].map(i => ({ src: faceHere(720, 540, i), seed: i + 1 })));
-const ready = Promise.all([fontsReady, texturesReady]);
+// the booth waits for this before its transition starts, so the first drawing is never late
+export const previewReady = Promise.all([fontsReady, texturesReady]);
+const ready = previewReady;
 let shown = null, last = '';
 
 // a throwaway design with the menu's choices; the renderer reads state.design, so it is swapped in
@@ -37,9 +39,12 @@ function draw(canvas, box, shots, layout) {
   }
 }
 
-export async function updatePreview() {
+// `instant`: the menu has just appeared, so the strip is simply there (no crossfade, no growing mount)
+export async function updatePreview({ instant = false } = {}) {
   const root = document.querySelector('#menu-preview');
   if (!root) return;
+  const stage = root.querySelector('.preview-stage');
+  if (instant) { stage.classList.add('is-instant'); last = ''; }
   const { shots, timer, layout } = state.settings;
   const name = SHORT[layout] || LAYOUTS[layout].name.toLowerCase();
   document.querySelector('#coin-plate').textContent = `your strip · ${shots} photos · ${name}`;
@@ -48,7 +53,6 @@ export async function updatePreview() {
   if (key === last) return;
   last = key;
   await ready;
-  const stage = root.querySelector('.preview-stage');
   const box = { w: stage.clientWidth - 28, h: stage.clientHeight - 28 };
   if (!box.w || !box.h) { last = ''; return; }
   const [a, b] = stage.querySelectorAll('canvas');
@@ -65,6 +69,9 @@ export async function updatePreview() {
   const prev = shown;
   next.style.zIndex = '2'; if (prev) prev.style.zIndex = '1';
   next.classList.add('is-shown');
-  if (prev) setTimeout(() => { if (shown !== prev) { prev.style.transition = 'none'; prev.classList.remove('is-shown'); prev.getBoundingClientRect(); prev.style.transition = ''; } }, 260);
+  if (instant && prev) { prev.classList.remove('is-shown'); }
+  else if (prev) setTimeout(() => { if (shown !== prev) { prev.style.transition = 'none'; prev.classList.remove('is-shown'); prev.getBoundingClientRect(); prev.style.transition = ''; } }, 260);
   shown = next;
+  // later changes (photo count, layout) crossfade again
+  if (instant) { stage.getBoundingClientRect(); requestAnimationFrame(() => requestAnimationFrame(() => stage.classList.remove('is-instant'))); }
 }

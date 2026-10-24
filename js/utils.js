@@ -53,6 +53,14 @@ export function el(tag, { className, text, html, attrs, dataset, style, on } = {
   return n;
 }
 
+// A screen or booth step has just appeared: state set in the same moment (a control enabled, focus moved)
+// shows at once instead of transitioning in. Hover and later changes transition as usual.
+export function settleNow(node) {
+  node.classList.add('is-settling');
+  clearTimeout(node.__settle);
+  requestAnimationFrame(() => requestAnimationFrame(() => { node.__settle = setTimeout(() => node.classList.remove('is-settling'), 0); }));
+}
+
 export function restartAnimation(node, cls) {
   node.classList.remove(cls);
   void node.offsetWidth;

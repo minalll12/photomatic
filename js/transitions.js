@@ -63,9 +63,9 @@ export async function play(kind, swap, nextScreen) {
 const visibleScreen = () => document.querySelector('main > .screen:not([hidden])');
 const delay = (ctx, ms) => ctx.animate(ctx.layer, [{ opacity: 1 }, { opacity: 1 }], { duration: ms });
 
-// incoming screen settles in like a page laid on the table
-const settleIn = (ctx, ms = 320, y = 10) =>
-  ctx.next && ctx.animate(ctx.next, [{ opacity: 0, transform: `translateY(${y}px)` }, { opacity: 1, transform: 'none' }], { duration: ms }, true);
+// the incoming screen, already fully drawn, fades up in one piece (nothing inside it moves)
+const settleIn = (ctx, ms = 320) =>
+  ctx.next && ctx.animate(ctx.next, [{ opacity: 0 }, { opacity: 1 }], { duration: ms }, true);
 
 /* =========================================================
    Overlays
@@ -98,7 +98,7 @@ export const SPRING = 'cubic-bezier(.34,1.56,.64,1)';
    ========================================================= */
 const KINDS = {
   async fade(ctx) {
-    if (ctx.prev) await ctx.animate(ctx.prev, [{ opacity: 1 }, { opacity: 0, transform: 'translateY(-6px)' }], { duration: 160, easing: 'ease-in' }, true);
+    if (ctx.prev) await ctx.animate(ctx.prev, [{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-in' }, true);
     ctx.swap();
     await settleIn(ctx);
   },

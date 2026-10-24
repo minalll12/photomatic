@@ -1,5 +1,5 @@
 /* Screens, heading swashes, toasts and dialogs. */
-import { $, $$ } from './utils.js';
+import { $, $$, settleNow } from './utils.js';
 import { state } from './state.js';
 import { play } from './transitions.js';
 
@@ -19,6 +19,7 @@ export async function show(name, { via = 'fade', scroll = 0 } = {}) {
   const changed = screens[state.screen] !== next;
   state.screen = name;
   const swap = () => {
+    settleNow(document.body);
     Object.values(screens).forEach(s => { s.hidden = s !== next; });
     document.body.dataset.screen = name;
     $$('[data-nav]').forEach(a => a.toggleAttribute('aria-current', a.dataset.nav === name));
@@ -33,13 +34,9 @@ export async function show(name, { via = 'fade', scroll = 0 } = {}) {
   else swap();
 }
 
-/* --- headings: a red-pencil swash under the italic word draws itself in --- */
-const SWASH = '<svg class="swash" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 13 C40 6 80 15 118 9 C146 5 170 8 197 6"/><path pathLength="1" d="M8 16 C52 10 96 17 140 12 C160 10 178 11 192 10"/></svg>';
+/* --- headings: a red-pencil swash under the italic word (static: nothing draws itself in) --- */
+const SWASH = '<svg class="swash" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M3 13 C40 6 80 15 118 9 C146 5 170 8 197 6"/><path d="M8 16 C52 10 96 17 140 12 C160 10 178 11 192 10"/></svg>';
 $$('.title em').forEach(em => em.insertAdjacentHTML('beforeend', SWASH));
-const swashIO = 'IntersectionObserver' in window ? new IntersectionObserver(entries => entries.forEach(en => {
-  if (en.isIntersecting) { en.target.classList.add('is-drawn'); swashIO.unobserve(en.target); }
-}), { threshold: 0.6 }) : null;
-$$('.title em').forEach(em => (swashIO ? swashIO.observe(em) : em.classList.add('is-drawn')));
 
 /* --- toast + confirm --- */
 export function toast(msg, ms = 3200) {

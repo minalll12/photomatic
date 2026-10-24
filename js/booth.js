@@ -1,11 +1,11 @@
 /* Booth: the menu card, camera, countdown capture, per-shot retakes,
    upload fallback and the "developing" moment. */
-import { updatePreview } from './menu-preview.js';
-import { $, $$, el, wait, pick, makeCanvas, restartAnimation, reducedMotion, pad2, isIOS } from './utils.js';
+import { updatePreview, previewReady } from './menu-preview.js';
+import { $, $$, el, wait, pick, makeCanvas, restartAnimation, reducedMotion, pad2, isIOS, settleNow } from './utils.js';
 import { state } from './state.js';
 import { createLayoutPicker, LAYOUTS } from './layouts.js';
 import { audio, countBeep, shutter, whirr, flashPop, punch, switchClick, thunk, click } from './sound.js';
-import { show, toast, confirmDialog } from './ui.js';
+import { show, onScreen, toast, confirmDialog } from './ui.js';
 import { icon } from './icons.js';
 import { startCamera, stopCamera as stopStream, capture, cropToCanvas } from './camera.js';
 import { faceHere } from './placeholders.js';
@@ -91,6 +91,7 @@ window.addEventListener('pagehide', stopCamera);
    Phases
    ========================================================= */
 function setPhase(phase) {
+  if (phase !== state.booth.phase) settleNow(document.body);
   state.booth.phase = phase;
   dom.frame.dataset.state = phase;
   dom.setup.hidden = phase !== 'setup';
@@ -171,19 +172,18 @@ dom.form.addEventListener('submit', e => { e.preventDefault(); audio(); thunk();
 /* =========================================================
    Entering / leaving
    ========================================================= */
-export function openBooth({ via = 'curtain' } = {}) {
+export async function openBooth({ via = 'curtain' } = {}) {
+  await previewReady;
   cancelCountdown();
   stopCamera();
   readForm();
   refreshPicker();
   setPhase('setup');
-  const shown = show('booth', { via });
-  // the preview and the layout illustrations measure themselves once the menu is on screen
-  const measure = () => { sameScale($('#booth-layouts')); updatePreview(); };
-  requestAnimationFrame(measure);
-  shown.then(measure);
-  return shown;
+  return show('booth', { via });
 }
+// the preview and the layout illustrations are measured and drawn the moment the screen is swapped in,
+// while the transition still covers it, so the menu is uncovered complete
+onScreen('booth', () => { if (state.booth.phase === 'setup') { sameScale($('#booth-layouts')); updatePreview({ instant: true }); } });
 
 async function startLive() {
   state.design.photos = [];

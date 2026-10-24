@@ -2,7 +2,7 @@
 import { $, fontsReady, makeCanvas, canvasToBlob } from './utils.js';
 import { state } from './state.js';
 import { hydrateIcons, icon } from './icons.js';
-import { show, onScreen, toast } from './ui.js';
+import { show, toast } from './ui.js';
 import { audio, isMuted, setMuted } from './sound.js';
 import { texturesReady } from './textures.js';
 import { initHero } from './hero.js';
@@ -40,7 +40,8 @@ async function go(where, { via } = {}) {
   setMenu(false);
   if (where === 'booth') { audio(); return openBooth({ via: via || (state.screen === 'home' ? 'zoom' : 'curtain') }); }
   stopCamera();
-  if (where === 'album') return show('album', { via: 'tin' });
+  // the album is built (and its pictures decoded) before the lid lifts, so it is uncovered complete
+  if (where === 'album') { await renderAlbum(); return show('album', { via: 'tin' }); }
   if (where === 'how' || where === 'home') {
     await show('home');
     if (where === 'how') $('#how').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
@@ -53,8 +54,6 @@ document.addEventListener('click', e => {
   go(link.dataset.nav);
 });
 
-onScreen('album', renderAlbum);
-onScreen('editor', requestRender);
 
 /* --- reveal actions --- */
 $('#btn-download').addEventListener('click', async () => {
