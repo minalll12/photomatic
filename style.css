@@ -1388,31 +1388,6 @@ html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before,
 }
 .tack-l { left: -9px; }
 .tack-r { right: calc(var(--end) - 9px); }
-/* pencilled step numbers on the wall above each peg (same columns as the prints) */
-.peg-nums {
-  position: absolute;
-  left: 0; top: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(24px, 4vw, 64px);
-  width: calc(100% - var(--end));
-  padding-inline: 2%;
-  pointer-events: none;
-}
-.peg-nums svg {
-  justify-self: center;
-  width: 17px; height: 22px;
-  margin-top: calc(var(--hang) - 52px);
-  overflow: visible;
-  fill: none;
-  stroke: var(--cherry);
-  stroke-width: 2.1;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: .85;
-  transform: rotate(-6deg);
-}
-
 .polaroids {
   position: relative;
   display: grid;
@@ -2841,7 +2816,7 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 /* How it works on phones and small tablets: the prints stack, each on its own short line, the tag last */
 @media (max-width: 768px) {
   .drying-line { --end: 0px; }
-  .twine, .tack, .peg-nums, .drying-line::after { display: none; }
+  .twine, .tack, .drying-line::after { display: none; }
   .polaroids { grid-template-columns: minmax(0, 1fr); width: 85%; max-width: 380px; margin-inline: auto; padding: 0; gap: var(--s8); }
   .polaroid { margin-top: 44px; }
   /* its own short peg line, tacked at both ends */

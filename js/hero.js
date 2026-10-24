@@ -225,9 +225,20 @@ function howItWorks() {
   }
   // opt in to the undeveloped look only now that something will develop it
   document.documentElement.classList.add('js-develop');
+  // prints always develop in order, 01 then 02 then 03, 400ms apart: when one comes into view,
+  // any earlier print that has not developed yet goes first
+  let queued = 0, lastAt = 0;
+  const develop = upTo => {
+    const now = performance.now();
+    for (; queued <= upTo; queued++) {
+      lastAt = Math.max(now, lastAt + 400);
+      items[queued].style.setProperty('--delay', `${Math.round(lastAt - now)}ms`);
+      items[queued].classList.add('is-developed');
+    }
+  };
   const io = new IntersectionObserver(entries => entries.forEach(en => {
     en.target.classList.toggle('is-playing', en.isIntersecting);
-    if (en.isIntersecting) en.target.classList.add('is-developed');
+    if (en.isIntersecting) develop(items.indexOf(en.target));
   }), { threshold: 0.3 });
   items.forEach(n => io.observe(n));
 }
