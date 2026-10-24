@@ -134,6 +134,13 @@ export function switchClick() {
   tone(420, 0.05, { type: 'square', vol: 0.015 });
 }
 
+// A coin dropping into a slot: two bright metal pings and a tiny tick
+export function coinClink() {
+  tick(0, 5200, 0.08, 0.02);
+  tone(2637, 0.18, { type: 'triangle', vol: 0.03 });
+  tone(3520, 0.14, { vol: 0.02, when: 0.06 });
+}
+
 // The big arcade button
 export function thunk() {
   tone(90, 0.16, { type: 'triangle', vol: 0.1 });

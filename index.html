@@ -25,9 +25,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bebas+Neue&family=Bodoni+Moda:opsz,wght@6..96,700&family=DM+Sans:opsz,wght@9..40,400..800&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Special+Elite&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-24d","/js/booth.js":"/js/booth.js?v=2026-10-24d","/js/camera.js":"/js/camera.js?v=2026-10-24d","/js/editor.js":"/js/editor.js?v=2026-10-24d","/js/export.js":"/js/export.js?v=2026-10-24d","/js/filters.js":"/js/filters.js?v=2026-10-24d","/js/frames.js":"/js/frames.js?v=2026-10-24d","/js/hero.js":"/js/hero.js?v=2026-10-24d","/js/icons.js":"/js/icons.js?v=2026-10-24d","/js/layouts.js":"/js/layouts.js?v=2026-10-24d","/js/main.js":"/js/main.js?v=2026-10-24d","/js/patterns.js":"/js/patterns.js?v=2026-10-24d","/js/placeholders.js":"/js/placeholders.js?v=2026-10-24d","/js/ransom.js":"/js/ransom.js?v=2026-10-24d","/js/render.js":"/js/render.js?v=2026-10-24d","/js/reveal.js":"/js/reveal.js?v=2026-10-24d","/js/sound.js":"/js/sound.js?v=2026-10-24d","/js/state.js":"/js/state.js?v=2026-10-24d","/js/stickers.js":"/js/stickers.js?v=2026-10-24d","/js/story.js":"/js/story.js?v=2026-10-24d","/js/textures.js":"/js/textures.js?v=2026-10-24d","/js/transitions.js":"/js/transitions.js?v=2026-10-24d","/js/ui.js":"/js/ui.js?v=2026-10-24d","/js/utils.js":"/js/utils.js?v=2026-10-24d"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-24d">
-  <script type="module" src="js/main.js?v=2026-10-24d"></script>
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-24e","/js/booth.js":"/js/booth.js?v=2026-10-24e","/js/camera.js":"/js/camera.js?v=2026-10-24e","/js/editor.js":"/js/editor.js?v=2026-10-24e","/js/export.js":"/js/export.js?v=2026-10-24e","/js/filters.js":"/js/filters.js?v=2026-10-24e","/js/frames.js":"/js/frames.js?v=2026-10-24e","/js/hero.js":"/js/hero.js?v=2026-10-24e","/js/icons.js":"/js/icons.js?v=2026-10-24e","/js/layouts.js":"/js/layouts.js?v=2026-10-24e","/js/main.js":"/js/main.js?v=2026-10-24e","/js/patterns.js":"/js/patterns.js?v=2026-10-24e","/js/placeholders.js":"/js/placeholders.js?v=2026-10-24e","/js/ransom.js":"/js/ransom.js?v=2026-10-24e","/js/render.js":"/js/render.js?v=2026-10-24e","/js/reveal.js":"/js/reveal.js?v=2026-10-24e","/js/sound.js":"/js/sound.js?v=2026-10-24e","/js/state.js":"/js/state.js?v=2026-10-24e","/js/stickers.js":"/js/stickers.js?v=2026-10-24e","/js/story.js":"/js/story.js?v=2026-10-24e","/js/textures.js":"/js/textures.js?v=2026-10-24e","/js/transitions.js":"/js/transitions.js?v=2026-10-24e","/js/ui.js":"/js/ui.js?v=2026-10-24e","/js/utils.js":"/js/utils.js?v=2026-10-24e"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-24e">
+  <script type="module" src="js/main.js?v=2026-10-24e"></script>
 </head>
 <body data-screen="home">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -95,9 +95,9 @@
           </div>
         </div>
 
-        <div class="hero-art" aria-hidden="true">
+        <div class="hero-art">
           <!-- a small gallery: two pieces on one hanging line, upper left of the booth -->
-          <div class="gallery" data-depth="2">
+          <div class="gallery" data-depth="2" aria-hidden="true">
             <div class="wall-frame">
               <span class="frame-wire"></span><span class="nail"></span>
               <div class="frame-box"><canvas id="wall-strip" width="180" height="560"></canvas></div>
@@ -107,18 +107,20 @@
               <span class="thumbtack"></span>
             </div>
           </div>
-          <span class="light-pool"></span><span class="light-warm"></span>
+          <span class="light-pool" aria-hidden="true"></span><span class="light-warm" aria-hidden="true"></span>
           <div class="booth-stand" data-depth="6">
-            <span class="sign-glow"></span>
-            <span class="booth-reflection"></span>
-            <span class="booth-shadow"></span>
+            <span class="sign-glow" aria-hidden="true"></span>
+            <span class="booth-reflection" aria-hidden="true"></span>
+            <span class="booth-shadow" aria-hidden="true"></span>
             <div class="booth-wrap" id="booth-wrap">
-              <div class="booth-sign">
+              <div class="booth-sign" aria-hidden="true">
                 <span class="bulbs bulbs-top"></span><span class="bulbs bulbs-bottom"></span>
                 <span class="sign-word">Photos</span>
                 <span class="sign-sub">4 poses · 25¢</span>
               </div>
-              <button type="button" class="hero-booth" id="hero-booth" aria-label="Step through the curtain into the booth" tabindex="-1"></button>
+              <button type="button" class="hero-booth" id="hero-booth" aria-hidden="true" tabindex="-1"></button>
+              <!-- easter egg: the 25¢ slot takes a coin -->
+              <button type="button" class="coin-slot" id="hero-coin" aria-label="Insert coin and enter the booth"><span class="coin-tip" aria-hidden="true">insert coin</span><span class="coin" aria-hidden="true"></span></button>
             </div>
           </div>
           <!-- a velvet rope queue into the booth -->

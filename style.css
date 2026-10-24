@@ -1164,6 +1164,68 @@ kbd {
 @keyframes rope-sway { 0%, 100% { transform: none; } 30% { transform: skewX(3deg) scaleY(1.04); } 65% { transform: skewX(-2deg) scaleY(.98); } }
 @keyframes card-sway { 0%, 100% { transform: none; } 35% { transform: rotate(4deg); } 70% { transform: rotate(-3deg); } }
 
+/* the 25¢ slot is a real button laid over the coin plate in the drawing (x 226-264, y 182-240 of 300 x 540,
+   below a sign 0.3 booth-widths tall) */
+.coin-slot {
+  position: absolute;
+  z-index: 3;
+  left: 75.33%;
+  top: calc(var(--booth-w) * (.3 + 1.8 * 182 / 540) - 2px);
+  width: 12.67%;
+  height: calc(var(--booth-w) * 1.8 * 58 / 540);
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+.coin-slot::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 34%;
+  width: 70%; height: 55%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 214 140 / .8), rgb(255 214 140 / .25) 60%, transparent);
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+.coin-slot:hover::before, .coin-slot:focus-visible::before { opacity: 1; }
+.coin-slot:focus-visible { outline: 2px solid var(--cherry); outline-offset: 3px; }
+.coin-tip {
+  position: absolute;
+  left: 50%; bottom: 100%;
+  padding: 3px 8px;
+  border-radius: 2px;
+  color: var(--ink);
+  font-family: var(--font-type);
+  font-size: var(--fs-12);
+  letter-spacing: .08em;
+  white-space: nowrap;
+  background: #FBF6EC;
+  box-shadow: 1px 3px 5px rgb(60 30 10 / .3);
+  opacity: 0;
+  transform: translate(-50%, -2px) rotate(-2deg);
+  transition: opacity var(--dur-1), transform var(--dur-2) var(--ease-out);
+  pointer-events: none;
+}
+.coin-slot:hover .coin-tip, .coin-slot:focus-visible .coin-tip { opacity: 1; transform: translate(-50%, -8px) rotate(-2deg); }
+.coin {
+  position: absolute;
+  left: 50%; top: 34%;
+  width: 16px; height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFF3C8, #D9B460 45%, #7A5C24);
+  box-shadow: inset 0 0 0 1.5px rgb(122 92 36 / .7), 1px 2px 3px rgb(60 40 10 / .4);
+  opacity: 0;
+  pointer-events: none;
+}
+/* the mini strip rests inside the slot */
+.booth-art .mini-strip { transform-box: view-box; transform-origin: 245px 277px; transform: translateY(-82px); }
+/* one quick bright chase when the coin drops */
+.booth-sign.is-chasing .bulbs { animation: chase 150ms steps(2) 3; filter: brightness(1.6) drop-shadow(0 0 3px #FFE9A8); }
+
 /* the sign supports the wordmark: smaller red-oxide letters, small close bulbs, a slow chase */
 .booth-sign {
   position: relative;

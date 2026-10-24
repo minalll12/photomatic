@@ -2,10 +2,12 @@
    booth standing on it, a framed strip on the wall and the red film strip
    pinned beside it. No people anywhere: example frames are "your face
    here" prints, or the visitor's own latest strip from their album. */
-import { $, $$, makeCanvas, mulberry32, range, loadImage, reducedMotion, isCoarse } from './utils.js';
+import { $, $$, makeCanvas, mulberry32, range, rand, wait, loadImage, reducedMotion, isCoarse } from './utils.js';
 import { TEX, texturesReady } from './textures.js';
 import { faceHere, faceHereStrip } from './placeholders.js';
 import { latestStrip } from './album.js';
+import { state } from './state.js';
+import { coinClink } from './sound.js';
 
 /* =========================================================
    The booth (drawn when /assets/hero/booth.png is absent)
@@ -51,6 +53,7 @@ function boothSVG() {
     <pattern id="velvetTex" width="512" height="512" patternUnits="userSpaceOnUse"><image class="tex-velvet" width="512" height="512" preserveAspectRatio="none"/></pattern>
     <linearGradient id="gapGlow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9B8" stop-opacity=".2"/><stop offset=".35" stop-color="#FFE3A3" stop-opacity=".75"/><stop offset=".8" stop-color="#FFD58A" stop-opacity=".65"/><stop offset="1" stop-color="#FFD58A" stop-opacity="0"/></linearGradient>
     <filter id="glowBlur" x="-200%" y="-10%" width="500%" height="120%"><feGaussianBlur stdDeviation="5"/></filter>
+    <clipPath id="slotOut"><rect x="200" y="277" width="100" height="130"/></clipPath>
     <clipPath id="opening"><rect x="22" y="42" width="172" height="354" rx="2"/></clipPath>
   </defs>
 
@@ -73,8 +76,12 @@ function boothSVG() {
     <rect x="22" y="340" width="172" height="56" fill="#2A1A12" opacity=".7"/>
     <ellipse cx="108" cy="354" rx="34" ry="7" fill="#7A2630"/>
     <ellipse cx="108" cy="350" rx="32" ry="6" fill="#A63A44"/>
+    <!-- someone's in the booth: the flash fires behind the curtain... -->
+    <rect class="flash-back" x="22" y="42" width="172" height="354" fill="#FFFDF6" opacity="0"/>
     ${curtain('l', curtainL, 22, 100, 'M22 380 C36 374 50 386 64 378 C78 370 90 382 104 374')}
     ${curtain('r', curtainR, 116, 194, 'M110 374 C126 384 140 372 154 380 C168 388 182 376 194 382')}
+    <!-- ...and lights the velvet from inside -->
+    <rect class="flash-fabric" x="22" y="42" width="172" height="354" fill="#FFE6DC" opacity="0" style="mix-blend-mode: screen"/>
     <!-- warm light spilling through the gap in the curtain -->
     <rect class="gap-glow" x="99" y="52" width="18" height="330" fill="url(#gapGlow)" filter="url(#glowBlur)"/>
   </g>
@@ -96,6 +103,12 @@ function boothSVG() {
   <rect x="220" y="272" width="50" height="6" rx="3" fill="#120A08"/>
   <rect x="233" y="276" width="24" height="22" fill="#FBF6EC" stroke="#8B7B6D" stroke-width=".6"/>
   <text x="245" y="334" text-anchor="middle" font-family='"Special Elite", "Courier New", monospace' font-size="8.5" letter-spacing="1.5" fill="#F4D7D9" opacity=".8">PRINTS</text>
+  <!-- the little strip that drops out of the slot after a session -->
+  <g clip-path="url(#slotOut)"><g class="mini-strip">
+    <rect x="233" y="277" width="24" height="80" fill="#FBF6EC" stroke="#B8A88E" stroke-width=".5"/>
+    ${range(4).map(i => `<rect x="235.5" y="${279.5 + i * 18.5}" width="19" height="16" fill="#E9E1D2"/><ellipse cx="245" cy="${287.5 + i * 18.5}" rx="4.5" ry="5.5" fill="none" stroke="#8B7B6D" stroke-width=".5" stroke-dasharray="1 1"/>`).join('')}
+    <rect x="240" y="353" width="10" height="1" fill="#8B7B6D" opacity=".6"/>
+  </g></g>
 
   <!-- kick plate and its brass plaque -->
   <rect x="6" y="412" width="288" height="112" rx="4" fill="url(#metalDark)"/>
@@ -131,6 +144,8 @@ export async function initHero({ onEnter }) {
   if (photo) { photo.alt = 'A vintage photo booth'; stage.replaceChildren(photo); }
   else stage.innerHTML = boothSVG();
   $('#booth-wrap').addEventListener('click', onEnter);   // the sign, the booth or its curtain
+  insertCoin(photo ? null : $('#hero-coin'), onEnter);
+  if (!photo) boothSession(hero);
   $('#hero-cta').addEventListener('click', onEnter);
 
   // idle motion only while the hero is on screen
@@ -181,6 +196,78 @@ export async function initHero({ onEnter }) {
     c.setAttribute('aria-hidden', 'true');
     film.append(c);
   }
+}
+
+/* "Someone's in the booth": every 12-16s four flashes go off behind the curtain, then a little
+   strip drops out of the PRINTS slot, hangs for a moment and slides back. Silent, and only while
+   the hero is on screen, the tab is visible, nobody is touching the booth and motion is allowed. */
+function boothSession(hero) {
+  const art = $('#hero-booth .booth-art');
+  const back = $('.flash-back', art), fabric = $('.flash-fabric', art), strip = $('.mini-strip', art), pool = $('.light-pool', hero);
+  let visible = true, busy = false, running = [];
+  const stop = () => { running.forEach(a => a.cancel()); running = []; };
+  const run = (node, frames, opts) => running.push(node.animate(frames, { fill: 'none', ...opts }));
+  const wrap = $('#booth-wrap');
+  wrap.addEventListener('pointerenter', () => { busy = true; stop(); });
+  wrap.addEventListener('pointerleave', () => { busy = false; });
+  wrap.addEventListener('pointerdown', () => { busy = true; stop(); });
+  // "on screen" means at least half the booth is in view, not a sliver behind the sticky nav
+  if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { visible = en.intersectionRatio >= 0.5; if (!visible) stop(); }, { threshold: [0, 0.5, 1] }).observe(wrap);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
+
+  function session() {
+    stop();
+    const FLASH = 180, GAP = 700, flashes = [0, GAP, GAP * 2, GAP * 3];
+    flashes.forEach(delay => {
+      run(back, [{ opacity: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 0 }], { duration: FLASH, delay });
+      run(fabric, [{ opacity: 0 }, { opacity: 0.55, offset: 0.25 }, { opacity: 0 }], { duration: FLASH, delay });
+      run(pool, [{ filter: 'brightness(1)' }, { filter: 'brightness(2.4)', offset: 0.25 }, { filter: 'brightness(1)' }], { duration: FLASH + 80, delay });
+    });
+    // ~1s after the last flash: slide out (0.6s), hang with a slight sway (3s), slide back (0.6s)
+    const out = GAP * 3 + FLASH + 1000, T = 4200, at = s => s / (T / 1000);
+    run(strip, [
+      { transform: 'translateY(-82px) rotate(0deg)' },
+      { transform: 'translateY(0) rotate(0deg)', offset: at(0.6), easing: 'ease-in-out' },
+      { transform: 'translateY(0) rotate(1.6deg)', offset: at(1.4), easing: 'ease-in-out' },
+      { transform: 'translateY(0) rotate(-1.2deg)', offset: at(2.4), easing: 'ease-in-out' },
+      { transform: 'translateY(0) rotate(.6deg)', offset: at(3.2), easing: 'ease-in-out' },
+      { transform: 'translateY(0) rotate(0deg)', offset: at(3.6), easing: 'ease-in' },
+      { transform: 'translateY(-82px) rotate(0deg)' },
+    ], { duration: T, delay: out, easing: 'ease-out' });
+  }
+  (function schedule() {
+    setTimeout(() => {
+      if (!reducedMotion() && visible && !document.hidden && !busy && state.screen === 'home') session();
+      schedule();
+    }, rand(12000, 16000));
+  })();
+}
+
+/* "Insert coin": the 25¢ slot takes a brass coin, the bulbs chase once, then into the booth */
+function insertCoin(slot, onEnter) {
+  if (!slot) return;
+  let going = false;
+  slot.addEventListener('click', async e => {
+    e.stopPropagation();                      // the booth's own click would enter straight away
+    if (going) return;
+    going = true;
+    const still = reducedMotion();
+    if (!still) {
+      await $('.coin', slot).animate([
+        { opacity: 0, transform: 'translateY(-48px) rotateY(0deg)' },
+        { opacity: 1, transform: 'translateY(-40px) rotateY(90deg)', offset: 0.15 },
+        { opacity: 1, transform: 'translateY(-4px) rotateY(540deg)', offset: 0.85 },
+        { opacity: 0, transform: 'translateY(2px) rotateY(540deg) scaleX(.2)' },
+      ], { duration: 420, easing: 'cubic-bezier(.55, 0, .8, .4)' }).finished.catch(() => {});
+    }
+    coinClink();
+    const sign = $('.booth-sign');
+    sign.classList.add('is-chasing');
+    await wait(still ? 0 : 450);
+    sign.classList.remove('is-chasing');
+    going = false;
+    onEnter();
+  });
 }
 
 /* "How it works": polaroids develop the first time they scroll into view,
