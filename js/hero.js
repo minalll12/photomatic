@@ -49,6 +49,8 @@ function boothSVG() {
     <linearGradient id="bodyLight" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".1"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient>
     <pattern id="brushedTex" width="256" height="128" patternUnits="userSpaceOnUse"><image class="tex-brushed" width="256" height="128" preserveAspectRatio="none"/></pattern>
     <pattern id="velvetTex" width="512" height="512" patternUnits="userSpaceOnUse"><image class="tex-velvet" width="512" height="512" preserveAspectRatio="none"/></pattern>
+    <linearGradient id="gapGlow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9B8" stop-opacity=".2"/><stop offset=".35" stop-color="#FFE3A3" stop-opacity=".75"/><stop offset=".8" stop-color="#FFD58A" stop-opacity=".65"/><stop offset="1" stop-color="#FFD58A" stop-opacity="0"/></linearGradient>
+    <filter id="glowBlur" x="-200%" y="-10%" width="500%" height="120%"><feGaussianBlur stdDeviation="5"/></filter>
     <clipPath id="opening"><rect x="22" y="42" width="172" height="354" rx="2"/></clipPath>
   </defs>
 
@@ -73,7 +75,10 @@ function boothSVG() {
     <ellipse cx="108" cy="350" rx="32" ry="6" fill="#A63A44"/>
     ${curtain('l', curtainL, 22, 100, 'M22 380 C36 374 50 386 64 378 C78 370 90 382 104 374')}
     ${curtain('r', curtainR, 116, 194, 'M110 374 C126 384 140 372 154 380 C168 388 182 376 194 382')}
+    <!-- warm light spilling through the gap in the curtain -->
+    <rect class="gap-glow" x="99" y="52" width="18" height="330" fill="url(#gapGlow)" filter="url(#glowBlur)"/>
   </g>
+  <ellipse cx="108" cy="402" rx="34" ry="5" fill="#FFD58A" opacity=".35" filter="url(#glowBlur)"/>
   <rect x="18" y="42" width="180" height="6" rx="3" fill="url(#metalDark)"/>
   <g>${rings}</g>
 
