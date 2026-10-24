@@ -9,7 +9,9 @@ import { texturesReady } from './textures.js';
 import { faceHere } from './placeholders.js';
 
 const SHORT = { strip: 'classic', grid: '2×2 grid', film: 'film row', polaroid: 'polaroid stack' };
-const photos = [0, 1, 2, 3].map(i => ({ src: faceHere(720, 540, i), seed: i + 1 }));
+// the four "your face here" prints, drawn the first time the menu is shown (not on page load)
+let photos = null;
+const prints = () => photos || (photos = [0, 1, 2, 3].map(i => ({ src: faceHere(720, 540, i), seed: i + 1 })));
 const ready = Promise.all([fontsReady, texturesReady]);
 let shown = null, last = '';
 
@@ -17,7 +19,7 @@ let shown = null, last = '';
 // for the length of one synchronous draw and put straight back
 function draw(canvas, box, shots, layout) {
   const design = {
-    photos: photos.slice(0, shots), layout, frame: 'booth', variants: {}, double: false, filmPaper: false,
+    photos: prints().slice(0, shots), layout, frame: 'booth', variants: {}, double: false, filmPaper: false,
     to: '', from: '', filter: 'natural', intensity: 0, brightness: 0,
     bg: { color: C.cream, pattern: 'solid' }, date: { show: true, style: 'typewriter', text: '' },
     caption: '', dedication: '', stickers: [], shotDate: new Date(),

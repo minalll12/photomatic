@@ -14,7 +14,9 @@
 @font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 400 900; font-display: swap; src: url("assets/fonts/playfair-display-italic.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("assets/fonts/playfair-display-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "Special Elite"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/special-elite-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family: "UnifrakturMaguntia"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/unifrakturmaguntia-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "UnifrakturMaguntia"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/unifrakturmaguntia-normal.woff2") format("woff2"); unicode-range: U+0000-004F, U+0051-0060, U+0062, U+0064-0067, U+006A-006C, U+006E, U+0070-0073, U+0075-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+/* the wordmark's eight letters, embedded (2.8 KB), so "Photomatic" is in its real face from the first frame */
+@font-face { font-family: "UnifrakturMaguntia"; font-style: normal; font-weight: 400; font-display: swap; src: url("data:font/woff2;base64,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") format("woff2"); unicode-range: U+0050, U+0061, U+0063, U+0068-0069, U+006D, U+006F, U+0074; }
 @font-face { font-family: "UnifrakturMaguntia Fallback"; src: local("Georgia"); size-adjust: 90.62%; ascent-override: 86.59%; descent-override: 27.64%; line-gap-override: 0.00%; }
 @font-face { font-family: "Playfair Display Fallback"; src: local("Georgia"); size-adjust: 100.56%; ascent-override: 107.60%; descent-override: 24.96%; line-gap-override: 0.00%; }
 @font-face { font-family: "Playfair Display Fallback"; src: local("Georgia"); font-style: italic; size-adjust: 93.34%; ascent-override: 115.92%; descent-override: 26.89%; line-gap-override: 0.00%; }
@@ -401,11 +403,9 @@ body[data-screen="booth"] .swash path { stroke: var(--blush); }
   -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
           mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
-.marquee-track { display: inline-flex; animation: marquee 128s linear 4s infinite; }
+.marquee-track { display: inline-flex; animation: marquee 128s linear infinite; }
 /* paused while the booth has a session, so only one ambient thing moves at a time */
 body.ambient-busy .marquee-track { animation-play-state: paused; }
-/* it also waits with the hero for the fonts, so its start never overlaps the bulbs' first chase */
-html.fonts-wait .marquee-track { animation-play-state: paused; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
@@ -1282,7 +1282,6 @@ kbd {
     radial-gradient(circle, #FFF6DC 0 1.4px, #F7C866 2px, rgb(247 200 102 / .3) 3.4px, transparent 4.4px) 0 0 / 12px 8px repeat-x,
     radial-gradient(circle, #9C7A48 0 1.3px, transparent 1.8px) 6px 0 / 12px 8px repeat-x;
 }
-.hero .bulbs { animation: chase 1s steps(2) 900ms 3; }
 .hero .bulbs-bottom { animation-direction: reverse; }
 body.ambient-busy .hero .bulbs { animation: chase 1s steps(2) infinite; }
 .bulbs-top { top: 0; }
@@ -1314,23 +1313,6 @@ body.ambient-busy .hero .bulbs { animation: chase 1s steps(2) infinite; }
   .hero-art:has(.booth-wrap:hover) .light-pool { filter: brightness(1.3); transition-duration: 500ms; }
 }
 
-/* load-in (1.2s): wall, floor rises, booth drops and settles, bulbs flicker on, gallery swings in, text rises.
-   Pure CSS: it runs on first paint and every keyframe set ends visible ("both" fill), so the hero
-   never depends on a script having run. */
-.hero .booth-stand { animation: booth-drop 550ms var(--ease-calm) 250ms both; }
-.hero .stanchion, .hero .pendant { animation: fade-in 400ms var(--ease-calm) 500ms both; }
-.hero .booth-sign { animation: sign-on 300ms steps(1) 650ms both; }
-.hero .wall-frame { animation: swing-in 450ms var(--ease-calm) 600ms backwards; }
-.hero .film-wall { animation: swing-in 450ms var(--ease-calm) 660ms backwards; }
-/* the text is painted from the first frame (it is the page's main content) and only slides into place */
-.hero .hero-copy > * { animation: rise-solid 400ms var(--ease-calm) both; }
-.hero .hero-copy > :nth-child(1) { animation-delay: 600ms; }
-.hero .hero-copy > :nth-child(2) { animation-delay: 660ms; }
-@keyframes rise-solid { from { transform: translateY(10px); } }
-.hero .hero-copy > :nth-child(3) { animation-delay: 720ms; }
-.hero .hero-copy > :nth-child(4) { animation-delay: 780ms; }
-/* hold the entrance until the fonts are in (an inline script in <head> sets this for at most 800ms) */
-html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before, html.fonts-wait .hero *::after { animation-play-state: paused !important; }
 /* focus: a cream line on an oxblood band reads on the wallpaper and on the nav alike */
 .topbar :focus-visible, .hero :focus-visible, .skip-link:focus-visible {
   outline: 2px solid var(--cream);
@@ -1340,13 +1322,6 @@ html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before,
 .hero .ticket:focus-visible { border-radius: 4px; }
 /* touch: the little 25¢ slot gets a 44px hit area */
 @media (pointer: coarse) { .coin-slot::after { content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%); } }
-/* the entrance plays once even if the hero starts off screen or the tab starts hidden */
-.is-paused :is(.wall, .dado, .skirting, .floor, .booth-stand, .booth-sign, .wall-frame, .film-wall, .stanchion, .pendant),
-.is-paused .hero-copy > * { animation-play-state: running !important; }
-@keyframes fade-in { from { opacity: 0; } }
-@keyframes booth-drop { from { opacity: 0; transform: translateY(-24px); } to { opacity: 1; transform: none; } }
-@keyframes sign-on { 0% { filter: brightness(.55); } 30% { filter: brightness(1.1); } 50% { filter: brightness(.6); } 70%, 100% { filter: none; } }
-@keyframes swing-in { from { opacity: 0; rotate: -3deg; } to { opacity: 1; rotate: 0deg; } }
 
 /* How it works: the next part of the same room. A cream wall between two thin wood rails that echo
    the hero's wainscot, and a drying line with three prints pegged to it. */
@@ -1361,6 +1336,9 @@ html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before,
 }
 /* landing here from the nav leaves a little breathing room under the marquee */
 #how { scroll-margin-top: calc(var(--header-h) + 24px); }
+/* below the fold: laid out only when it comes near the screen (keeps the first load light) */
+#how, .site-footer { content-visibility: auto; contain-intrinsic-size: auto 1100px; }
+.site-footer { contain-intrinsic-size: auto 90px; }
 /* one rail style, top and bottom: a dark joint, the wood rail, a narrow butter-kraft band */
 .how::before, .how::after { content: ""; position: absolute; left: 0; right: 0; height: 16px; pointer-events: none; }
 .how::before {
@@ -1703,15 +1681,15 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   width: min(100%, 960px);
   padding: var(--s5);
   color: var(--ink);
-  background: var(--grain-subtle), #FBF8F2;
-  box-shadow: inset 0 0 0 1px var(--red-oxide), 0 14px 34px rgb(70 44 20 / .16), 0 2px 6px rgb(70 44 20 / .1);
+  background: var(--grain-subtle), #E6D3A8;
+  box-shadow: inset 0 0 0 3px #CDB27E, inset 0 0 0 9px #E6D3A8, inset 0 0 0 10px var(--red-oxide), 0 18px 40px rgb(6 10 24 / .5), 0 3px 6px rgb(6 10 24 / .3);
 }
 .menu-board .bulldog-clip { left: 50%; top: -24px; width: 60px; margin-left: -30px; z-index: 3; }
 .menu-title {
   grid-column: 1 / -1;
   margin-bottom: var(--s3);
   padding: var(--s0) 0 var(--s1);
-  border-bottom: 1px solid rgb(94 28 35 / .3);
+  border-bottom: 1px solid rgb(94 28 35 / .35);
   font-family: var(--font-type);
   font-size: var(--fs-14);
   letter-spacing: .3em;
@@ -1723,13 +1701,14 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 /* every row: a fixed label column, centred to its controls */
 .menu-row { display: grid; grid-template-columns: 110px minmax(0, 1fr); column-gap: 12px; align-items: center; }
 .menu-label {
-  font-family: var(--font-type);
-  font-size: .8125rem;
-  letter-spacing: .16em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-12);
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: rgb(31 26 23 / .7);
 }
-.menu-row-options { padding-top: 28px; border-top: 1px solid rgb(92 75 65 / .22); }
+.menu-row-options { padding-top: 28px; border-top: 1px solid rgb(92 75 65 / .3); }
 .menu-hint { margin-top: var(--s0); color: var(--muted); font-family: var(--font-sans); font-size: .8125rem; line-height: 1.4; }
 .menu-hint:empty { display: none; }
 
@@ -1745,20 +1724,21 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   gap: 3px;
   width: 96px; height: 56px;
   color: var(--ink);
-  background: var(--grain-subtle), #FBF8F2;
-  box-shadow: inset 0 0 0 1px #D2C6B0;
+  background: var(--grain-subtle), #F7F1E3;
+  box-shadow: inset 0 0 0 1px #C9B78F, 0 1px 2px rgb(70 44 20 / .12);
   transition: background-color 250ms var(--ease-calm), box-shadow 250ms var(--ease-calm), transform 250ms var(--ease-calm);
 }
-.ticket-chip-face b { font-family: var(--font-serif); font-weight: 600; font-size: 1.25rem; line-height: 1; }
-.ticket-chip-face small { font-family: var(--font-type); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.ticket-chip-face b { font-family: var(--font-serif); font-weight: 600; font-size: 1.25rem; line-height: 1; font-variant-numeric: lining-nums; }
+.ticket-chip-face b span { font-size: .72em; }
+.ticket-chip-face small { font-family: var(--font-sans); font-weight: 500; font-size: .6875rem; letter-spacing: .06em; color: var(--muted); }
 .ticket-chips-pair .ticket-chip-face { width: 72px; }
-.ticket-chips-pair .ticket-chip-face b { font-weight: 500; }
+.ticket-chips-pair .ticket-chip-face b { font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-14); }
 @media (hover: hover) {
-  .ticket-chip:hover input:not(:checked) + .ticket-chip-face { box-shadow: inset 0 0 0 1px #8E7F6C; transform: translateY(-1px); }
+  .ticket-chip:hover input:not(:checked) + .ticket-chip-face { box-shadow: inset 0 0 0 1px #7E6C55, 0 2px 4px rgb(70 44 20 / .16); transform: translateY(-1px); }
 }
 /* the one selected state: cherry border, butter-tinted paper and a small check stamp */
 .ticket-chip input:checked + .ticket-chip-face,
-.menu-layouts .layout-opt input:checked + .layout-card { background-color: #F6E7B8; box-shadow: inset 0 0 0 2px var(--cherry); }
+.menu-layouts .layout-opt input:checked + .layout-card { background-color: #F8DC93; box-shadow: inset 0 0 0 2px var(--cherry), 0 2px 5px rgb(120 30 20 / .18); }
 .ticket-chip input:checked + .ticket-chip-face::after,
 .menu-layouts .layout-opt input:checked + .layout-card::after {
   content: "✓";
@@ -1766,12 +1746,12 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   right: 4px; top: 4px;
   display: grid;
   place-items: center;
-  width: 15px; height: 15px;
+  width: 16px; height: 16px;
   border-radius: 50%;
   color: var(--cream);
   background: var(--cherry);
   font-family: var(--font-sans);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1;
 }
 .ticket-chip input:focus-visible + .ticket-chip-face,
@@ -1787,22 +1767,24 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   padding: var(--s0) 4px;
   border: 0;
   border-radius: 0;
-  background: var(--grain-subtle), #FBF8F2;
-  box-shadow: inset 0 0 0 1px #D2C6B0;
+  background: var(--grain-subtle), #F7F1E3;
+  box-shadow: inset 0 0 0 1px #C9B78F, 0 1px 2px rgb(70 44 20 / .12);
   transition: background-color 250ms var(--ease-calm), box-shadow 250ms var(--ease-calm), transform 250ms var(--ease-calm);
 }
-@media (hover: hover) { .menu-layouts .layout-opt:hover input:not(:checked):not(:disabled) + .layout-card { box-shadow: inset 0 0 0 1px #8E7F6C; transform: translateY(-1px); } }
+@media (hover: hover) { .menu-layouts .layout-opt:hover input:not(:checked):not(:disabled) + .layout-card { box-shadow: inset 0 0 0 1px #7E6C55, 0 2px 4px rgb(70 44 20 / .16); transform: translateY(-1px); } }
 .menu-layouts .layout-thumb { height: 64px; }
 .menu-layouts .layout-thumb svg { max-height: none; filter: none; }
-.menu-layouts .layout-name { font-family: var(--font-type); font-weight: 400; font-size: var(--fs-12); line-height: 1.25; letter-spacing: .02em; }
+/* sentence case for the shared layout names ("Classic strip", "2×2 grid") */
+.menu-layouts .layout-name { font-family: var(--font-sans); font-weight: 500; font-size: .8125rem; line-height: 1.25; text-transform: lowercase; }
+.menu-layouts .layout-name::first-letter { text-transform: uppercase; }
 .menu-layouts .layout-opt.is-disabled .layout-card { opacity: .5; }
 
 /* options: the setting and a one-line description on the left, the On/Off pair centred to it */
 .opt-list { display: grid; gap: 12px; }
 .opt-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
 .opt-text { display: grid; gap: 2px; min-width: 0; }
-.opt-name { font-family: var(--font-type); font-size: var(--fs-14); color: var(--ink); }
-.opt-desc { font-family: var(--font-sans); font-size: .8125rem; line-height: 1.35; color: var(--muted); }
+.opt-name { font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-14); color: var(--ink); }
+.opt-desc { font-family: var(--font-sans); font-size: .8125rem; line-height: 1.45; color: var(--muted); }
 
 /* the right column: live preview, its caption, START and Upload photos, centred against the settings */
 .menu-start { display: grid; justify-items: center; align-content: center; gap: var(--s2); }
@@ -1834,9 +1816,11 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   transition: transform 250ms var(--ease-calm);
 }
 .menu-summary { font-family: var(--font-type); font-size: var(--fs-12); letter-spacing: .06em; color: var(--muted); text-align: center; }
-.menu-upload { min-height: var(--tap); font-size: .8125rem; background-size: 0 6px; transition: background-size 400ms var(--ease-calm); }
-.menu-upload:focus-visible { background-size: 100% 6px; }
-@media (hover: hover) { .menu-upload:hover { background-size: 100% 6px; } }
+/* the hint under the layouts, the only other line of copy */
+.menu-hint { color: var(--muted); }
+.menu-upload { min-height: var(--tap); color: var(--ink); font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-14); letter-spacing: 0; background: none; text-decoration: underline 1.5px transparent; text-underline-offset: 4px; transition: text-decoration-color 250ms var(--ease-calm); }
+.menu-upload:focus-visible { text-decoration-color: var(--cherry); }
+@media (hover: hover) { .menu-upload:hover { text-decoration-color: var(--cherry); } }
 
 /* a vintage coin-op push button: matte cherry enamel with one soft highlight, a brushed-brass bezel */
 .coin-bezel {
@@ -1863,9 +1847,10 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   width: 100%; height: 100%;
   border-radius: 50%;
   color: var(--cream);
-  font-family: var(--font-type);
+  font-family: var(--font-sans);
+  font-weight: 700;
   font-size: .8125rem;
-  letter-spacing: .16em;
+  letter-spacing: .18em;
   text-transform: uppercase;
   background: radial-gradient(60% 42% at 50% 26%, rgb(255 236 230 / .14), transparent 72%), #A92330;
   box-shadow: 0 4px 0 #6E141A, 0 5px 6px rgb(0 0 0 / .3);
@@ -1881,7 +1866,7 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 /* narrower: the preview and START move under the settings; phones: labels sit above their controls */
 @media (max-width: 900px) {
   .menu-board { grid-template-columns: minmax(0, 1fr); width: min(100%, 620px); }
-  .menu-start { margin-top: var(--s4); padding-top: var(--s4); border-top: 1px solid rgb(92 75 65 / .22); }
+  .menu-start { margin-top: var(--s4); padding-top: var(--s4); border-top: 1px solid rgb(92 75 65 / .3); }
   .preview-stage { width: 180px; height: 196px; }
 }
 @media (max-width: 600px) {
@@ -1890,18 +1875,6 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   .menu-layouts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* the booth menu shares How it works' room: warm cream paper with the same grain, and the same thin
-   wood rail under the marquee and at the foot of the screen. The camera screens keep the navy room. */
-body[data-screen="booth"].booth-menu { --fg: var(--ink); --fg-muted: var(--muted); --focus: var(--oxblood); --kicker: var(--cherry); --accent: var(--cherry); }
-body[data-screen="booth"].booth-menu::before { background: var(--grain-subtle), var(--cream); }
-html:has(body[data-screen="booth"].booth-menu) { background: var(--cream); }
-body[data-screen="booth"].booth-menu::after {
-  background:
-    linear-gradient(#2A190D 0 2px, #6E4626 2px 5px, #9A6A42 5px 6px, #5A3A20 6px 8px, #D8BF86 8px 16px, rgb(60 36 14 / .16) 16px, transparent 22px) 0 var(--header-h) / 100% 22px no-repeat,
-    linear-gradient(to top, #2A190D 0 2px, #6E4626 2px 5px, #9A6A42 5px 6px, #5A3A20 6px 8px, #D8BF86 8px 16px, rgb(60 36 14 / .12) 16px, transparent 21px) 0 100% / 100% 21px no-repeat;
-}
-body[data-screen="booth"].booth-menu .swash path { stroke: var(--cherry); }
-body[data-screen="booth"].booth-menu .room-curtains { display: none; }
 /* 32px of wall between the rail and the kicker (main already pads the top) */
 .booth-setup { padding-top: calc(48px - var(--s4)); padding-bottom: var(--s5); }
 @media (max-width: 640px) { .booth-setup { padding-top: calc(48px - var(--s3)); } }
@@ -2887,7 +2860,6 @@ body[data-screen="booth"].booth-menu .room-curtains { display: none; }
   .leader, .leader-sweep, .leader b { animation: none !important; }
   .leader b:nth-of-type(1) { opacity: 1; }
   .hero .scene *, .hero-copy > *, .hero-art *, .pendant { animation: none !important; }
-  .hero .scene *, .hero-copy > *, .booth-stand, .wall-frame, .film-wall { opacity: 1 !important; }
 }
 
 /* anchors land below the sticky header */

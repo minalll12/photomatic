@@ -47,8 +47,6 @@ window.addEventListener('pagehide', stopCamera);
    ========================================================= */
 function setPhase(phase) {
   state.booth.phase = phase;
-  // the menu has its own cream room; the camera screens keep the navy one
-  document.body.classList.toggle('booth-menu', phase === 'setup');
   dom.frame.dataset.state = phase;
   dom.setup.hidden = phase !== 'setup';
   dom.live.hidden = !['loading', 'live', 'shooting', 'error'].includes(phase);

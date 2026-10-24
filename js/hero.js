@@ -3,8 +3,6 @@
    pinned beside it. No people anywhere: example frames are "your face
    here" prints, or the visitor's own latest strip from their album. */
 import { $, $$, rand, wait, loadImage, optionalImage, reducedMotion } from './utils.js';
-import { heroTexturesReady } from './textures.js';
-import { faceHere, faceHereStrip } from './placeholders.js';
 import { latestStrip } from './album.js';
 import { state } from './state.js';
 import { coinClink } from './sound.js';
@@ -29,28 +27,19 @@ export async function initHero({ onEnter }) {
 
   // everything below only decorates; the hero is already visible without it
   howItWorks();
-  await heroTexturesReady;
 
-  // the framed strip on the wall: the visitor's latest strip, or "your face here"
-  const wall = $('#wall-strip'), wx = wall.getContext('2d');
-  const dpr = Math.min(3, window.devicePixelRatio || 1), shown = wall.getBoundingClientRect().width;
-  if (shown) { wall.width = Math.max(180, Math.round(shown * dpr)); wall.height = Math.round(wall.width * 560 / 180); }
+  // the framed strip on the wall shows the visitor's latest strip from their album, if they have one;
+  // otherwise the static "your face here" print in the page stays as it is (nothing is redrawn on load)
   const blob = await latestStrip();
   const own = blob ? await loadImage(URL.createObjectURL(blob)).catch(() => null) : null;
   if (own) {
+    const wall = $('#wall-strip'), wx = wall.getContext('2d');
+    const dpr = Math.min(3, window.devicePixelRatio || 1), shown = wall.getBoundingClientRect().width;
+    if (shown) { wall.width = Math.max(180, Math.round(shown * dpr)); wall.height = Math.round(wall.width * 560 / 180); }
     const s = Math.min(wall.width / own.naturalWidth, wall.height / own.naturalHeight);
     wx.fillStyle = '#1F1A17'; wx.fillRect(0, 0, wall.width, wall.height);
     wx.drawImage(own, (wall.width - own.naturalWidth * s) / 2, (wall.height - own.naturalHeight * s) / 2, own.naturalWidth * s, own.naturalHeight * s);
     URL.revokeObjectURL(own.src);
-  } else {
-    wx.drawImage(faceHereStrip(wall.width, wall.height, 4), 0, 0);
-  }
-
-  // the red film strip, pinned with a brass tack
-  const film = $('#hero-film');
-  for (let i = 0; i < 4; i++) {
-    const c = film.children[i];
-    if (c) c.getContext('2d').drawImage(faceHere(c.width, c.height, i), 0, 0);
   }
 }
 

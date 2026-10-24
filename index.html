@@ -25,26 +25,16 @@
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <link rel="preload" href="assets/fonts/unifrakturmaguntia-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-25j","/js/booth.js":"/js/booth.js?v=2026-10-25j","/js/camera.js":"/js/camera.js?v=2026-10-25j","/js/editor.js":"/js/editor.js?v=2026-10-25j","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-25j","/js/export.js":"/js/export.js?v=2026-10-25j","/js/filters.js":"/js/filters.js?v=2026-10-25j","/js/frames.js":"/js/frames.js?v=2026-10-25j","/js/hero.js":"/js/hero.js?v=2026-10-25j","/js/icons.js":"/js/icons.js?v=2026-10-25j","/js/layouts.js":"/js/layouts.js?v=2026-10-25j","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-25j","/js/main.js":"/js/main.js?v=2026-10-25j","/js/patterns.js":"/js/patterns.js?v=2026-10-25j","/js/placeholders.js":"/js/placeholders.js?v=2026-10-25j","/js/ransom.js":"/js/ransom.js?v=2026-10-25j","/js/render.js":"/js/render.js?v=2026-10-25j","/js/reveal.js":"/js/reveal.js?v=2026-10-25j","/js/sound.js":"/js/sound.js?v=2026-10-25j","/js/state.js":"/js/state.js?v=2026-10-25j","/js/stickers.js":"/js/stickers.js?v=2026-10-25j","/js/story.js":"/js/story.js?v=2026-10-25j","/js/textures.js":"/js/textures.js?v=2026-10-25j","/js/transitions.js":"/js/transitions.js?v=2026-10-25j","/js/ui.js":"/js/ui.js?v=2026-10-25j","/js/utils.js":"/js/utils.js?v=2026-10-25j"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-25j">
-  <script>
-    (function () {
-      var d = document.documentElement, done = function () { d.classList.remove('fonts-wait'); };
-      if (!document.fonts || !document.fonts.load) return;
-      d.classList.add('fonts-wait');
-      setTimeout(done, 800);
-      Promise.all(['1em UnifrakturMaguntia', '1em "Special Elite"', 'italic 600 1em "Playfair Display"'].map(function (f) { return document.fonts.load(f); })).then(done, done);
-    })();
-  </script>
-  <!-- the hero needs no script: the app starts once the fonts have painted (or at the first touch or key) -->
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-25n","/js/booth.js":"/js/booth.js?v=2026-10-25n","/js/camera.js":"/js/camera.js?v=2026-10-25n","/js/editor.js":"/js/editor.js?v=2026-10-25n","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-25n","/js/export.js":"/js/export.js?v=2026-10-25n","/js/filters.js":"/js/filters.js?v=2026-10-25n","/js/frames.js":"/js/frames.js?v=2026-10-25n","/js/hero.js":"/js/hero.js?v=2026-10-25n","/js/icons.js":"/js/icons.js?v=2026-10-25n","/js/layouts.js":"/js/layouts.js?v=2026-10-25n","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-25n","/js/main.js":"/js/main.js?v=2026-10-25n","/js/patterns.js":"/js/patterns.js?v=2026-10-25n","/js/placeholders.js":"/js/placeholders.js?v=2026-10-25n","/js/ransom.js":"/js/ransom.js?v=2026-10-25n","/js/render.js":"/js/render.js?v=2026-10-25n","/js/reveal.js":"/js/reveal.js?v=2026-10-25n","/js/sound.js":"/js/sound.js?v=2026-10-25n","/js/state.js":"/js/state.js?v=2026-10-25n","/js/stickers.js":"/js/stickers.js?v=2026-10-25n","/js/story.js":"/js/story.js?v=2026-10-25n","/js/textures.js":"/js/textures.js?v=2026-10-25n","/js/transitions.js":"/js/transitions.js?v=2026-10-25n","/js/ui.js":"/js/ui.js?v=2026-10-25n","/js/utils.js":"/js/utils.js?v=2026-10-25n"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-25n">
+  <!-- the page is complete without script; the app starts once the fonts have painted (or at the first touch or key) -->
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-25j'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-25n'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
@@ -66,8 +56,8 @@
         <a href="#how" data-nav="how">How it works</a>
       </nav>
       <div class="topbar-tools">
-        <button type="button" class="icon-btn icon-btn-light sound-toggle" id="sound-toggle" aria-pressed="true" aria-label="Sound effects on" title="Sound effects"><span data-icon="soundOn" data-size="20"></span></button>
-        <button type="button" class="icon-btn menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="menu-sheet" aria-label="Menu"><span data-icon="menu" data-size="22"></span></button>
+        <button type="button" class="icon-btn icon-btn-light sound-toggle" id="sound-toggle" aria-pressed="true" aria-label="Sound effects on" title="Sound effects"><span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></span></button>
+        <button type="button" class="icon-btn menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="menu-sheet" aria-label="Menu"><span class="i"><svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span></button>
       </div>
     </div>
     <div class="marquee" aria-hidden="true">
@@ -113,9 +103,9 @@
           <div class="hero-actions">
             <button type="button" class="ticket" id="hero-cta">
               <span class="ticket-stub" aria-hidden="true">Admit<br>one</span>
-              <span class="ticket-main">Enter the booth <span data-icon="arrowRight" data-size="20"></span></span>
+              <span class="ticket-main">Enter the booth <span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
             </button>
-            <a class="hero-link" href="#how" data-nav="how">How it works <span data-icon="arrowDown" data-size="16"></span></a>
+            <a class="hero-link" href="#how" data-nav="how">How it works <span class="i"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span></a>
           </div>
         </div>
 
@@ -404,15 +394,15 @@
             <div class="menu-row" role="radiogroup" aria-labelledby="lbl-shots">
               <p class="menu-label" id="lbl-shots">Photos</p>
               <div class="ticket-chips">
-                <label class="ticket-chip"><input type="radio" name="shots" value="3"><span class="ticket-chip-face"><b>3</b><small>shots</small></span></label>
-                <label class="ticket-chip"><input type="radio" name="shots" value="4" checked><span class="ticket-chip-face"><b>4</b><small>shots</small></span></label>
+                <label class="ticket-chip"><input type="radio" name="shots" value="3"><span class="ticket-chip-face"><b>3</b><small>Shots</small></span></label>
+                <label class="ticket-chip"><input type="radio" name="shots" value="4" checked><span class="ticket-chip-face"><b>4</b><small>Shots</small></span></label>
               </div>
             </div>
             <div class="menu-row" role="radiogroup" aria-labelledby="lbl-timer">
               <p class="menu-label" id="lbl-timer">Timer</p>
               <div class="ticket-chips">
-                <label class="ticket-chip"><input type="radio" name="timer" value="3" checked><span class="ticket-chip-face"><b>3s</b><small>quick</small></span></label>
-                <label class="ticket-chip"><input type="radio" name="timer" value="5"><span class="ticket-chip-face"><b>5s</b><small>relaxed</small></span></label>
+                <label class="ticket-chip"><input type="radio" name="timer" value="3" checked><span class="ticket-chip-face"><b>3<span>s</span></b><small>Quick</small></span></label>
+                <label class="ticket-chip"><input type="radio" name="timer" value="5"><span class="ticket-chip-face"><b>5<span>s</span></b><small>Relaxed</small></span></label>
               </div>
             </div>
             <div class="menu-row" role="radiogroup" aria-labelledby="lbl-layout">
@@ -453,7 +443,7 @@
             <span class="coin-bezel">
               <button type="submit" class="coin-btn" aria-describedby="coin-plate"><span class="coin-dome">Start</span></button>
             </span>
-            <button type="button" class="text-link menu-upload" data-action="upload"><span data-icon="upload" data-size="16"></span> Upload photos</button>
+            <button type="button" class="text-link menu-upload" data-action="upload"><span class="i"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9.5" r="1.5"/><path d="m4.5 17 4.5-4.5 3 3 2.5-2.5 5 5"/></svg></span> Upload photos</button>
           </div>
         </form>
       </div>
@@ -461,7 +451,7 @@
       <!-- live camera -->
       <div class="booth-live" id="booth-live" hidden>
         <div class="camera-head">
-          <button type="button" class="text-link text-link-light" id="btn-live-back"><span data-icon="arrowLeft" data-size="16"></span> Menu</button>
+          <button type="button" class="text-link text-link-light" id="btn-live-back"><span class="i"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Menu</button>
         </div>
         <div class="booth-interior">
           <div class="camera" id="camera" data-state="loading">
@@ -477,8 +467,8 @@
           <h3>The camera isn’t available</h3>
           <p id="cam-error-msg"></p>
           <div class="btn-row">
-            <button type="button" class="btn btn-primary" data-action="upload"><span data-icon="upload" data-size="18"></span> Upload photos instead</button>
-            <button type="button" class="btn btn-quiet" id="btn-retry"><span data-icon="retake" data-size="18"></span> Try again</button>
+            <button type="button" class="btn btn-primary" data-action="upload"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9.5" r="1.5"/><path d="m4.5 17 4.5-4.5 3 3 2.5-2.5 5 5"/></svg></span> Upload photos instead</button>
+            <button type="button" class="btn btn-quiet" id="btn-retry"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9"/><path d="M4.5 4.5V9H9"/></svg></span> Try again</button>
           </div>
         </div>
         <div class="camera-actions">
@@ -498,8 +488,8 @@
           <ol class="review-grid" id="review-grid" aria-label="Your photos"></ol>
         </div>
         <div class="btn-row btn-row-center">
-          <button type="button" class="btn btn-paper" id="btn-retake-all"><span data-icon="retake" data-size="18"></span> Retake all</button>
-          <button type="button" class="btn btn-primary btn-lg" id="btn-continue">Continue <span data-icon="arrowRight" data-size="18"></span></button>
+          <button type="button" class="btn btn-paper" id="btn-retake-all"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9"/><path d="M4.5 4.5V9H9"/></svg></span> Retake all</button>
+          <button type="button" class="btn btn-primary btn-lg" id="btn-continue">Continue <span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
         </div>
       </div>
 
@@ -527,9 +517,9 @@
           <h2 class="title" id="editor-title" tabindex="-1" data-focus>Make it <em>yours</em></h2>
         </div>
         <div class="editor-tools" role="toolbar" aria-label="History">
-          <button type="button" class="desk-btn" id="btn-undo" aria-label="Undo" title="Undo (Ctrl+Z)"><span data-icon="undo"></span></button>
-          <button type="button" class="desk-btn" id="btn-redo" aria-label="Redo" title="Redo (Ctrl+Shift+Z)"><span data-icon="redo"></span></button>
-          <button type="button" class="tag tag-butter surprise-tag" id="btn-surprise" style="--tilt:-2deg"><span data-icon="surprise" data-size="18"></span><span class="btn-text">Surprise me</span></button>
+          <button type="button" class="desk-btn" id="btn-undo" aria-label="Undo" title="Undo (Ctrl+Z)"><span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 14 4.5 9.5 9 5"/><path d="M4.5 9.5H14a5.5 5.5 0 0 1 0 11h-3"/></svg></span></button>
+          <button type="button" class="desk-btn" id="btn-redo" aria-label="Redo" title="Redo (Ctrl+Shift+Z)"><span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 14l4.5-4.5L15 5"/><path d="M19.5 9.5H10a5.5 5.5 0 0 0 0 11h3"/></svg></span></button>
+          <button type="button" class="tag tag-butter surprise-tag" id="btn-surprise" style="--tilt:-2deg"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="8.5" cy="8.5" r=".6" fill="currentColor"/><circle cx="15.5" cy="15.5" r=".6" fill="currentColor"/><circle cx="12" cy="12" r=".6" fill="currentColor"/><circle cx="15.5" cy="8.5" r=".6" fill="currentColor"/><circle cx="8.5" cy="15.5" r=".6" fill="currentColor"/></svg></span><span class="btn-text">Surprise me</span></button>
         </div>
       </header>
 
@@ -542,13 +532,13 @@
           <div class="canvas-wrap" id="canvas-wrap">
             <canvas id="strip" role="img" aria-label="Your Photomatic strip"></canvas>
             <div class="sticker-bar" id="sticker-bar" role="toolbar" aria-label="Selected sticker" hidden>
-              <button type="button" data-act="edit" aria-label="Edit text" title="Edit text"><span data-icon="pencil" data-size="18"></span></button>
-              <button type="button" data-act="flip" aria-label="Flip" title="Flip"><span data-icon="flip" data-size="18"></span></button>
-              <button type="button" data-act="shadow" aria-label="Drop shadow" title="Drop shadow" aria-pressed="true"><span data-icon="shadow" data-size="18"></span></button>
-              <button type="button" data-act="duplicate" aria-label="Duplicate" title="Duplicate"><span data-icon="duplicate" data-size="18"></span></button>
-              <button type="button" data-act="forward" aria-label="Bring forward" title="Bring forward ( ] )"><span data-icon="layerUp" data-size="18"></span></button>
-              <button type="button" data-act="backward" aria-label="Send backward" title="Send backward ( [ )"><span data-icon="layerDown" data-size="18"></span></button>
-              <button type="button" data-act="delete" aria-label="Delete" title="Delete"><span data-icon="trash" data-size="18"></span></button>
+              <button type="button" data-act="edit" aria-label="Edit text" title="Edit text"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></span></button>
+              <button type="button" data-act="flip" aria-label="Flip" title="Flip"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v18"/><path d="M8.5 7 4 17h4.5zM15.5 7 20 17h-4.5z"/></svg></span></button>
+              <button type="button" data-act="shadow" aria-label="Drop shadow" title="Drop shadow" aria-pressed="true"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="12" height="12" rx="2"/><path d="M19 8.5V18a1 1 0 0 1-1 1H8.5" opacity=".55"/></svg></span></button>
+              <button type="button" data-act="duplicate" aria-label="Duplicate" title="Duplicate"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg></span></button>
+              <button type="button" data-act="forward" aria-label="Bring forward" title="Bring forward ( ] )"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 4 8 4-8 4-8-4z"/><path d="m4 13 8 4 8-4" opacity=".45"/><path d="M12 21v-4"/></svg></span></button>
+              <button type="button" data-act="backward" aria-label="Send backward" title="Send backward ( [ )"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4 11 8 4 8-4"/><path d="m12 3 8 4-8 4-8-4z" opacity=".45"/><path d="M12 21v-6"/></svg></span></button>
+              <button type="button" data-act="delete" aria-label="Delete" title="Delete"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10.5 11v5.5M13.5 11v5.5"/></svg></span></button>
             </div>
           </div>
         </div>
@@ -648,8 +638,8 @@
           </div>
 
           <div class="panel-actions">
-            <button type="button" class="btn btn-quiet" id="btn-editor-back"><span data-icon="retake" data-size="18"></span> Start over</button>
-            <button type="button" class="btn btn-primary" id="btn-finish">Print my strip <span data-icon="arrowRight" data-size="18"></span></button>
+            <button type="button" class="btn btn-quiet" id="btn-editor-back"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9"/><path d="M4.5 4.5V9H9"/></svg></span> Start over</button>
+            <button type="button" class="btn btn-primary" id="btn-finish">Print my strip <span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
           </div>
         </aside>
       </div>
@@ -668,10 +658,10 @@
           <div class="tag-bundle">
             <span class="bundle-clip" aria-hidden="true"></span>
             <span class="bundle-string" aria-hidden="true"></span>
-            <button type="button" class="tag tag-primary" id="btn-download" style="--tilt:-2deg; --i:0"><span data-icon="download" data-size="18"></span><span class="btn-label">Download strip</span></button>
-            <button type="button" class="tag" id="btn-story" style="--tilt:1deg; --i:1"><span data-icon="story" data-size="18"></span><span class="btn-label">Story collage</span></button>
-            <button type="button" class="tag tag-kraft" id="btn-video" style="--tilt:-1deg; --i:2"><span data-icon="video" data-size="18"></span><span class="btn-label">Save as video</span></button>
-            <button type="button" class="tag" id="btn-album-save" style="--tilt:2deg; --i:3"><span data-icon="album" data-size="18"></span><span class="btn-label">Save to album</span></button>
+            <button type="button" class="tag tag-primary" id="btn-download" style="--tilt:-2deg; --i:0"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></svg></span><span class="btn-label">Download strip</span></button>
+            <button type="button" class="tag" id="btn-story" style="--tilt:1deg; --i:1"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="6.5" y="3" width="11" height="18" rx="2"/><path d="M9.5 7.5h5M9.5 11h5"/></svg></span><span class="btn-label">Story collage</span></button>
+            <button type="button" class="tag tag-kraft" id="btn-video" style="--tilt:-1deg; --i:2"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.5" y="6.5" width="12" height="11" rx="2"/><path d="m15.5 10.5 5-3v9l-5-3z"/></svg></span><span class="btn-label">Save as video</span></button>
+            <button type="button" class="tag" id="btn-album-save" style="--tilt:2deg; --i:3"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="btn-label">Save to album</span></button>
           </div>
           <p class="link-row">
             <button type="button" class="pencil-link" id="btn-replay">Replay</button><span aria-hidden="true">·</span>
@@ -693,13 +683,13 @@
               <p class="kicker">— Kept on this device —</p>
               <h2 class="title" id="album-title" tabindex="-1" data-focus>The <em>album</em></h2>
             </div>
-            <button type="button" class="btn btn-quiet btn-sm" id="btn-album-clear" hidden><span data-icon="trash" data-size="18"></span> Clear album</button>
+            <button type="button" class="btn btn-quiet btn-sm" id="btn-album-clear" hidden><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10.5 11v5.5M13.5 11v5.5"/></svg></span> Clear album</button>
           </header>
           <ul class="album-grid" id="album-grid"></ul>
           <div class="album-empty" id="album-empty" hidden>
             <canvas class="album-empty-strip" id="album-empty-strip" width="150" height="460" aria-hidden="true"></canvas>
             <p class="typed">No strips yet. The ones you save will wait for you here.</p>
-            <button type="button" class="btn btn-primary" data-nav="booth">Enter the booth <span data-icon="arrowRight" data-size="18"></span></button>
+            <button type="button" class="btn btn-primary" data-nav="booth">Enter the booth <span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
           </div>
           <p class="typed-sm tin-note">Your album lives only on this device.</p>
         </div>
@@ -714,14 +704,14 @@
       <div class="story-controls">
         <div class="dialog-head">
           <h2 id="story-title" class="dialog-title">Story collage</h2>
-          <button type="button" class="icon-btn" id="story-close" aria-label="Close"><span data-icon="close"></span></button>
+          <button type="button" class="icon-btn" id="story-close" aria-label="Close"><span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></span></button>
         </div>
         <div class="field"><span class="label" id="tpl-label">Template</span><div class="chips" id="story-templates" role="group" aria-labelledby="tpl-label"></div></div>
         <div class="field"><span class="label" id="pat-label">Background</span><div class="chips" id="story-patterns" role="group" aria-labelledby="pat-label"></div></div>
         <label class="field"><span class="label">Dedication</span><input type="text" id="story-dedication" maxlength="48" autocomplete="off" placeholder="e.g. you and me, always"></label>
         <label class="field"><span class="label">Date</span><input type="text" id="story-date" maxlength="32" autocomplete="off"></label>
         <p class="hint num">1080 × 1920, sized for stories.</p>
-        <button type="button" class="btn btn-primary btn-block" id="story-download"><span data-icon="download" data-size="18"></span> Download collage</button>
+        <button type="button" class="btn btn-primary btn-block" id="story-download"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></svg></span> Download collage</button>
       </div>
     </div>
   </dialog>
@@ -729,12 +719,12 @@
   <dialog class="dialog viewer" id="album-viewer" aria-labelledby="viewer-date">
     <div class="dialog-head">
       <h2 class="dialog-title num" id="viewer-date"></h2>
-      <button type="button" class="icon-btn" id="viewer-close" aria-label="Close"><span data-icon="close"></span></button>
+      <button type="button" class="icon-btn" id="viewer-close" aria-label="Close"><span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></span></button>
     </div>
     <img id="viewer-img" alt="A saved Photomatic strip">
     <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="viewer-download"><span data-icon="download" data-size="18"></span> Download</button>
-      <button type="button" class="btn btn-quiet" id="viewer-delete"><span data-icon="trash" data-size="18"></span> Delete</button>
+      <button type="button" class="btn btn-primary" id="viewer-download"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></svg></span> Download</button>
+      <button type="button" class="btn btn-quiet" id="viewer-delete"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10.5 11v5.5M13.5 11v5.5"/></svg></span> Delete</button>
     </div>
   </dialog>
 
