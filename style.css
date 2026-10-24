@@ -1158,7 +1158,7 @@ kbd {
   pointer-events: none;
 }
 .stanchion .rope { transform-box: view-box; transform-origin: 120px 70px; }
-.stanchion .st-card { transform-box: view-box; transform-origin: 192px 84px; }
+.stanchion .st-card { transform-box: view-box; transform-origin: 120px 129px; }
 .booth-stand:hover ~ .stanchion .rope { animation: rope-sway 1.8s ease-in-out infinite; }
 .booth-stand:hover ~ .stanchion .st-card { animation: card-sway 1.8s ease-in-out infinite; }
 @keyframes rope-sway { 0%, 100% { transform: none; } 30% { transform: skewX(3deg) scaleY(1.04); } 65% { transform: skewX(-2deg) scaleY(.98); } }
