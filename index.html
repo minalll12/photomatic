@@ -29,8 +29,8 @@
   <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-24x","/js/booth.js":"/js/booth.js?v=2026-10-24x","/js/camera.js":"/js/camera.js?v=2026-10-24x","/js/editor.js":"/js/editor.js?v=2026-10-24x","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-24x","/js/export.js":"/js/export.js?v=2026-10-24x","/js/filters.js":"/js/filters.js?v=2026-10-24x","/js/frames.js":"/js/frames.js?v=2026-10-24x","/js/hero.js":"/js/hero.js?v=2026-10-24x","/js/icons.js":"/js/icons.js?v=2026-10-24x","/js/layouts.js":"/js/layouts.js?v=2026-10-24x","/js/main.js":"/js/main.js?v=2026-10-24x","/js/patterns.js":"/js/patterns.js?v=2026-10-24x","/js/placeholders.js":"/js/placeholders.js?v=2026-10-24x","/js/ransom.js":"/js/ransom.js?v=2026-10-24x","/js/render.js":"/js/render.js?v=2026-10-24x","/js/reveal.js":"/js/reveal.js?v=2026-10-24x","/js/sound.js":"/js/sound.js?v=2026-10-24x","/js/state.js":"/js/state.js?v=2026-10-24x","/js/stickers.js":"/js/stickers.js?v=2026-10-24x","/js/story.js":"/js/story.js?v=2026-10-24x","/js/textures.js":"/js/textures.js?v=2026-10-24x","/js/transitions.js":"/js/transitions.js?v=2026-10-24x","/js/ui.js":"/js/ui.js?v=2026-10-24x","/js/utils.js":"/js/utils.js?v=2026-10-24x"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-24x">
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-24y","/js/booth.js":"/js/booth.js?v=2026-10-24y","/js/camera.js":"/js/camera.js?v=2026-10-24y","/js/editor.js":"/js/editor.js?v=2026-10-24y","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-24y","/js/export.js":"/js/export.js?v=2026-10-24y","/js/filters.js":"/js/filters.js?v=2026-10-24y","/js/frames.js":"/js/frames.js?v=2026-10-24y","/js/hero.js":"/js/hero.js?v=2026-10-24y","/js/icons.js":"/js/icons.js?v=2026-10-24y","/js/layouts.js":"/js/layouts.js?v=2026-10-24y","/js/main.js":"/js/main.js?v=2026-10-24y","/js/patterns.js":"/js/patterns.js?v=2026-10-24y","/js/placeholders.js":"/js/placeholders.js?v=2026-10-24y","/js/ransom.js":"/js/ransom.js?v=2026-10-24y","/js/render.js":"/js/render.js?v=2026-10-24y","/js/reveal.js":"/js/reveal.js?v=2026-10-24y","/js/sound.js":"/js/sound.js?v=2026-10-24y","/js/state.js":"/js/state.js?v=2026-10-24y","/js/stickers.js":"/js/stickers.js?v=2026-10-24y","/js/story.js":"/js/story.js?v=2026-10-24y","/js/textures.js":"/js/textures.js?v=2026-10-24y","/js/transitions.js":"/js/transitions.js?v=2026-10-24y","/js/ui.js":"/js/ui.js?v=2026-10-24y","/js/utils.js":"/js/utils.js?v=2026-10-24y"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-24y">
   <script>
     (function () {
       var d = document.documentElement, done = function () { d.classList.remove('fonts-wait'); };
@@ -44,7 +44,7 @@
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-24x'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-24y'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
@@ -329,35 +329,33 @@
               <path d="M0 23 Q500 119 1000 23" fill="none" stroke="#E6CFA0" stroke-opacity=".6" stroke-width="1" stroke-dasharray="3 2" vector-effect="non-scaling-stroke"/>
             </svg>
             <span class="tack tack-l" aria-hidden="true"></span><span class="tack tack-r" aria-hidden="true"></span>
-            <svg class="doodle doodle-1" viewBox="0 0 120 48" aria-hidden="true" focusable="false">
-              <path class="pencil" pathLength="1" d="M5 33 C18 21 31 14 47 12 C62 10 79 14 93 22"/>
-              <path class="pencil pencil-2" pathLength="1" d="M7 35 C20 23 34 16 48 14 C64 12 80 16 92 24"/>
-              <path class="pencil pencil-head" pathLength="1" d="M82 10 L95 22 L79 28"/>
-            </svg>
-            <svg class="doodle doodle-2" viewBox="0 0 120 48" aria-hidden="true" focusable="false">
-              <path class="pencil" pathLength="1" d="M4 18 C20 30 38 36 58 35 C74 34 86 28 96 20"/>
-              <path class="pencil pencil-2" pathLength="1" d="M6 20 C21 32 39 37 58 37 C75 36 87 30 95 22"/>
-              <path class="pencil pencil-head" pathLength="1" d="M83 15 L97 19 L89 32"/>
-            </svg>
+            <!-- pencilled step numbers on the wall, just above each peg -->
+            <div class="peg-nums" aria-hidden="true">
+              <svg style="--hang:51px" viewBox="0 0 20 26" focusable="false"><path d="M6 7 L11 3 L11 23 M7 23 L15 23"/></svg>
+              <svg style="--hang:72px" viewBox="0 0 20 26" focusable="false"><path d="M4 8 C5 2 14 1 15 7 C16 12 8 16 4 23 L16 22"/></svg>
+              <svg style="--hang:51px" viewBox="0 0 20 26" focusable="false"><path d="M4 5 C8 1 16 2 14 8 C13 11 9 12 8 12 C13 12 17 14 16 18 C15 24 6 24 3 19"/></svg>
+            </div>
             <ol class="polaroids">
-              <li class="polaroid" style="--tilt:-4deg; --hang:51px; --delay:0ms" tabindex="0" aria-labelledby="step-1 step-1-desc">
+              <li class="polaroid" style="--tilt:-2deg; --hang:51px; --delay:0ms" tabindex="0" aria-labelledby="step-1 step-1-desc">
                 <span class="clothespin" aria-hidden="true"></span>
                 <div class="polaroid-photo" aria-hidden="true">
+                  <!-- 01 pose: inside the booth, a flip-clock countdown, then a soft flash -->
                   <div class="demo demo-pose">
-                    <div class="vf">
-                      <span class="vf-oval"><small>your face here</small></span>
-                      <span class="flip"><span class="flip-roll"><b>3</b><b>2</b><b>1</b></span></span>
-                      <span class="vf-flash"></span>
-                    </div>
+                    <span class="pose-rod"></span>
+                    <span class="pose-curtain pose-curtain-l"></span><span class="pose-curtain pose-curtain-r"></span>
+                    <span class="pose-oval"><small>your face here</small></span>
+                    <span class="flip"><span class="flip-roll"><b>3</b><b>2</b><b>1</b></span></span>
+                    <span class="pose-flash"></span>
                   </div>
                   <span class="develop-veil"></span>
                 </div>
                 <h3 class="polaroid-title" id="step-1"><span class="step-num num">01</span> Pose</h3>
-                <p class="typed-sm" id="step-1-desc">A countdown, a soft flash, four frames. Retake any of them.</p>
+                <p id="step-1-desc">A countdown, a soft flash, four frames. Retake any of them.</p>
               </li>
-              <li class="polaroid" style="--tilt:2deg; --hang:72px; --delay:300ms" tabindex="0" aria-labelledby="step-2 step-2-desc">
+              <li class="polaroid" style="--tilt:1deg; --hang:72px; --delay:300ms" tabindex="0" aria-labelledby="step-2 step-2-desc">
                 <span class="clothespin" aria-hidden="true"></span>
                 <div class="polaroid-photo" aria-hidden="true">
+                  <!-- 02 customise: the strip changes frame (Midnight, Train Ticket, Receipt) and a sticker lands -->
                   <div class="demo demo-custom">
                     <div class="mini mini-black"><i></i><i></i><i></i><b class="mini-mark">Photomatic</b></div>
                     <div class="mini mini-ticket"><i></i><i></i><i></i><b class="mini-line">admit one</b></div>
@@ -367,20 +365,21 @@
                   <span class="develop-veil"></span>
                 </div>
                 <h3 class="polaroid-title" id="step-2"><span class="step-num num">02</span> Customise</h3>
-                <p class="typed-sm" id="step-2-desc">Film looks, keepsake frames, stickers and a date stamp.</p>
+                <p id="step-2-desc">Film looks, keepsake frames, stickers and a date stamp.</p>
               </li>
-              <li class="polaroid" style="--tilt:-2deg; --hang:51px; --delay:600ms" tabindex="0" aria-labelledby="step-3 step-3-desc">
+              <li class="polaroid" style="--tilt:-1.5deg; --hang:51px; --delay:600ms" tabindex="0" aria-labelledby="step-3 step-3-desc">
                 <span class="clothespin" aria-hidden="true"></span>
                 <div class="polaroid-photo" aria-hidden="true">
+                  <!-- 03 keep: the strip slides out of the booth's PRINTS slot, then it is stamped saved -->
                   <div class="demo demo-keep">
-                    <span class="keep-slot"></span>
+                    <span class="keep-panel"><span class="keep-slot"></span><small>prints</small></span>
                     <div class="keep-window"><div class="mini mini-cream"><i></i><i></i><i></i></div></div>
-                    <span class="keep-stamp"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="keep-stamp">saved ✓</span>
                   </div>
                   <span class="develop-veil"></span>
                 </div>
                 <h3 class="polaroid-title" id="step-3"><span class="step-num num">03</span> Keep</h3>
-                <p class="typed-sm" id="step-3-desc">A print-ready strip, a story collage or a short video.</p>
+                <p id="step-3-desc">A print-ready strip, a story collage or a short video.</p>
               </li>
             </ol>
             <p class="tag-note"><span>Your photos stay on your device.</span></p>

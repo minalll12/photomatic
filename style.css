@@ -78,14 +78,6 @@
     linear-gradient(90deg, rgb(94 28 35 / .42) 50%, transparent 0) 0 0 / 14px 14px,
     linear-gradient(rgb(94 28 35 / .42) 50%, transparent 0) 0 0 / 14px 14px,
     var(--cream);
-  --gingham-sage:
-    linear-gradient(90deg, rgb(120 138 104 / .5) 50%, transparent 0) 0 0 / 16px 16px,
-    linear-gradient(rgb(120 138 104 / .5) 50%, transparent 0) 0 0 / 16px 16px,
-    var(--cream);
-  --gingham-blue:
-    linear-gradient(90deg, rgb(110 138 166 / .5) 50%, transparent 0) 0 0 / 16px 16px,
-    linear-gradient(rgb(110 138 166 / .5) 50%, transparent 0) 0 0 / 16px 16px,
-    var(--cream);
   --candy: repeating-linear-gradient(90deg, var(--cream) 0 9px, var(--red-oxide) 9px 18px);
   --polka-cream:
     radial-gradient(var(--ink) 20%, transparent 22%) 0 0 / 16px 16px,
@@ -99,7 +91,6 @@
 
   /* edges (masks) */
   --torn-b: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='12' preserveAspectRatio='none'%3E%3Cpath d='M0 0H200V7L191 9 182 5 171 10 160 6 151 11 140 6 128 10 119 5 108 9 97 6 86 11 75 7 64 10 53 5 42 9 31 6 20 10 9 6 0 7Z'/%3E%3C/svg%3E");
-  --torn-t: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='12' preserveAspectRatio='none'%3E%3Cpath d='M0 12H200V5L191 3 182 7 171 2 160 6 151 1 140 6 128 2 119 7 108 3 97 6 86 1 75 5 64 2 53 7 42 3 31 6 20 2 9 6 0 5Z'/%3E%3C/svg%3E");
   --torn-r: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='200' preserveAspectRatio='none'%3E%3Cpath d='M0 0V200H7L9 191 5 182 10 171 6 160 11 151 6 140 10 128 5 119 9 108 6 97 11 86 7 75 10 64 5 53 9 42 6 31 10 20 6 9 7 0Z'/%3E%3C/svg%3E");
 
   /* spacing: 8px scale */
@@ -1356,8 +1347,10 @@ html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before,
 @keyframes sign-on { 0% { filter: brightness(.55); } 30% { filter: brightness(1.1); } 50% { filter: brightness(.6); } 70%, 100% { filter: none; } }
 @keyframes swing-in { from { opacity: 0; rotate: -3deg; } to { opacity: 1; rotate: 0deg; } }
 
-/* How it works: a full-width cream page, gingham edges, a darkroom drying line */
+/* How it works: the next part of the same room. A cream wall between two thin wood rails that echo
+   the hero's wainscot, and a drying line with three prints pegged to it. */
 .how {
+  --ease-calm: cubic-bezier(.22, .61, .36, 1);
   position: relative;
   margin: 0 calc(50% - 50vw);
   padding: var(--s10) var(--gutter) var(--s10);
@@ -1365,23 +1358,24 @@ html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before,
   --fg: var(--ink); --kicker: var(--cherry); --accent: var(--cherry);
   background: var(--grain-subtle), var(--cream);
 }
-.how::before, .how::after { content: ""; position: absolute; left: 0; right: 0; height: 30px; pointer-events: none; }
+/* landing here from the nav leaves a little breathing room under the marquee */
+#how { scroll-margin-top: calc(var(--header-h) + 24px); }
+/* one rail style, top and bottom: a dark joint, the wood rail, a narrow butter-kraft band */
+.how::before, .how::after { content: ""; position: absolute; left: 0; right: 0; height: 16px; pointer-events: none; }
 .how::before {
   top: 0;
-  background: var(--gingham-sage);
-  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 11px) no-repeat, var(--torn-b) bottom / 200px 12px repeat-x;
-          mask: linear-gradient(#000 0 0) top / 100% calc(100% - 11px) no-repeat, var(--torn-b) bottom / 200px 12px repeat-x;
+  background: linear-gradient(#2A190D 0 2px, #6E4626 2px 5px, #9A6A42 5px 6px, #5A3A20 6px 8px, transparent 8px), var(--grain-subtle), #D8BF86;
+  box-shadow: 0 3px 6px rgb(60 36 14 / .22);
 }
 .how::after {
   bottom: 0;
-  background: var(--gingham-blue);
-  -webkit-mask: linear-gradient(#000 0 0) bottom / 100% calc(100% - 11px) no-repeat, var(--torn-t) top / 200px 12px repeat-x;
-          mask: linear-gradient(#000 0 0) bottom / 100% calc(100% - 11px) no-repeat, var(--torn-t) top / 200px 12px repeat-x;
+  background: linear-gradient(to top, #2A190D 0 2px, #6E4626 2px 5px, #9A6A42 5px 6px, #5A3A20 6px 8px, transparent 8px), var(--grain-subtle), #D8BF86;
+  box-shadow: 0 -2px 5px rgb(60 36 14 / .16);
 }
 .how-page { position: relative; max-width: 1280px; margin-inline: auto; }
 .how-page .heading-block { margin-bottom: var(--s6); }
 
-.drying-line { --end: 150px; position: relative; }
+.drying-line { --end: 170px; position: relative; }
 .twine { position: absolute; left: 0; top: 0; width: calc(100% - var(--end)); height: 140px; overflow: visible; pointer-events: none; }
 .tack {
   position: absolute;
@@ -1394,15 +1388,30 @@ html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before,
 }
 .tack-l { left: -9px; }
 .tack-r { right: calc(var(--end) - 9px); }
-/* red-pencil arrows: an uneven double stroke that draws itself in */
-.doodle { position: absolute; top: 12px; z-index: 2; width: clamp(70px, 9vw, 116px); overflow: visible; pointer-events: none; }
-.doodle-1 { left: calc((100% - var(--end)) * .28); }
-.doodle-2 { left: calc((100% - var(--end)) * .62); }
-.pencil { fill: none; stroke: var(--cherry); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
-.pencil-2 { stroke-width: 1.1; opacity: .55; }
-.doodle.is-drawn .pencil { stroke-dashoffset: 0; transition: stroke-dashoffset var(--dur-4) var(--ease-out); }
-.doodle.is-drawn .pencil-2 { transition-delay: 120ms; }
-.doodle.is-drawn .pencil-head { transition-duration: var(--dur-2); transition-delay: 800ms; }
+/* pencilled step numbers on the wall above each peg (same columns as the prints) */
+.peg-nums {
+  position: absolute;
+  left: 0; top: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  width: calc(100% - var(--end));
+  padding-inline: 2%;
+  pointer-events: none;
+}
+.peg-nums svg {
+  justify-self: center;
+  width: 17px; height: 22px;
+  margin-top: calc(var(--hang) - 52px);
+  overflow: visible;
+  fill: none;
+  stroke: var(--cherry);
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .85;
+  transform: rotate(-6deg);
+}
 
 .polaroids {
   position: relative;
@@ -1416,20 +1425,21 @@ html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before,
   --tilt: 0deg;
   position: relative;
   margin-top: calc(var(--hang) + 6px);
-  padding: 14px 14px 20px;
+  padding: 14px 14px 22px;
   background: var(--grain-paper), var(--ivory);
   box-shadow: 3px 8px 14px rgb(42 33 28 / .26), 1px 2px 3px rgb(42 33 28 / .18);
   transform: rotate(var(--tilt));
   transform-origin: 50% -20px;
-  transition: box-shadow var(--dur-2) var(--ease-out);
+  transition: box-shadow 300ms var(--ease-calm);
 }
-.polaroid:hover, .polaroid:focus-visible { animation: peg-swing 1400ms var(--ease-out); box-shadow: 6px 16px 26px rgb(42 33 28 / .3), 1px 2px 3px rgb(42 33 28 / .18); }
-.polaroid:focus-visible { outline: 2px solid var(--oxblood); outline-offset: 6px; }
+/* the only motion besides developing: a small swing on its peg */
+.polaroid:focus-visible { animation: peg-swing 1400ms var(--ease-calm); outline: 2px solid var(--oxblood); outline-offset: 6px; }
+@media (hover: hover) { .polaroid:hover { animation: peg-swing 1400ms var(--ease-calm); box-shadow: 5px 12px 20px rgb(42 33 28 / .28), 1px 2px 3px rgb(42 33 28 / .18); } }
 @keyframes peg-swing {
   0% { transform: rotate(var(--tilt)); }
-  25% { transform: rotate(calc(var(--tilt) + 3deg)); }
-  55% { transform: rotate(calc(var(--tilt) - 2deg)); }
-  80% { transform: rotate(calc(var(--tilt) + .8deg)); }
+  30% { transform: rotate(calc(var(--tilt) + 1.5deg)); }
+  62% { transform: rotate(calc(var(--tilt) - 1deg)); }
+  84% { transform: rotate(calc(var(--tilt) + .4deg)); }
   100% { transform: rotate(var(--tilt)); }
 }
 .clothespin {
@@ -1445,17 +1455,17 @@ html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before,
   box-shadow: 2px 4px 4px rgb(42 33 28 / .35);
 }
 .clothespin::after { content: ""; position: absolute; left: -2px; right: -2px; top: 17px; height: 7px; border-radius: 2px; background: linear-gradient(#EDEBE6, #8F8B84); }
-.polaroid-photo { position: relative; overflow: hidden; aspect-ratio: 1; background: #F3EBDC; }
-.develop-veil { position: absolute; inset: 0; z-index: 3; background: #140C08; pointer-events: none; }
+.polaroid-photo { position: relative; overflow: hidden; aspect-ratio: 1; background: #2A2320; }
+.develop-veil { position: absolute; inset: 0; z-index: 5; background: #140C08; pointer-events: none; }
 /* without the script (or before it starts) the prints are simply developed */
 html:not(.js-develop) .develop-veil { display: none; }
-html:not(.js-develop) .doodle .pencil { stroke-dashoffset: 0; }
 .polaroid.is-developed .develop-veil { animation: polaroid-develop 1600ms ease-in-out var(--delay, 0ms) forwards; }
 @keyframes polaroid-develop {
   0% { background: #140C08; opacity: 1; }
-  45% { background: #7A5530; opacity: .78; }
-  100% { background: #C9A479; opacity: 0; }
+  45% { background: #5A3A24; opacity: .78; }
+  100% { background: #8A6A48; opacity: 0; }
 }
+/* captions: a stamped step number and a typewritten title, the description in DM Sans for easy reading */
 .polaroid-title { display: flex; align-items: center; gap: var(--s1); margin-top: var(--s2); font-family: var(--font-type); font-size: var(--fs-18); font-weight: 400; }
 .step-num {
   display: inline-grid;
@@ -1471,73 +1481,75 @@ html:not(.js-develop) .doodle .pencil { stroke-dashoffset: 0; }
   box-shadow: inset 0 0 0 2px var(--ivory), inset 0 0 0 3px rgb(179 32 42 / .45);
   transform: rotate(-10deg);
 }
-.polaroid p { margin-top: var(--s0); color: var(--muted); }
+.polaroid p { max-width: 34ch; margin-top: var(--s0); color: var(--muted); font-family: var(--font-sans); font-size: .96875rem; line-height: 1.5; }
 
-/* the mini demos (they loop only while their polaroid is on screen) */
-.demo { position: absolute; inset: 0; display: grid; place-items: center; background: var(--grain-paper), #F3EBDC; }
-/* the little demos loop only while their print is on screen (each demo sets `animation`, which would
-   otherwise reset the play state, hence !important) */
+/* the mini demos, drawn in the hero's palette (booth red, brass, cream, velvet) on a darker backdrop.
+   They loop only while their print is on screen (each demo sets `animation`, hence !important). */
+.demo { position: absolute; inset: 0; background: radial-gradient(70% 60% at 50% 42%, rgb(255 214 150 / .12), transparent 70%), var(--grain-subtle), #2A2320; }
 .polaroid:not(.is-playing) .demo * { animation-play-state: paused !important; }
-/* 01 pose: a viewfinder, a flip-clock countdown and a white flash */
-.vf {
-  position: relative;
-  width: 82%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 4px;
-  background: radial-gradient(circle at 50% 45%, #3A4A6E, var(--navy));
-  box-shadow: inset 0 0 0 6px #2A1A12, inset 0 0 0 8px var(--gold), 3px 6px 10px rgb(42 33 28 / .3);
-}
-.vf::before, .vf::after { content: ""; position: absolute; top: 8px; bottom: 8px; width: 13%; background: linear-gradient(90deg, #3A0A0E, #7A2630 45%, #4A1015); }
-.vf::before { left: 8px; }
-.vf::after { right: 8px; transform: scaleX(-1); }
-.vf-oval {
+
+/* 01 pose: inside the booth, curtains to the sides, a flip-clock countdown and a soft flash */
+.demo-pose { background: radial-gradient(46% 56% at 50% 46%, #FFE3A3, #E3A55A 44%, #8C3A2E 78%, #3A0A0E); }
+.pose-rod { position: absolute; left: 4%; right: 4%; top: 4%; z-index: 3; height: 3.5%; border-radius: 99px; background: linear-gradient(#F3D98B, #B8934A 55%, #7A5C24); box-shadow: 0 2px 3px rgb(20 8 4 / .45); }
+.pose-curtain {
   position: absolute;
-  left: 50%; top: 50%;
-  width: 34%;
-  aspect-ratio: .78;
+  top: 5%; bottom: 0;
+  z-index: 2;
+  width: 27%;
+  border-bottom: 3px solid #C9A24E;
+  background:
+    linear-gradient(rgb(0 0 0 / .35), transparent 24%, transparent 80%, rgb(0 0 0 / .3)),
+    repeating-linear-gradient(90deg, #3E0B11 0 5%, #6E1E27 12%, #8C2E37 18%, #5A1820 25%);
+  box-shadow: 0 0 14px rgb(20 4 6 / .45);
+}
+.pose-curtain-l { left: 0; border-radius: 0 0 60% 0 / 0 0 10% 0; }
+.pose-curtain-r { right: 0; border-radius: 0 0 0 60% / 0 0 0 10%; }
+.pose-oval {
+  position: absolute;
+  left: 50%; top: 54%;
+  z-index: 1;
   display: grid;
   place-items: center;
-  border: 2px dashed rgb(244 238 227 / .7);
+  width: 38%;
+  aspect-ratio: .78;
+  border: 2px dashed rgb(31 26 23 / .55);
   border-radius: 50%;
+  background: rgb(244 238 227 / .82);
   transform: translate(-50%, -50%);
 }
-.vf-oval small { width: 70%; font-family: var(--font-type); font-size: 9px; line-height: 1.2; letter-spacing: .1em; text-align: center; text-transform: uppercase; color: rgb(244 238 227 / .8); }
-.flip { position: absolute; right: 18%; top: 12%; width: 17%; aspect-ratio: .78; overflow: hidden; border-radius: 4px; background: #141110; box-shadow: inset 0 -50% 0 rgb(255 255 255 / .04), 0 2px 3px rgb(0 0 0 / .4); }
+.pose-oval small { width: 70%; color: rgb(31 26 23 / .72); font-family: var(--font-type); font-size: 9px; line-height: 1.2; letter-spacing: .1em; text-align: center; text-transform: uppercase; }
+.flip { position: absolute; right: 30%; top: 11%; z-index: 3; width: 13%; aspect-ratio: .78; overflow: hidden; border-radius: 4px; background: #141110; box-shadow: inset 0 0 0 1.5px var(--gold), 0 2px 4px rgb(0 0 0 / .45); }
 .flip::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgb(0 0 0 / .6); }
-.flip-roll { display: grid; grid-template-rows: repeat(3, 1fr); height: 300%; animation: flip-count 4s infinite; }
-.flip-roll b { display: grid; place-items: center; font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: clamp(18px, 2.4vw, 30px); color: var(--cream); }
+.flip-roll { display: grid; grid-template-rows: repeat(3, 1fr); height: 300%; animation: flip-count 4s steps(1) infinite; }
+.flip-roll b { display: grid; place-items: center; color: var(--cream); font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: clamp(16px, 2vw, 26px); }
 @keyframes flip-count {
   0%, 24% { transform: translateY(0); }
   25%, 49% { transform: translateY(-33.333%); }
   50%, 100% { transform: translateY(-66.667%); }
 }
-.vf-flash { position: absolute; inset: 0; background: #fff; opacity: 0; animation: vf-flash 4s infinite; }
-@keyframes vf-flash { 0%, 74% { opacity: 0; } 76% { opacity: 1; } 92%, 100% { opacity: 0; } }
-/* 02 customise: a strip cycling through frames as a sticker drops on */
+.pose-flash { position: absolute; inset: 0; z-index: 4; background: #FFFBF0; opacity: 0; animation: pose-flash 4s var(--ease-calm) infinite; }
+@keyframes pose-flash { 0%, 72% { opacity: 0; } 76% { opacity: .55; } 92%, 100% { opacity: 0; } }
+
+/* 02 customise: one strip changes frame (Midnight, Train Ticket, Receipt) and a sticker lands on it */
 .mini {
   position: absolute;
   left: 50%; top: 50%;
   display: grid;
   align-content: start;
-  gap: 5%;
-  width: 30%;
+  gap: 4%;
+  height: 84%;
   aspect-ratio: 1 / 2.9;
-  padding: 7% 5%;
+  padding: 3% 2.4%;
   transform: translate(-50%, -50%) rotate(-3deg);
-  box-shadow: 3px 6px 10px rgb(42 33 28 / .3);
+  box-shadow: 3px 8px 14px rgb(0 0 0 / .45);
 }
-.mini i {
-  display: block;
-  aspect-ratio: 4 / 3;
-  background: radial-gradient(ellipse 22% 34% at 50% 50%, transparent 86%, rgb(31 26 23 / .38) 90% 100%, transparent 104%), #F4ECDC;
-}
+.mini i { display: block; aspect-ratio: 4 / 3; background: radial-gradient(ellipse 22% 34% at 50% 50%, transparent 86%, rgb(31 26 23 / .38) 90% 100%, transparent 104%), #F4ECDC; }
 .mini b { display: block; margin-top: 4%; font-size: 8px; text-align: center; letter-spacing: .1em; text-transform: uppercase; }
-.demo-custom .mini { opacity: 0; animation: skin 6s infinite; }
+.demo-custom .mini { opacity: 0; animation: skin 6s var(--ease-calm) infinite; }
 .mini-black { background: #141110; }
 .mini-black i { box-shadow: 0 0 0 2px #F7F4EE; }
 .mini-mark { padding-top: 3px; border-top: 1px solid var(--gold); color: var(--cream); font-family: var(--font-logo); font-weight: 400; font-size: 11px !important; letter-spacing: 0 !important; text-transform: none !important; }
-.mini-ticket { background: var(--cream); border-radius: 6px; box-shadow: inset 0 0 0 2px var(--red-oxide), 3px 6px 10px rgb(42 33 28 / .3); animation-delay: 2s !important; }
+.mini-ticket { background: var(--cream); border-radius: 6px; box-shadow: inset 0 0 0 2px var(--red-oxide), 3px 8px 14px rgb(0 0 0 / .45); animation-delay: 2s !important; }
 .mini-ticket b { color: var(--red-oxide); font-family: var(--font-type); font-weight: 400; }
 .mini-receipt {
   background: #F7F7F4;
@@ -1549,19 +1561,28 @@ html:not(.js-develop) .doodle .pencil { stroke-dashoffset: 0; }
 @keyframes skin { 0% { opacity: 0; } 4%, 31% { opacity: 1; } 35%, 100% { opacity: 0; } }
 .drop-sticker {
   position: absolute;
-  left: 60%; top: 34%;
-  width: 14%;
+  left: 58%; top: 26%;
+  z-index: 2;
+  width: 15%;
   aspect-ratio: 1;
   background: center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 35C9 27 3 21 4 13 5 7 12 4 20 11 28 4 35 7 36 13 37 21 31 27 20 35Z' fill='%23B3202A' stroke='%23FBF6EC' stroke-width='3'/%3E%3C/svg%3E");
-  filter: drop-shadow(1px 3px 2px rgb(42 33 28 / .35));
-  animation: drop 2s var(--spring) infinite;
+  filter: drop-shadow(1px 3px 2px rgb(0 0 0 / .4));
+  animation: drop 2s var(--ease-calm) infinite;
 }
-@keyframes drop { 0% { opacity: 0; transform: translateY(-80%) scale(1.3) rotate(-20deg); } 30% { opacity: 1; transform: none; } 85% { opacity: 1; transform: none; } 100% { opacity: 0; transform: none; } }
-/* 03 keep: a strip prints out of a slot, then a download arrow stamps on */
-.keep-slot { position: absolute; left: 24%; right: 24%; top: 12%; z-index: 2; height: 7%; border-radius: 6px; background: var(--tex-brushed) 0 0 / 256px 128px, linear-gradient(#D9D4CA, #8E8778); box-shadow: 0 3px 5px rgb(42 33 28 / .3); }
-.keep-slot::after { content: ""; position: absolute; left: 10%; right: 10%; top: 45%; height: 3px; border-radius: 2px; background: #120A08; }
-.keep-window { position: absolute; left: 50%; top: 15.5%; width: 24%; height: 74%; overflow: hidden; transform: translateX(-50%); }
-.demo-keep .mini { position: relative; left: auto; top: auto; width: 100%; transform: none; animation: print 4s infinite; }
+@keyframes drop { 0% { opacity: 0; transform: translateY(-60%) scale(1.2) rotate(-16deg); } 30% { opacity: 1; transform: none; } 85% { opacity: 1; transform: none; } 100% { opacity: 0; transform: none; } }
+
+/* 03 keep: the strip slides out of the booth's PRINTS slot, then a "saved" stamp lands */
+.keep-panel {
+  position: absolute;
+  left: 14%; right: 14%; top: 0; bottom: 0;
+  background: linear-gradient(90deg, #7A1C24, #B8323C 8%, #9A2630 30%, #C2414A 52%, #931F29 74%, #A92C36 93%, #6E1820);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / .25), 0 0 18px rgb(0 0 0 / .5);
+}
+.keep-panel small { position: absolute; left: 0; right: 0; top: 4%; color: #F4D7D9; font-family: var(--font-type); font-size: 9px; letter-spacing: .2em; text-align: center; text-transform: uppercase; opacity: .85; }
+.keep-slot { position: absolute; left: 16%; right: 16%; top: 11%; height: 11%; border-radius: 6px; background: linear-gradient(90deg, #857F76, #D4D0C9 50%, #7C776F); box-shadow: inset 0 0 0 1px #857F76, 0 3px 5px rgb(20 8 4 / .4); }
+.keep-slot::after { content: ""; position: absolute; left: 12%; right: 12%; top: 52%; height: 4px; border-radius: 2px; background: #120A08; }
+.keep-window { position: absolute; left: 50%; top: 18%; z-index: 2; width: 30%; height: 80%; overflow: hidden; transform: translateX(-50%); }
+.demo-keep .mini { position: relative; left: auto; top: auto; width: 100%; height: auto; transform: none; animation: print 4s var(--ease-calm) infinite; }
 .mini-cream { background: var(--ivory); }
 @keyframes print {
   0% { transform: translateY(-100%); } 12%, 18% { transform: translateY(-74%); } 30%, 36% { transform: translateY(-48%); }
@@ -1569,32 +1590,34 @@ html:not(.js-develop) .doodle .pencil { stroke-dashoffset: 0; }
 }
 .keep-stamp {
   position: absolute;
-  right: 12%; bottom: 12%;
+  right: 8%; bottom: 10%;
   z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 22%;
-  aspect-ratio: 1;
+  padding: .3em .55em;
   border: 3px solid var(--cherry);
-  border-radius: 50%;
+  border-radius: 6px;
   color: var(--cherry);
-  background: rgb(244 238 227 / .8);
+  background: rgb(244 238 227 / .92);
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(11px, 1.15vw, 15px);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgb(0 0 0 / .35);
   opacity: 0;
-  animation: stamp-on 4s infinite;
+  animation: stamp-on 4s var(--ease-calm) infinite;
 }
-.keep-stamp svg { width: 60%; }
-@keyframes stamp-on { 0%, 66% { opacity: 0; transform: scale(1.6) rotate(-12deg); } 72% { opacity: .92; transform: scale(1) rotate(-12deg); } 94% { opacity: .92; transform: scale(1) rotate(-12deg); } 100% { opacity: 0; transform: scale(1) rotate(-12deg); } }
+@keyframes stamp-on { 0%, 66% { opacity: 0; transform: scale(1.4) rotate(-12deg); } 72% { opacity: .95; transform: scale(1) rotate(-12deg); } 94% { opacity: .95; transform: scale(1) rotate(-12deg); } 100% { opacity: 0; transform: scale(1) rotate(-12deg); } }
 
-/* the privacy tag, tied to the end of the twine */
+/* the privacy tag hangs from the right end of the line, well clear of the third print */
 .tag-note {
   position: absolute;
-  right: 0; top: 70px;
-  width: calc(var(--end) - 18px);
-  padding: var(--s1) var(--s1) var(--s1) 30px;
+  right: 6px; top: 66px;
+  width: 128px;
+  padding: 8px 10px 8px 28px;
   color: var(--ink);
   font-family: var(--font-type);
   font-size: var(--fs-14);
-  line-height: var(--lh-snug);
+  line-height: 1.3;
   background: var(--grain-paper), var(--butter);
   clip-path: polygon(12px 0, 100% 0, 100% 100%, 12px 100%, 0 50%);
   filter: var(--drop);
@@ -1602,7 +1625,8 @@ html:not(.js-develop) .doodle .pencil { stroke-dashoffset: 0; }
   transform-origin: 16px 22px;
 }
 .tag-note::before { content: ""; position: absolute; left: 13px; top: 18px; width: 8px; height: 8px; border-radius: 50%; background: var(--cream); box-shadow: inset 0 0 0 1.5px rgb(42 33 28 / .3); }
-.drying-line::after { content: ""; position: absolute; right: calc(var(--end) - 1px); top: 24px; width: 1.5px; height: 66px; background: #8B6A42; transform-origin: top; transform: rotate(-26deg); }
+/* the string from the end of the line to the tag's hole */
+.drying-line::after { content: ""; position: absolute; right: calc(var(--end) - 1px); top: 24px; width: 1.5px; height: 74px; background: #8B6A42; transform-origin: top; transform: rotate(-39deg); }
 
 .site-footer {
   display: flex;
@@ -2708,20 +2732,6 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 
 /* the drying line turns vertical on narrow screens */
 @media (max-width: 720px) {
-  .twine, .tack, .doodle, .drying-line::after { display: none; }
-  .drying-line::before {
-    content: "";
-    position: absolute;
-    left: 10px; top: -12px; bottom: 0;
-    width: 4px;
-    border-radius: 2px;
-    background: repeating-linear-gradient(#A8814F 0 3px, #6E5230 3px 5px);
-    box-shadow: 2px 2px 2px rgb(42 33 28 / .2);
-  }
-  .polaroids { grid-template-columns: 1fr; width: auto; max-width: 340px; padding: 0 0 0 48px; gap: var(--s6); }
-  .polaroid { margin-top: 0; transform-origin: -30px 40px; }
-  .clothespin { left: -38px; top: 22px; margin-left: 0; transform: rotate(90deg); }
-  .tag-note { position: relative; right: auto; top: auto; width: auto; max-width: 260px; margin: var(--s5) 0 0 48px; transform: rotate(-2deg); }
   .menu-grid { grid-template-columns: 1fr; }
 }
 
@@ -2752,7 +2762,6 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   .ticket-face { width: 84px; }
   .frame-grid, .filter-grid { grid-template-columns: repeat(2, 1fr); }
   .field-pair { grid-template-columns: 1fr; }
-  .polaroids { padding: 0 14px 0 42px; }
 }
 
 /* ---------------------------------------------------------
@@ -2827,6 +2836,35 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   .booth-sign { gap: 0; }
   .wainscot { grid-row: 1; }
   .floor-tiles { background-size: 40px 40px; }
+}
+
+/* How it works on phones and small tablets: the prints stack, each on its own short line, the tag last */
+@media (max-width: 768px) {
+  .drying-line { --end: 0px; }
+  .twine, .tack, .peg-nums, .drying-line::after { display: none; }
+  .polaroids { grid-template-columns: minmax(0, 1fr); width: 85%; max-width: 380px; margin-inline: auto; padding: 0; gap: var(--s8); }
+  .polaroid { margin-top: 44px; }
+  /* its own short peg line, tacked at both ends */
+  .polaroid::before {
+    content: "";
+    position: absolute;
+    left: -7%; right: -7%; top: -26px;
+    height: 4px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(90deg, #A8814F 0 3px, #6E5230 3px 5px);
+    box-shadow: 0 3px 3px rgb(42 33 28 / .2);
+  }
+  .polaroid::after {
+    content: "";
+    position: absolute;
+    left: calc(-7% - 7px); right: calc(-7% - 7px); top: -31px;
+    height: 14px;
+    background:
+      radial-gradient(circle at 7px 50%, #FBEBB8 0, var(--gold) 4px, #6B4F1C 6px, transparent 7px),
+      radial-gradient(circle at calc(100% - 7px) 50%, #FBEBB8 0, var(--gold) 4px, #6B4F1C 6px, transparent 7px);
+    pointer-events: none;
+  }
+  .tag-note { position: relative; right: auto; top: auto; width: auto; max-width: 240px; margin: var(--s6) auto 0; transform: rotate(-2deg); }
 }
 
 /* ---------------------------------------------------------

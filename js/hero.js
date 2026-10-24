@@ -216,19 +216,18 @@ function hangingThings(hero) {
 }
 
 /* "How it works": polaroids develop the first time they scroll into view,
-   their little demos loop only while visible, and the pencil arrows draw in */
+   and their little demos loop only while visible */
 function howItWorks() {
-  const items = $$('.polaroid'), doodles = $$('.doodle');
+  const items = $$('.polaroid');
   if (!('IntersectionObserver' in window) || reducedMotion()) {
     items.forEach(p => p.classList.add('is-developed', 'is-playing'));
-    doodles.forEach(d => d.classList.add('is-drawn'));
     return;
   }
   // opt in to the undeveloped look only now that something will develop it
   document.documentElement.classList.add('js-develop');
   const io = new IntersectionObserver(entries => entries.forEach(en => {
     en.target.classList.toggle('is-playing', en.isIntersecting);
-    if (en.isIntersecting) en.target.classList.add('is-developed', 'is-drawn');
+    if (en.isIntersecting) en.target.classList.add('is-developed');
   }), { threshold: 0.3 });
-  [...items, ...doodles].forEach(n => io.observe(n));
+  items.forEach(n => io.observe(n));
 }
