@@ -1739,22 +1739,24 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   align-content: center;
   gap: 3px;
   width: 96px; height: 56px;
-  color: var(--ink);
-  background: var(--grain-subtle), rgb(244 238 227 / .92);
-  box-shadow: 0 1px 3px rgb(0 0 0 / .32);
+  color: rgb(244 238 227 / .8);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgb(244 238 227 / .4);
   transition: background-color 250ms var(--ease-calm), box-shadow 250ms var(--ease-calm), transform 250ms var(--ease-calm), opacity 250ms var(--ease-calm);
 }
 .ticket-chip-face b { font-family: var(--font-serif); font-weight: 600; font-size: 1.25rem; line-height: 1; font-variant-numeric: lining-nums; }
 .ticket-chip-face b span { font-size: .72em; }
-.ticket-chip-face small { font-family: var(--font-sans); font-weight: 500; font-size: .6875rem; letter-spacing: .06em; color: var(--muted); }
+.ticket-chip-face small { font-family: var(--font-sans); font-weight: 500; font-size: .6875rem; letter-spacing: .06em; color: rgb(244 238 227 / .65); }
+.ticket-chip input:checked + .ticket-chip-face small { color: var(--muted); }
+.menu-layouts .layout-name { color: inherit; }
 .ticket-chips-pair .ticket-chip-face { width: 72px; }
 .ticket-chips-pair .ticket-chip-face b { font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-14); }
 @media (hover: hover) {
-  .ticket-chip:hover input:not(:checked) + .ticket-chip-face { background-color: #F4EEE3; box-shadow: 0 3px 6px rgb(0 0 0 / .35); transform: translateY(-1px); }
+  .ticket-chip:hover input:not(:checked) + .ticket-chip-face { box-shadow: inset 0 0 0 1px rgb(244 238 227 / .6); transform: translateY(-1px); }
 }
 /* the one selected state: a 2px gold border on full cream, a small gold seal and a soft gold glow */
 .ticket-chip input:checked + .ticket-chip-face,
-.menu-layouts .layout-opt input:checked + .layout-card { background-color: #F4EEE3; box-shadow: inset 0 0 0 2px #B08A3A, 0 0 0 3px rgb(226 194 122 / .22), 0 0 16px rgb(226 194 122 / .32); }
+.menu-layouts .layout-opt input:checked + .layout-card { color: var(--ink); background: var(--grain-subtle), #F4EEE3; box-shadow: inset 0 0 0 2px #B08A3A, 0 0 0 3px rgb(226 194 122 / .22), 0 0 16px rgb(226 194 122 / .32); }
 .ticket-chip input:checked + .ticket-chip-face::after,
 .menu-layouts .layout-opt input:checked + .layout-card::after {
   content: "✓";
@@ -1785,11 +1787,12 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   padding: var(--s0) 4px;
   border: 0;
   border-radius: 0;
-  background: var(--grain-subtle), rgb(244 238 227 / .92);
-  box-shadow: 0 1px 3px rgb(0 0 0 / .32);
+  color: rgb(244 238 227 / .8);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgb(244 238 227 / .4);
   transition: background-color 250ms var(--ease-calm), box-shadow 250ms var(--ease-calm), transform 250ms var(--ease-calm), opacity 250ms var(--ease-calm);
 }
-@media (hover: hover) { .menu-layouts .layout-opt:hover input:not(:checked):not(:disabled) + .layout-card { background-color: #F4EEE3; box-shadow: 0 3px 6px rgb(0 0 0 / .35); transform: translateY(-1px); } }
+@media (hover: hover) { .menu-layouts .layout-opt:hover input:not(:checked):not(:disabled) + .layout-card { box-shadow: inset 0 0 0 1px rgb(244 238 227 / .6); transform: translateY(-1px); } }
 .menu-layouts .layout-thumb { height: 64px; }
 .menu-layouts .layout-thumb svg { max-height: none; filter: none; }
 /* sentence case for the shared layout names ("Classic strip", "2×2 grid") */
