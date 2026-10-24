@@ -28,13 +28,13 @@
   <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-25s","/js/booth.js":"/js/booth.js?v=2026-10-25s","/js/camera.js":"/js/camera.js?v=2026-10-25s","/js/editor.js":"/js/editor.js?v=2026-10-25s","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-25s","/js/export.js":"/js/export.js?v=2026-10-25s","/js/filters.js":"/js/filters.js?v=2026-10-25s","/js/frames.js":"/js/frames.js?v=2026-10-25s","/js/hero.js":"/js/hero.js?v=2026-10-25s","/js/icons.js":"/js/icons.js?v=2026-10-25s","/js/layouts.js":"/js/layouts.js?v=2026-10-25s","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-25s","/js/main.js":"/js/main.js?v=2026-10-25s","/js/patterns.js":"/js/patterns.js?v=2026-10-25s","/js/placeholders.js":"/js/placeholders.js?v=2026-10-25s","/js/ransom.js":"/js/ransom.js?v=2026-10-25s","/js/render.js":"/js/render.js?v=2026-10-25s","/js/reveal.js":"/js/reveal.js?v=2026-10-25s","/js/sound.js":"/js/sound.js?v=2026-10-25s","/js/state.js":"/js/state.js?v=2026-10-25s","/js/stickers.js":"/js/stickers.js?v=2026-10-25s","/js/story.js":"/js/story.js?v=2026-10-25s","/js/textures.js":"/js/textures.js?v=2026-10-25s","/js/transitions.js":"/js/transitions.js?v=2026-10-25s","/js/ui.js":"/js/ui.js?v=2026-10-25s","/js/utils.js":"/js/utils.js?v=2026-10-25s"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-25s">
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-25t","/js/booth.js":"/js/booth.js?v=2026-10-25t","/js/camera.js":"/js/camera.js?v=2026-10-25t","/js/editor.js":"/js/editor.js?v=2026-10-25t","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-25t","/js/export.js":"/js/export.js?v=2026-10-25t","/js/filters.js":"/js/filters.js?v=2026-10-25t","/js/frames.js":"/js/frames.js?v=2026-10-25t","/js/hero.js":"/js/hero.js?v=2026-10-25t","/js/icons.js":"/js/icons.js?v=2026-10-25t","/js/layouts.js":"/js/layouts.js?v=2026-10-25t","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-25t","/js/main.js":"/js/main.js?v=2026-10-25t","/js/patterns.js":"/js/patterns.js?v=2026-10-25t","/js/placeholders.js":"/js/placeholders.js?v=2026-10-25t","/js/ransom.js":"/js/ransom.js?v=2026-10-25t","/js/render.js":"/js/render.js?v=2026-10-25t","/js/reveal.js":"/js/reveal.js?v=2026-10-25t","/js/sound.js":"/js/sound.js?v=2026-10-25t","/js/state.js":"/js/state.js?v=2026-10-25t","/js/stickers.js":"/js/stickers.js?v=2026-10-25t","/js/story.js":"/js/story.js?v=2026-10-25t","/js/textures.js":"/js/textures.js?v=2026-10-25t","/js/transitions.js":"/js/transitions.js?v=2026-10-25t","/js/ui.js":"/js/ui.js?v=2026-10-25t","/js/utils.js":"/js/utils.js?v=2026-10-25t"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-25t">
   <!-- the page is complete without script; the app starts once the fonts have painted (or at the first touch or key) -->
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-25s'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-25t'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
@@ -454,8 +454,9 @@
       <div class="booth-live" id="booth-live" hidden>
         <div class="camera-head">
           <button type="button" class="text-link text-link-light" id="btn-live-back"><span class="i"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Menu</button>
+          <button type="button" class="ring-toggle" id="ring-toggle" aria-pressed="false"><svg class="ring-bulb" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 17.5h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V17.5h5.2v-1.7c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>Ring light<span class="ring-switch" aria-hidden="true"></span></button>
         </div>
-        <div class="booth-interior">
+        <div class="booth-interior" id="booth-interior">
           <div class="camera" id="camera" data-state="loading">
             <video id="video" playsinline muted autoplay aria-label="Camera preview"></video>
             <div class="camera-status"><span class="spinner" aria-hidden="true"></span><p id="camera-status">Warming up the camera…</p></div>
@@ -474,8 +475,11 @@
           </div>
         </div>
         <div class="camera-actions">
-          <button type="button" class="shutter" id="btn-snap" disabled aria-label="Take photos"><span class="shutter-ring"></span></button>
-          <p class="kbd-hint"><kbd>Space</kbd> to shoot · <kbd>Esc</kbd> to go back</p>
+          <span class="coin-bezel shutter-bezel">
+            <button type="button" class="coin-btn shutter" id="btn-snap" disabled aria-label="Take photos"><span class="coin-dome"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2.2l1.4-2h5.8l1.4 2h2.2A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="13" r="3.5"/></svg></span></button>
+          </span>
+          <ol class="shot-tray" id="shot-tray" aria-hidden="true"></ol>
+          <p class="kbd-hint">Press <kbd>Space</kbd> to shoot · <kbd>Esc</kbd> to go back</p>
         </div>
       </div>
 

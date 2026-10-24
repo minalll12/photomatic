@@ -37,6 +37,7 @@ const dom = {
   counter: $('#shot-counter'), prompt: $('#pose-line'), countdown: $('#countdown'), countNum: $('#countdown-num'),
   flash: $('#flash'), snap: $('#btn-snap'), error: $('#cam-error'), errorMsg: $('#cam-error-msg'),
   announcer: $('#booth-announce'), thumbs: $('#review-grid'), file: $('#file-input'),
+  ring: $('#ring-toggle'), tray: $('#shot-tray'),
 };
 
 export const stopCamera = () => stopStream(dom.video);
@@ -56,7 +57,8 @@ function setPhase(phase) {
   dom.error.hidden = phase !== 'error';
   dom.frame.hidden = phase === 'error';
   if (phase === 'loading') dom.status.textContent = 'Warming up the camera…';
-  if (phase === 'live') dom.counter.textContent = `${state.settings.shots} shots · ${state.settings.timer}s timer`;
+  if (phase === 'live') dom.counter.innerHTML = `<span class="num">${state.settings.shots}</span> shots · <span class="num">${state.settings.timer}</span>s timer`;
+  if (phase === 'loading' || phase === 'live') fillTray([]);
 }
 const announce = msg => { dom.announcer.textContent = msg; };
 
@@ -165,6 +167,48 @@ export async function boothBack() {
 }
 
 /* =========================================================
+   Ring light: a cream glow round the frame, remembered per browser
+   ========================================================= */
+const RING_KEY = 'photomatic-ringlight';
+let ringOn = false;
+try { ringOn = localStorage.getItem(RING_KEY) === '1'; } catch { /* storage blocked */ }
+function setRing(on) {
+  ringOn = on;
+  dom.ring.setAttribute('aria-pressed', String(on));
+  dom.live.classList.toggle('ring-on', on);
+  try { localStorage.setItem(RING_KEY, on ? '1' : '0'); } catch { /* storage blocked */ }
+}
+setRing(ringOn);
+dom.ring.addEventListener('click', () => { audio(); switchClick(); setRing(!ringOn); });
+
+/* =========================================================
+   Shot tray: one empty print per shot under the shutter
+   ========================================================= */
+const TRAY_W = 96;
+function trayThumb(li, p) {
+  const c = makeCanvas(TRAY_W, Math.round(TRAY_W / ASPECT));
+  const cx = c.getContext('2d');
+  cx.imageSmoothingQuality = 'high';
+  cx.drawImage(p.src, 0, 0, c.width, c.height);
+  li.replaceChildren(c);
+  li.className = p.failed ? 'is-failed' : 'is-filled';
+}
+// the tray for this session, with any photos already taken (photos[i] may be empty)
+function fillTray(photos) {
+  dom.tray.replaceChildren(...Array.from({ length: photos.length || state.settings.shots }, (_, i) => {
+    const li = el('li');
+    if (photos[i]) trayThumb(li, photos[i]);
+    return li;
+  }));
+}
+function dropIntoTray(i, p) {
+  const li = dom.tray.children[i];
+  if (!li) return;
+  trayThumb(li, p);
+  restartAnimation(li, 'drop-in');
+}
+
+/* =========================================================
    Capture
    ========================================================= */
 const makePhoto = src => ({ src, seed: Math.floor(Math.random() * 1e9) });
@@ -198,12 +242,14 @@ async function shoot(i, total) {
   dom.countdown.classList.remove('is-on');
   dom.prompt.classList.remove('is-on');
   restartAnimation(dom.flash, 'go');
+  if (ringOn) restartAnimation(dom.live, 'is-boost');
   shutter();
   flashPop();
   // the still develops in the background so the next countdown isn't held up
   const pending = capture(dom.video, { aspect: ASPECT, mirror: state.settings.mirror })
     .then(c => (c ? makePhoto(c) : failedPhoto(i)))
     .catch(() => failedPhoto(i));
+  pending.then(p => { if (my === state.booth.session) dropIntoTray(i, p); });
   announce(`Photo ${i + 1} taken`);
   await wait(700);
   return alive() ? pending : null;
@@ -229,6 +275,7 @@ async function runAll() {
 async function retakeOne(i) {
   const my = ++state.booth.session;
   setPhase('shooting');
+  fillTray(state.design.photos.map((p, j) => (j === i ? null : p)));
   await wait(400);
   const p = await shoot(i, state.design.photos.length);
   if (!p || my !== state.booth.session) return;
@@ -240,7 +287,7 @@ export function snapKey() {
   if (state.booth.phase === 'live') runAll();
 }
 
-dom.snap.addEventListener('click', runAll);
+dom.snap.addEventListener('click', () => { audio(); thunk(); runAll(); });
 $('#btn-live-back').addEventListener('click', boothBack);
 $('#btn-retry').addEventListener('click', startLive);
 

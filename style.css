@@ -1942,22 +1942,105 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 }
 
 .booth-live { display: grid; justify-items: center; gap: var(--s3); }
-.camera-head { display: flex; justify-content: flex-start; width: min(100%, 860px, calc((100svh - var(--header-h) - 330px) * 4 / 3 + 52px)); min-width: min(100%, 320px); margin-bottom: calc(var(--s3) * -1); }
+.booth-live {
+  --ease-calm: cubic-bezier(.22, .61, .36, 1);
+  --frame-w: min(100%, 860px, calc((100svh - var(--header-h) - 372px) * 4 / 3 + 52px));
+}
+.camera-head { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); width: var(--frame-w); min-width: min(100%, 320px); margin-bottom: calc(var(--s3) * -1); }
+/* the frame: a marquee of bulbs (--bulb-g apart, in a --bulb-d deep border) round brushed brass */
 .booth-interior {
+  --bulb: radial-gradient(circle, #FFF6DC 0 2.4px, #F7C866 3.2px, rgb(247 200 102 / .3) 6px, transparent 9px);
+  --bulb-g: 26px;
+  --bulb-d: 26px;
   position: relative;
-  width: min(100%, 860px, calc((100svh - var(--header-h) - 330px) * 4 / 3 + 52px));
+  width: var(--frame-w);
   min-width: min(100%, 320px);
-  padding: 26px;
+  padding: var(--bulb-d);
   border-radius: 10px;
   background:
-    radial-gradient(circle, #FFF6DC 0 2.4px, #F7C866 3.2px, rgb(247 200 102 / .3) 6px, transparent 9px) 13px 0 / 26px 26px repeat-x,
-    radial-gradient(circle, #FFF6DC 0 2.4px, #F7C866 3.2px, rgb(247 200 102 / .3) 6px, transparent 9px) 13px 100% / 26px 26px repeat-x,
-    radial-gradient(circle, #FFF6DC 0 2.4px, #F7C866 3.2px, rgb(247 200 102 / .3) 6px, transparent 9px) 0 13px / 26px 26px repeat-y,
-    radial-gradient(circle, #FFF6DC 0 2.4px, #F7C866 3.2px, rgb(247 200 102 / .3) 6px, transparent 9px) 100% 13px / 26px 26px repeat-y,
+    var(--bulb) calc(var(--bulb-g) / 2) 0 / var(--bulb-g) var(--bulb-d) repeat-x,
+    var(--bulb) calc(var(--bulb-g) / 2) 100% / var(--bulb-g) var(--bulb-d) repeat-x,
+    var(--bulb) 0 calc(var(--bulb-g) / 2) / var(--bulb-d) var(--bulb-g) repeat-y,
+    var(--bulb) 100% calc(var(--bulb-g) / 2) / var(--bulb-d) var(--bulb-g) repeat-y,
     var(--tex-brushed) 0 0 / 256px 128px,
     linear-gradient(#5A4B3B, #2E241C);
   box-shadow: inset 0 0 0 1px rgb(255 240 200 / .2), 0 0 60px rgb(247 200 102 / .16), var(--lift-3);
 }
+/* ring light: a cream wash on the room round the frame (::before) and the same bulbs burning
+   warm-white (::after); each capture boosts both to white for a moment */
+.booth-interior::before,
+.booth-interior::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 450ms var(--ease-calm);
+}
+.booth-interior::before {
+  inset: -130px -170px;
+  z-index: -1;
+  background: radial-gradient(farthest-side, rgb(255 244 224 / .7) 58%, rgb(255 238 212 / .3) 78%, rgb(255 236 208 / 0));
+}
+.booth-interior::after {
+  --bulb: radial-gradient(circle, #FFFFFF 0 3.2px, #FFF3D6 4.2px, rgb(255 242 214 / .55) 6.5px, transparent 9.5px);
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  background:
+    var(--bulb) calc(var(--bulb-g) / 2) 0 / var(--bulb-g) var(--bulb-d) repeat-x,
+    var(--bulb) calc(var(--bulb-g) / 2) 100% / var(--bulb-g) var(--bulb-d) repeat-x,
+    var(--bulb) 0 calc(var(--bulb-g) / 2) / var(--bulb-d) var(--bulb-g) repeat-y,
+    var(--bulb) 100% calc(var(--bulb-g) / 2) / var(--bulb-d) var(--bulb-g) repeat-y;
+  box-shadow: 0 0 34px rgb(255 246 228 / .45);
+}
+.booth-live.ring-on .booth-interior::before,
+.booth-live.ring-on .booth-interior::after { opacity: 1; }
+.booth-live.ring-on.is-boost .booth-interior::before { animation: ring-boost 700ms var(--ease-out); }
+.booth-live.ring-on.is-boost .booth-interior::after { animation: ring-boost-bulbs 700ms var(--ease-out); }
+@keyframes ring-boost { from { filter: saturate(0) brightness(1.5); transform: scale(1.1); } }
+@keyframes ring-boost-bulbs { from { filter: brightness(1.6); box-shadow: 0 0 60px #fff; } }
+
+.ring-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 8px 0 10px;
+  border: 0;
+  border-radius: 999px;
+  color: #2A1F12;
+  font: 600 var(--fs-12) / 1 var(--font-sans);
+  letter-spacing: .04em;
+  text-shadow: 0 1px 0 rgb(255 244 210 / .55);
+  background: var(--tex-brushed) 0 0 / 256px 128px, linear-gradient(#F3D98B, #C9993C 45%, #E9C66C 70%, #A57B2C);
+  box-shadow: inset 0 0 0 1px rgb(255 240 200 / .5), 0 2px 5px rgb(14 2 4 / .45);
+  cursor: pointer;
+  transition: box-shadow 300ms var(--ease-calm);
+}
+.ring-bulb { flex: none; color: #5A4318; transition: color 300ms, filter 300ms; }
+/* a little toggle switch: a dark slot with a brass knob that slides over and lights */
+.ring-switch {
+  position: relative;
+  flex: none;
+  width: 26px; height: 14px;
+  border-radius: 7px;
+  background: #3A2A14;
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / .6);
+}
+.ring-switch::after {
+  content: "";
+  position: absolute;
+  left: 2px; top: 2px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFF1C2, #B8934A 70%);
+  transition: transform 200ms var(--ease-out);
+}
+.ring-toggle[aria-pressed="true"] { box-shadow: inset 0 0 0 1px rgb(255 240 200 / .6), 0 2px 5px rgb(14 2 4 / .45), 0 0 16px rgb(255 240 210 / .45); }
+.ring-toggle[aria-pressed="true"] .ring-bulb { color: #FFFBEF; fill: rgb(255 251 239 / .9); filter: drop-shadow(0 0 3px #FFF6DC) drop-shadow(0 0 1px #6B4F1C); }
+.ring-toggle[aria-pressed="true"] .ring-switch::after { transform: translateX(12px); background: radial-gradient(circle, #FFFFFF 30%, #FFF1C8); box-shadow: 0 0 6px #FFF6DC; }
+.ring-toggle:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+@media (hover: hover) { .ring-toggle:hover { box-shadow: inset 0 0 0 1px rgb(255 240 200 / .7), 0 3px 8px rgb(14 2 4 / .5); } }
 .camera {
   position: relative;
   aspect-ratio: 4 / 3;
@@ -1974,8 +2057,8 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   z-index: 3;
   pointer-events: none;
   background:
-    linear-gradient(90deg, #3A0A0E, #7A2630 30%, #4A1015 55%, #8A2E38 80%, transparent) left / 7% 100% no-repeat,
-    linear-gradient(270deg, #3A0A0E, #7A2630 30%, #4A1015 55%, #8A2E38 80%, transparent) right / 7% 100% no-repeat,
+    linear-gradient(90deg, #3A0A0E, #7A2630 30%, #4A1015 55%, #8A2E38 80%, transparent) left / 4.2% 100% no-repeat,
+    linear-gradient(270deg, #3A0A0E, #7A2630 30%, #4A1015 55%, #8A2E38 80%, transparent) right / 4.2% 100% no-repeat,
     radial-gradient(120% 80% at 50% 45%, transparent 60%, rgb(14 2 4 / .45));
 }
 .camera video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
@@ -2054,6 +2137,7 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   font-size: var(--fs-xs);
   letter-spacing: .24em;
   text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
   text-shadow: 0 1px 0 rgb(255 244 210 / .6);
   white-space: nowrap;
   background:
@@ -2064,23 +2148,43 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   box-shadow: inset 0 0 0 1px rgb(255 240 200 / .5), 0 3px 6px rgb(14 2 4 / .5);
   transform: translateX(-50%);
 }
-.camera-actions { display: grid; justify-items: center; gap: var(--s1); margin-top: var(--s2); }
-.shutter {
-  position: relative;
-  width: 78px; height: 78px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #FFF7E6, #D9CCB4);
-  box-shadow: 0 0 0 5px var(--red-oxide), 0 0 0 7px rgb(244 238 227 / .35), var(--lift-2);
-  cursor: pointer;
-  transition: transform var(--t-fast);
+.camera-actions { display: grid; justify-items: center; gap: 10px; margin-top: var(--s2); }
+/* the shutter is START's sibling: the same cherry dome in a gold bezel, a camera on it */
+.shutter-bezel { width: 96px; height: 96px; margin-top: 0; }
+.shutter-bezel .shutter { width: 70px; height: 70px; }
+.shutter .coin-dome svg { color: var(--cream); opacity: .95; }
+.coin-btn.shutter:disabled .coin-dome svg { opacity: .7; }
+
+/* one empty cream print per shot; each takes its photo as it's taken */
+.shot-tray { display: flex; justify-content: center; gap: 8px; margin: 2px 0 0; padding: 0; list-style: none; }
+.shot-tray li {
+  width: 42px;
+  aspect-ratio: 4 / 3;
+  padding: 2px;
+  border-radius: 1px;
+  background: rgb(244 238 227 / .1);
+  box-shadow: inset 0 0 0 1px rgb(244 238 227 / .4);
 }
-.shutter-ring { position: absolute; inset: 9px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #C0303A, var(--red-oxide)); }
-.shutter:hover:not(:disabled) { transform: scale(1.04); }
-.shutter:active:not(:disabled) { transform: scale(.96); }
-.shutter:disabled { opacity: .45; cursor: not-allowed; }
-.kbd-hint { color: rgb(244 238 227 / .75); font-size: var(--fs-sm); }
+.shot-tray li.is-filled { background: var(--cream); box-shadow: 0 2px 4px rgb(0 0 0 / .4); }
+.shot-tray li.is-failed { background: rgb(244 238 227 / .1); box-shadow: inset 0 0 0 1.5px #E07A80; }
+.shot-tray canvas { display: block; width: 100%; height: 100%; }
+.shot-tray li.drop-in { animation: drop-in 420ms var(--ease-out); }
+@keyframes drop-in { from { transform: translateY(-10px) rotate(-4deg); opacity: 0; } 60% { opacity: 1; } }
+
+.kbd-hint { color: rgb(244 238 227 / .6); font: 400 var(--fs-12) / 1.4 var(--font-sans); letter-spacing: .01em; }
+.kbd-hint kbd {
+  min-width: 0;
+  margin: 0 1px;
+  padding: 1px 5px;
+  border: 1px solid rgb(244 238 227 / .5);
+  border-radius: 3px;
+  background: none;
+  color: var(--cream);
+  font: 600 .625rem / 1.4 var(--font-sans);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
 .cam-error { width: min(100%, 560px); }
 
 
@@ -2758,7 +2862,7 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   main { padding-top: var(--s3); }
   .hero { margin-top: calc(var(--s3) * -1); }
   .how { padding-block: var(--s8); }
-  .booth-interior { padding: 18px; }
+  .booth-interior { --bulb-d: 20px; }
   .review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); }
   .contact-sheet { padding: var(--s2); }
   .ticket-main { padding: 0 var(--s3); font-size: var(--fs-18); }
@@ -2907,4 +3011,15 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 /* anchors land below the sticky header */
 section[id], .how, [id].heading-block { scroll-margin-top: calc(var(--header-h) + 16px); }
 /* keyboard hints only where there is a keyboard */
-@media (hover: none) { .kbd-hint { display: none; } }
+@media (hover: none), (pointer: coarse) { .kbd-hint { display: none; } }
+
+/* booth camera on phones: the frame fills the width, fewer bulbs, a big shutter */
+@media (max-width: 600px) {
+  .booth-live { --frame-w: 100%; }
+  .booth-interior { --bulb-g: 36px; }
+  .booth-interior::before { inset: -120px -16px; }
+  .ring-toggle { min-height: 44px; padding-inline: 12px 10px; }
+  .shutter-bezel { width: 104px; height: 104px; }
+  .shutter-bezel .shutter { width: 78px; height: 78px; }
+  .shutter .coin-dome svg { width: 28px; height: 28px; }
+}
