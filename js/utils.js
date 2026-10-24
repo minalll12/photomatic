@@ -33,6 +33,11 @@ export const reducedMotion = () => motionQuery.matches;
 export const isCoarse = () => matchMedia('(pointer: coarse)').matches;
 
 // Tiny element factory: el('button', { className, text, html, attrs, dataset, style, on }, children)
+/* Optional art (see assets/README.md): only files listed in assets/overrides.json are requested,
+   so a missing override never costs a failed network request. Resolves to an image or null. */
+const overrides = fetch('assets/overrides.json').then(r => (r.ok ? r.json() : [])).catch(() => []);
+export const optionalImage = path => overrides.then(list => (list.includes(path) ? loadImage(path).catch(() => null) : null));
+
 export function el(tag, { className, text, html, attrs, dataset, style, on } = {}, children = []) {
   const n = document.createElement(tag);
   if (className) n.className = className;

@@ -1,7 +1,7 @@
 /* Static textures and attached props (wax seal, safety pin, clips).
    Everything is generated once at boot, or replaced by a real PNG from
    /assets/textures/ when one exists, then shared by CSS and the canvases. */
-import { C, FONT, makeCanvas, mulberry32, range, svgUrl, loadImage, fontsReady, tracking } from './utils.js';
+import { C, FONT, makeCanvas, mulberry32, range, svgUrl, loadImage, optionalImage, fontsReady, tracking } from './utils.js';
 
 // Canvas-ready images, filled in by initTextures()
 export const IMG = {};
@@ -231,22 +231,6 @@ function bulldogSVG() {
     <circle cx="29" cy="65" r="1.5" fill="#FFF3C8"/><circle cx="89" cy="65" r="1.5" fill="#FFF3C8"/>`);
 }
 
-function pushpinSVG() {
-  return svg('0 0 60 60', `<defs><radialGradient id="pp" cx=".38" cy=".32" r=".7"><stop offset="0" stop-color="#D2474F"/><stop offset=".6" stop-color="#9E1B22"/><stop offset="1" stop-color="#5E1C23"/></radialGradient></defs>
-    <circle cx="30" cy="28" r="17" fill="url(#pp)"/>
-    <circle cx="30" cy="28" r="10" fill="#9E1B22" stroke="#5E1C23" stroke-opacity=".5"/>
-    <ellipse cx="24" cy="21" rx="5" ry="3" fill="#fff" opacity=".5" transform="rotate(-30 24 21)"/>`);
-}
-
-function starburstSVG() {
-  const rnd = mulberry32(14), n = 16;
-  const pts = (R, r) => range(n * 2).map(i => {
-    const a = -Math.PI / 2 + (i * Math.PI) / n, rr = (i % 2 ? r : R) * (0.88 + rnd() * 0.24);
-    return `${(50 + Math.cos(a) * rr).toFixed(1)},${(50 + Math.sin(a) * rr).toFixed(1)}`;
-  }).join(' ');
-  return svg('0 0 100 100', `<polygon points="${pts(48, 24)}" fill="${C.dusty}" stroke="#5F7489" stroke-width="1.5"/><polygon points="${pts(24, 12)}" fill="${C.cream}"/>`);
-}
-
 /* --- desk props for the editor (drawn when /assets/props/*.png is missing) --- */
 function scissorsSVG() {
   return svg('0 0 220 120', `<defs>
@@ -305,8 +289,6 @@ const PROPS = {
   waxSeal: waxSealSVG,
   safetyPin: safetyPinSVG,
   bulldog: bulldogSVG,
-  pushpin: pushpinSVG,
-  starburst: starburstSVG,
   scissors: scissorsSVG,
   washiRoll: washiRollSVG,
   pencil: pencilSVG,
@@ -315,47 +297,68 @@ const PROPS = {
 export const propUrl = (name, ...args) => svgUrl(PROPS[name](...args));
 
 /* =========================================================
-   Boot: prefer real PNGs from /assets/textures/
+   Boot: prefer real PNGs from /assets/textures/ (when listed in assets/overrides.json)
    ========================================================= */
-const asset = name => loadImage(`assets/textures/${name}.png`).catch(() => null);
+const asset = name => optionalImage(`assets/textures/${name}.png`);
 const DESK_PROPS = [['scissors', 'scissors'], ['washi-tape', 'washiRoll'], ['pencil', 'pencil'], ['stamps', 'stamps']];
-const blobUrl = canvas => new Promise(res => canvas.toBlob(b => res(URL.createObjectURL(b)), 'image/png'));
+// PNG encoding is the slow part, so it happens in a worker when the browser has OffscreenCanvas;
+// otherwise (or if the worker is slow to answer) on the main thread as before
+const encodeOnMain = canvas => new Promise(res => canvas.toBlob(b => res(URL.createObjectURL(b)), 'image/png'));
+let encoder = null, seq = 0;
+const waiting = new Map();
+try {
+  if ('OffscreenCanvas' in window && typeof createImageBitmap === 'function') {
+    encoder = new Worker(new URL('./encode-worker.js' + new URL(import.meta.url).search, import.meta.url));
+    encoder.onmessage = ({ data: { id, blob } }) => { const done = waiting.get(id); waiting.delete(id); if (done) done(blob); };
+    encoder.onerror = () => { encoder = null; waiting.forEach(done => done(null)); waiting.clear(); };
+  }
+} catch { encoder = null; }
+// a canvas as an object URL, encoded off the main thread when possible
+export async function blobUrl(canvas) {
+  if (encoder) {
+    try {
+      const bitmap = await createImageBitmap(canvas), id = ++seq;
+      const blob = await Promise.race([
+        new Promise(res => { waiting.set(id, res); encoder.postMessage({ id, bitmap }, [bitmap]); }),
+        new Promise(res => setTimeout(() => res(null), 4000)),
+      ]);
+      if (blob) return URL.createObjectURL(blob);
+    } catch { /* fall back below */ }
+  }
+  return encodeOnMain(canvas);
+}
 const setVar = (name, url) => document.documentElement.style.setProperty(name, `url("${url}")`);
 
-export const texturesReady = (async () => {
-  const [grain, velvet, crumple, brushed, letter, walnut, ...props] = await Promise.all([
-    asset('paper-grain'), asset('velvet'), asset('crumpled-paper'), asset('brushed-metal'),
-    asset('letter-paper'), asset('walnut'),
-    ...DESK_PROPS.map(([file]) => loadImage(`assets/props/${file}.png`).catch(() => null)),
-  ]);
+// a gap in the main thread between textures, so none of this blocks input or the hero's first paint
+const idle = () => new Promise(r => (window.requestIdleCallback ? requestIdleCallback(() => r(), { timeout: 1500 }) : setTimeout(r, 30)));
+
+// the hero only needs the paper grain; it is ready first
+export const heroTexturesReady = (async () => {
+  const grain = await asset('paper-grain');
   IMG.grain = grain || makeGrain(GRAIN.paper, 14);
-  IMG.velvet = velvet || makeVelvet();
-  IMG.crumple = crumple || makeCrumple();
-  IMG.brushed = brushed || makeBrushed();
+  TEX.grain = grain ? grain.src : await blobUrl(IMG.grain);
+  setVar('--tex-grain', TEX.grain);
+})();
 
-  const [uGrain, uVelvet, uCrumple, uBrushed] = await Promise.all([
-    grain ? grain.src : blobUrl(IMG.grain), velvet ? velvet.src : blobUrl(IMG.velvet),
-    crumple ? crumple.src : blobUrl(IMG.crumple), brushed ? brushed.src : blobUrl(IMG.brushed),
+// everything the other screens use, made in idle time after the hero has settled
+export const texturesReady = (async () => {
+  await heroTexturesReady;
+  const [velvet, crumple, brushed, letter, walnut, ...props] = await Promise.all([
+    asset('velvet'), asset('crumpled-paper'), asset('brushed-metal'), asset('letter-paper'), asset('walnut'),
+    ...DESK_PROPS.map(([file]) => optionalImage(`assets/props/${file}.png`)),
   ]);
-  Object.assign(TEX, { grain: uGrain, velvet: uVelvet, crumple: uCrumple, brushed: uBrushed });
-  // three grain strengths, each one small static tile
-  setVar('--tex-grain-subtle', await blobUrl(makeGrain(GRAIN.subtle)));
-  setVar('--tex-grain-strong', await blobUrl(makeGrain(GRAIN.strong, 20)));
-  setVar('--tex-walnut', walnut ? walnut.src : await blobUrl(makeWalnut()));
-  // desk props: real PNGs from /assets/props/ when present, otherwise drawn
+  await idle(); IMG.velvet = velvet || makeVelvet(); TEX.velvet = velvet ? velvet.src : await blobUrl(IMG.velvet); setVar('--tex-velvet', TEX.velvet);
+  await idle(); IMG.brushed = brushed || makeBrushed(); TEX.brushed = brushed ? brushed.src : await blobUrl(IMG.brushed); setVar('--tex-brushed', TEX.brushed);
+  await idle(); IMG.crumple = crumple || makeCrumple();
+  await idle(); setVar('--tex-grain-strong', await blobUrl(makeGrain(GRAIN.strong, 20)));
+  await idle(); setVar('--tex-walnut', walnut ? walnut.src : await blobUrl(makeWalnut()));
+  // desk props: real PNGs from /assets/props/ when listed, otherwise drawn
   DESK_PROPS.forEach(([file, prop], i) => setVar(`--img-${file}`, props[i] ? props[i].src : propUrl(prop)));
-  setVar('--tex-grain', uGrain);
-  setVar('--tex-velvet', uVelvet);
-  setVar('--tex-crumple', uCrumple);
-  setVar('--tex-brushed', uBrushed);
-
-  ['waxSeal', 'safetyPin', 'bulldog', 'pushpin', 'starburst'].forEach(n => setVar(`--img-${n.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)}`, propUrl(n)));
+  setVar('--img-bulldog', propUrl('bulldog'));
   [IMG.waxSeal, IMG.safetyPin, IMG.bulldog] = await Promise.all([loadImage(propUrl('waxSeal')), loadImage(propUrl('safetyPin')), loadImage(propUrl('bulldog'))]);
-
   // the letter needs Pinyon Script, so it comes last
-  await fontsReady;
+  await fontsReady; await idle();
   IMG.letter = letter || makeLetter();
-  setVar('--tex-letter', letter ? letter.src : await blobUrl(IMG.letter));
 })();
 
 /* =========================================================

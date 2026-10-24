@@ -4,6 +4,24 @@
    something (tape, pin, clip, seal) and never takes clicks.
    ========================================================= */
 
+/* Fonts: self-hosted latin subsets (nothing is fetched from third parties), plus local fallbacks
+   sized to the same metrics so text does not jump when the real font swaps in. */
+@font-face { font-family: "Abril Fatface"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/abril-fatface-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Bebas Neue"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/bebas-neue-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 700; font-display: swap; src: url("assets/fonts/bodoni-moda-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 400 800; font-display: swap; src: url("assets/fonts/dm-sans-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Pinyon Script"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/pinyon-script-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 400 900; font-display: swap; src: url("assets/fonts/playfair-display-italic.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("assets/fonts/playfair-display-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Special Elite"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/special-elite-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "UnifrakturMaguntia"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/unifrakturmaguntia-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "UnifrakturMaguntia Fallback"; src: local("Georgia"); size-adjust: 90.62%; ascent-override: 86.59%; descent-override: 27.64%; line-gap-override: 0.00%; }
+@font-face { font-family: "Playfair Display Fallback"; src: local("Georgia"); size-adjust: 100.56%; ascent-override: 107.60%; descent-override: 24.96%; line-gap-override: 0.00%; }
+@font-face { font-family: "Playfair Display Fallback"; src: local("Georgia"); font-style: italic; size-adjust: 93.34%; ascent-override: 115.92%; descent-override: 26.89%; line-gap-override: 0.00%; }
+@font-face { font-family: "Special Elite Fallback"; src: local("Courier New"); size-adjust: 88.28%; ascent-override: 79.64%; descent-override: 33.63%; line-gap-override: 0.00%; }
+@font-face { font-family: "Abril Fatface Fallback"; src: local("Georgia"); size-adjust: 99.98%; ascent-override: 105.82%; descent-override: 29.11%; line-gap-override: 0.00%; }
+@font-face { font-family: "DM Sans Fallback"; src: local("Arial"); size-adjust: 91.87%; ascent-override: 107.98%; descent-override: 33.74%; line-gap-override: 0.00%; }
+
 /* ---------------------------------------------------------
    1. Tokens
    --------------------------------------------------------- */
@@ -44,7 +62,8 @@
   --tex-crumple: none;
   --tex-brushed: none;
   --tex-letter: none;
-  --tex-grain-subtle: none;
+  /* the subtle grain is a static noise tile, so it is there on the first paint (no script needed) */
+  --tex-grain-subtle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .165 0 0 0 0 .13 0 0 0 0 .11 .34 0 0 0 -.17'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
   --tex-grain-strong: none;
   --tex-walnut: none;
   --img-scissors: none; --img-washi-tape: none; --img-pencil: none; --img-stamps: none;
@@ -52,11 +71,7 @@
   --grain-subtle: var(--tex-grain-subtle) 0 0 / 256px;
   --grain-paper: var(--tex-grain-subtle) 0 0 / 256px;
   --grain-strong: var(--tex-grain-strong) 0 0 / 256px;
-  --img-wax-seal: none;
-  --img-safety-pin: none;
   --img-bulldog: none;
-  --img-pushpin: none;
-  --img-starburst: none;
 
   /* patterns */
   --gingham:
@@ -96,11 +111,11 @@
   --lift-2: 0 2px 2px rgb(20 4 6 / .22), 0 10px 24px rgb(20 4 6 / .35);
   --lift-3: 0 4px 6px rgb(20 4 6 / .2), 0 22px 48px rgb(20 4 6 / .45);
 
-  --font-logo: "UnifrakturMaguntia", "Old English Text MT", serif;
-  --font-serif: "Playfair Display", Didot, Georgia, serif;
+  --font-logo: "UnifrakturMaguntia", "UnifrakturMaguntia Fallback", "Old English Text MT", serif;
+  --font-serif: "Playfair Display", "Playfair Display Fallback", Didot, Georgia, serif;
   --font-script: "Pinyon Script", cursive;
-  --font-type: "Special Elite", "Courier New", Courier, monospace;
-  --font-sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-type: "Special Elite", "Special Elite Fallback", "Courier New", Courier, monospace;
+  --font-sans: "DM Sans", "DM Sans Fallback", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   /* type scale: only these sizes are used */
   --fs-12: .75rem; --fs-14: .875rem; --fs-16: 1rem; --fs-18: 1.125rem; --fs-22: 1.375rem;
@@ -354,7 +369,7 @@ body[data-screen="booth"] .swash path { stroke: var(--blush); }
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
-.wordmark-link { text-decoration: none; display: inline-flex; padding: var(--s-1) 0; }
+.wordmark-link { text-decoration: none; display: inline-flex; align-items: center; min-height: var(--tap); padding: var(--s-1) 0; }
 .nav { display: flex; gap: var(--s4); }
 .nav a {
   position: relative;
@@ -394,7 +409,11 @@ body[data-screen="booth"] .swash path { stroke: var(--blush); }
   -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
           mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
-.marquee-track { display: inline-flex; animation: marquee 90s linear infinite; }
+.marquee-track { display: inline-flex; animation: marquee 128s linear 4s infinite; }
+/* paused while the booth has a session, so only one ambient thing moves at a time */
+body.ambient-busy .marquee-track { animation-play-state: paused; }
+/* it also waits with the hero for the fonts, so its start never overlaps the bulbs' first chase */
+html.fonts-wait .marquee-track { animation-play-state: paused; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
@@ -833,6 +852,8 @@ kbd {
    the booth cluster in 7-12 (the gallery may reach into the gutter column 6). Every size in the
    scene comes from three numbers: the hero height, the floor height (18%) and the booth width. */
 .hero {
+  /* one easing for everything that moves here, and nothing quicker than 250ms */
+  --ease-calm: cubic-bezier(.22, .61, .36, 1);
   --hero-h: max(560px, calc(100svh - var(--header-h)));
   --floor-h: calc(var(--hero-h) * .18);
   --wall-h: calc(var(--hero-h) - var(--floor-h));
@@ -1047,6 +1068,7 @@ kbd {
 
 .hero-actions { display: flex; flex-wrap: nowrap; align-items: center; gap: var(--s3); }
 .hero .ticket-main { padding: 0 var(--s3); font-size: var(--fs-18); }
+.hero .ticket { transition: transform 300ms var(--ease-calm), filter 300ms var(--ease-calm); }
 .hero .ticket-main, .hero-link { white-space: nowrap; }
 /* secondary: a plain typewritten link; the red-pencil underline draws in on hover */
 .hero-link {
@@ -1062,10 +1084,10 @@ kbd {
   text-transform: uppercase;
   text-decoration: none;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='6'%3E%3Cpath d='M2 4 Q18 1 34 3.5 T66 3 T98 3.6 T118 2.6' fill='none' stroke='%23B3202A' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") 0 calc(100% - 8px) / 0 6px no-repeat;
-  transition: background-size var(--dur-3) var(--ease-out), color var(--dur-1);
+  transition: background-size 600ms var(--ease-calm), color 300ms var(--ease-calm);
 }
 .hero-link:hover, .hero-link:focus-visible { color: var(--cherry); background-size: 100% 6px; }
-.hero-link:focus-visible { outline: 2px solid var(--oxblood); outline-offset: 3px; }
+
 
 /* --- the booth cluster --- */
 /* no z-index here: the light pool must blend with the floor painted behind it */
@@ -1076,13 +1098,14 @@ kbd {
   position: absolute;
   right: calc(var(--booth-right0) + var(--booth-w0) * 1.04 + 56px);
   top: calc(var(--wall-h) - var(--booth-w0) * 2.1 + var(--booth-w0) * .3);
+  top: round(calc(var(--wall-h) - var(--booth-w0) * 2.1 + var(--booth-w0) * .3), 1px);
   display: flex;
   align-items: flex-start;
   gap: var(--s3);
 }
-.wall-frame { position: relative; width: calc(var(--booth-w0) * .3); transform: rotate(1.5deg); transform-origin: 50% -20px; }
+.wall-frame { position: relative; width: calc(var(--booth-w0) * .3); width: round(calc(var(--booth-w0) * .3), 1px); transform: rotate(1.5deg); transform-origin: 50% -20px; }
 .nail { position: absolute; left: 50%; top: -24px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FBEBB8, var(--gold) 60%, #6B4F1C); box-shadow: 1px 2px 2px rgb(60 40 20 / .4); }
-.frame-wire { position: absolute; left: 14%; right: 14%; top: -20px; height: 22px; border: 1.25px solid #7A6A55; border-bottom: 0; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+.frame-wire { position: absolute; left: 14%; right: 14%; top: -20px; height: 22px; border: 1px solid #7A6A55; border-bottom: 0; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
 .frame-box {
   position: relative;
   padding: 5px;
@@ -1099,7 +1122,7 @@ kbd {
 }
 .frame-box::before { inset: -6px; transform: translate(calc(7px + var(--sx, 0px)), 11px) scale(var(--ss, 1)); }
 .film-wrap::before { inset: 2px; transform: translate(calc(6px + var(--sx, 0px)), 9px) scale(var(--ss, 1)); }
-.frame-box canvas { width: 100%; height: auto; }
+.frame-box canvas { width: 100%; height: auto; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 560'%3E%3Crect width='180' height='560' fill='%23141110'/%3E%3Crect x='14.4' y='14.4' width='151.2' height='113.4' fill='%23EFE6D6'/%3E%3Cellipse cx='90' cy='66.4' rx='30' ry='38' fill='none' stroke='%231F1A17' stroke-opacity='.42' stroke-width='2' stroke-dasharray='7 5'/%3E%3Crect x='14.4' y='139.3' width='151.2' height='113.4' fill='%23EFE6D6'/%3E%3Cellipse cx='90' cy='191.3' rx='30' ry='38' fill='none' stroke='%231F1A17' stroke-opacity='.42' stroke-width='2' stroke-dasharray='7 5'/%3E%3Crect x='14.4' y='264.2' width='151.2' height='113.4' fill='%23EFE6D6'/%3E%3Cellipse cx='90' cy='316.2' rx='30' ry='38' fill='none' stroke='%231F1A17' stroke-opacity='.42' stroke-width='2' stroke-dasharray='7 5'/%3E%3Crect x='14.4' y='389.1' width='151.2' height='113.4' fill='%23EFE6D6'/%3E%3Cellipse cx='90' cy='441.1' rx='30' ry='38' fill='none' stroke='%231F1A17' stroke-opacity='.42' stroke-width='2' stroke-dasharray='7 5'/%3E%3Crect x='54' y='522' width='72' height='1.5' fill='%23B8934A'/%3E%3C/svg%3E") center / 100% 100%; }
 /* faint warm bounce from the booth on the edges nearest it */
 .frame-box::after, .film-wrap::after {
   content: "";
@@ -1109,7 +1132,7 @@ kbd {
   background: linear-gradient(to left, rgb(255 206 130 / .2), transparent);
   pointer-events: none;
 }
-.film-wall { position: relative; width: calc(var(--booth-w0) * .25); transform: rotate(-1.5deg); transform-origin: 50% 9px; }
+.film-wall { position: relative; width: calc(var(--booth-w0) * .25); width: round(calc(var(--booth-w0) * .25), 2px); transform: rotate(-1.5deg); transform-origin: 50% 9px; }
 .thumbtack {
   position: absolute;
   left: 50%; top: 3px;
@@ -1136,10 +1159,10 @@ kbd {
   -webkit-mask: var(--holes);
           mask: var(--holes);
 }
-.film-strip canvas { width: 100%; height: auto; aspect-ratio: 4 / 3; }
+.film-strip canvas { width: 100%; height: auto; aspect-ratio: 4 / 3; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23EFE6D6'/%3E%3Cellipse cx='160' cy='110' rx='50' ry='64' fill='none' stroke='%231F1A17' stroke-opacity='.42' stroke-width='3' stroke-dasharray='10 7'/%3E%3C/svg%3E") center / 100% 100%; }
 
 /* the booth stands on the floor line, right of the gallery */
-.booth-stand { position: absolute; right: var(--booth-right); bottom: calc(var(--floor-h) - 6px); width: var(--booth-w); }
+.booth-stand { position: absolute; right: var(--booth-right); right: round(var(--booth-right), 1px); bottom: calc(var(--floor-h) - 6px); width: var(--booth-w); width: round(var(--booth-w), 2px); }
 .booth-wrap { position: relative; z-index: 1; width: 100%; cursor: pointer; }
 .sign-glow { position: absolute; left: -40%; right: -40%; top: calc(var(--booth-w) * -.3); height: calc(var(--booth-w) * .95); background: radial-gradient(closest-side, rgb(255 214 140 / .55), rgb(255 214 140 / .16) 55%, transparent); }
 .booth-shadow { position: absolute; left: -8%; right: -8%; bottom: -8px; height: 20px; background: radial-gradient(closest-side, rgb(20 12 8 / .6), transparent); }
@@ -1153,10 +1176,9 @@ kbd {
   height: calc(var(--booth-w) * .5);
   pointer-events: none;
 }
-.light-pool { background: radial-gradient(closest-side, rgb(255 190 105 / .25), rgb(255 190 105 / .12) 55%, transparent); animation: breathe 9s ease-in-out infinite alternate; }
+.light-pool { background: radial-gradient(closest-side, rgb(255 190 105 / .25), rgb(255 190 105 / .12) 55%, transparent); }
 /* the tiles inside the pool turn warmer and brighter */
 .light-warm { background: radial-gradient(closest-side, rgb(255 196 120 / .85), rgb(255 196 120 / .3) 55%, transparent 88%); mix-blend-mode: soft-light; }
-@keyframes breathe { to { opacity: .7; } }
 .booth-reflection {
   position: absolute;
   left: 4%; right: 4%; top: 100%;
@@ -1205,11 +1227,10 @@ kbd {
   border-radius: 50%;
   background: radial-gradient(closest-side, rgb(255 214 140 / .8), rgb(255 214 140 / .25) 60%, transparent);
   opacity: 0;
-  transition: opacity var(--dur-2) var(--ease-out);
+  transition: opacity 300ms var(--ease-calm);
 }
 .coin-slot:focus-visible::before { opacity: 1; }
 @media (hover: hover) { .coin-slot:hover::before { opacity: 1; } }
-.coin-slot:focus-visible { outline: 2px solid var(--cherry); outline-offset: 3px; }
 .coin-tip {
   position: absolute;
   left: 50%; bottom: 100%;
@@ -1224,7 +1245,7 @@ kbd {
   box-shadow: 1px 3px 5px rgb(60 30 10 / .3);
   opacity: 0;
   transform: translate(-50%, -2px) rotate(-2deg);
-  transition: opacity var(--dur-1), transform var(--dur-2) var(--ease-out);
+  transition: opacity 300ms var(--ease-calm), transform 300ms var(--ease-calm);
   pointer-events: none;
 }
 .coin-slot:focus-visible .coin-tip { opacity: 1; transform: translate(-50%, -8px) rotate(-2deg); }
@@ -1243,7 +1264,7 @@ kbd {
 /* the mini strip rests inside the slot */
 .booth-art .mini-strip { transform-box: view-box; transform-origin: 245px 277px; transform: translateY(-82px); }
 /* one quick bright chase when the coin drops */
-.booth-sign.is-chasing .bulbs { animation: chase 150ms steps(2) 3; filter: brightness(1.6) drop-shadow(0 0 3px #FFE9A8); }
+.hero .booth-sign.is-chasing .bulbs { animation: chase 260ms steps(2) 2; filter: brightness(1.6) drop-shadow(0 0 3px #FFE9A8); }
 
 /* the sign supports the wordmark: smaller red-oxide letters, small close bulbs, a slow chase */
 .booth-sign {
@@ -1266,14 +1287,16 @@ kbd {
   background:
     radial-gradient(circle, #FFF6DC 0 1.4px, #F7C866 2px, rgb(247 200 102 / .3) 3.4px, transparent 4.4px) 0 0 / 12px 8px repeat-x,
     radial-gradient(circle, #9C7A48 0 1.3px, transparent 1.8px) 6px 0 / 12px 8px repeat-x;
-  animation: chase 2.8s steps(2) infinite;
 }
+.hero .bulbs { animation: chase 1s steps(2) 900ms 3; }
+.hero .bulbs-bottom { animation-direction: reverse; }
+body.ambient-busy .hero .bulbs { animation: chase 1s steps(2) infinite; }
 .bulbs-top { top: 0; }
 .bulbs-bottom { bottom: 0; animation-direction: reverse; }
 @keyframes chase { to { background-position: 12px 0, 18px 0; } }
 .sign-word {
   padding-left: .16em;
-  font-family: "Abril Fatface", Georgia, serif;
+  font-family: "Abril Fatface", "Abril Fatface Fallback", Georgia, serif;
   font-size: calc(var(--booth-w) * .115);
   line-height: 1;
   letter-spacing: .16em;
@@ -1281,49 +1304,53 @@ kbd {
   color: #A82B34;
 }
 .sign-sub { font-family: var(--font-type); font-size: max(9px, calc(var(--booth-w) * .04)); letter-spacing: .2em; text-transform: uppercase; color: var(--red-oxide); }
-.hero-booth { display: block; width: 100%; margin-top: -2px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(5px 12px 14px rgb(60 30 10 / .4)); }
+.hero-booth { display: block; width: 100%; aspect-ratio: 300 / 540; margin-top: -2px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(5px 12px 14px rgb(60 30 10 / .4)); }
 .booth-art { width: 100%; height: auto; overflow: visible; }
 .hero-booth img { width: 100%; height: auto; }
 /* idle: the curtain sways a touch; hovering the booth parts it a little more */
-.booth-art .curtain { transform-box: fill-box; }
-.booth-art .curtain-l { transform-origin: 0 0; animation: sway-l 7s ease-in-out infinite alternate; }
-.booth-art .curtain-r { transform-origin: 100% 0; animation: sway-r 8s ease-in-out infinite alternate; }
-@keyframes sway-l { to { transform: skewX(.7deg); } }
-@keyframes sway-r { to { transform: skewX(-.6deg); } }
-.booth-art .curtain-part { transform-box: fill-box; transition: transform 700ms var(--ease-out); }
+.booth-art .curtain-part { transform-box: fill-box; transition: transform 1100ms var(--ease-calm); }
 .booth-art .curtain-part-l { transform-origin: 0 0; }
 .booth-art .curtain-part-r { transform-origin: 100% 0; }
 /* the booth never wobbles: the curtain parts a little and the light spill brightens */
-.light-pool { transition: filter var(--dur-3) var(--ease-out); }
+.light-pool { transition: filter 900ms var(--ease-calm); }
 @media (hover: hover) {
-  .booth-wrap:hover .curtain-part { transform: scaleX(.84); }
-  .hero-art:has(.booth-wrap:hover) .light-pool { filter: brightness(1.45); }
+  .booth-wrap:hover .curtain-part { transform: scaleX(.92); transition-duration: 500ms; }
+  .hero-art:has(.booth-wrap:hover) .light-pool { filter: brightness(1.3); transition-duration: 500ms; }
 }
 
 /* load-in (1.2s): wall, floor rises, booth drops and settles, bulbs flicker on, gallery swings in, text rises.
    Pure CSS: it runs on first paint and every keyframe set ends visible ("both" fill), so the hero
    never depends on a script having run. */
-.hero :is(.wall, .dado, .skirting) { animation: fade-in 300ms ease-out both; }
-.hero .floor { animation: floor-in 350ms var(--ease-out) 100ms both; }
-.hero .booth-stand { animation: booth-drop 500ms var(--spring) 250ms both; }
-.hero .stanchion, .hero .pendant { animation: fade-in 400ms ease-out 500ms both; }
+.hero .booth-stand { animation: booth-drop 550ms var(--ease-calm) 250ms both; }
+.hero .stanchion, .hero .pendant { animation: fade-in 400ms var(--ease-calm) 500ms both; }
 .hero .booth-sign { animation: sign-on 300ms steps(1) 650ms both; }
-.hero .wall-frame { animation: swing-in 450ms var(--ease-out) 600ms backwards; }
-.hero .film-wall { animation: swing-in 450ms var(--ease-out) 660ms backwards; }
-.hero .hero-copy > * { animation: rise 400ms var(--ease-out) both; }
+.hero .wall-frame { animation: swing-in 450ms var(--ease-calm) 600ms backwards; }
+.hero .film-wall { animation: swing-in 450ms var(--ease-calm) 660ms backwards; }
+/* the text is painted from the first frame (it is the page's main content) and only slides into place */
+.hero .hero-copy > * { animation: rise-solid 400ms var(--ease-calm) both; }
 .hero .hero-copy > :nth-child(1) { animation-delay: 600ms; }
 .hero .hero-copy > :nth-child(2) { animation-delay: 660ms; }
+@keyframes rise-solid { from { transform: translateY(10px); } }
 .hero .hero-copy > :nth-child(3) { animation-delay: 720ms; }
 .hero .hero-copy > :nth-child(4) { animation-delay: 780ms; }
+/* hold the entrance until the fonts are in (an inline script in <head> sets this for at most 800ms) */
+html.fonts-wait .hero, html.fonts-wait .hero *, html.fonts-wait .hero *::before, html.fonts-wait .hero *::after { animation-play-state: paused !important; }
+/* focus: a cream line on an oxblood band reads on the wallpaper and on the nav alike */
+.topbar :focus-visible, .hero :focus-visible, .skip-link:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--oxblood);
+}
+.hero .ticket:focus-visible { border-radius: 4px; }
+/* touch: the little 25¢ slot gets a 44px hit area */
+@media (pointer: coarse) { .coin-slot::after { content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%); } }
 /* the entrance plays once even if the hero starts off screen or the tab starts hidden */
 .is-paused :is(.wall, .dado, .skirting, .floor, .booth-stand, .booth-sign, .wall-frame, .film-wall, .stanchion, .pendant),
 .is-paused .hero-copy > * { animation-play-state: running !important; }
 @keyframes fade-in { from { opacity: 0; } }
-@keyframes floor-in { from { opacity: 0; transform: translateY(40%); } }
-@keyframes booth-drop { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: none; } }
+@keyframes booth-drop { from { opacity: 0; transform: translateY(-24px); } to { opacity: 1; transform: none; } }
 @keyframes sign-on { 0% { filter: brightness(.55); } 30% { filter: brightness(1.1); } 50% { filter: brightness(.6); } 70%, 100% { filter: none; } }
-@keyframes swing-in { from { opacity: 0; rotate: -5deg; } 65% { opacity: 1; rotate: 1deg; } to { opacity: 1; rotate: 0deg; } }
-@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes swing-in { from { opacity: 0; rotate: -3deg; } to { opacity: 1; rotate: 0deg; } }
 
 /* How it works: a full-width cream page, gingham edges, a darkroom drying line */
 .how {
@@ -1444,8 +1471,9 @@ html:not(.js-develop) .doodle .pencil { stroke-dashoffset: 0; }
 
 /* the mini demos (they loop only while their polaroid is on screen) */
 .demo { position: absolute; inset: 0; display: grid; place-items: center; background: var(--grain-paper), #F3EBDC; }
-.demo * { animation-play-state: paused; }
-.polaroid.is-playing .demo * { animation-play-state: running; }
+/* the little demos loop only while their print is on screen (each demo sets `animation`, which would
+   otherwise reset the play state, hence !important) */
+.polaroid:not(.is-playing) .demo * { animation-play-state: paused !important; }
 /* 01 pose: a viewfinder, a flip-clock countdown and a white flash */
 .vf {
   position: relative;

@@ -3,31 +3,55 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Photomatic · The online photo booth</title>
-  <meta name="description" content="Photomatic is a vintage photo booth in your browser. Shoot a strip, add film looks, keepsake frames and stickers, then keep it. No app, no account, nothing uploaded.">
-  <meta name="theme-color" content="#3A0A0E">
+  <title>Photomatic · the online photo booth</title>
+  <meta name="description" content="A little photo booth in your browser. Take four photos, pick a frame and a film look, and keep the strip. Nothing leaves your device.">
+  <meta name="theme-color" content="#2A070B">
   <meta name="color-scheme" content="light">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Photomatic">
-  <meta property="og:title" content="Photomatic · The online photo booth">
-  <meta property="og:description" content="Strike a pose, develop, keep forever. A vintage photo booth that runs entirely in your browser.">
+  <meta property="og:title" content="Photomatic · the online photo booth">
+  <meta property="og:description" content="Take four photos, pick a frame and a film look, and keep the strip. A little photo booth that lives in your browser.">
   <meta property="og:image" content="assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Photomatic wordmark beside a red vintage photo booth on a striped wall">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Photomatic · the online photo booth">
+  <meta name="twitter:description" content="Take four photos, pick a frame and a film look, and keep the strip.">
   <meta name="twitter:image" content="assets/og-image.png">
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bebas+Neue&family=Bodoni+Moda:opsz,wght@6..96,700&family=DM+Sans:opsz,wght@9..40,400..800&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Special+Elite&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/fonts/unifrakturmaguntia-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-24f","/js/booth.js":"/js/booth.js?v=2026-10-24f","/js/camera.js":"/js/camera.js?v=2026-10-24f","/js/editor.js":"/js/editor.js?v=2026-10-24f","/js/export.js":"/js/export.js?v=2026-10-24f","/js/filters.js":"/js/filters.js?v=2026-10-24f","/js/frames.js":"/js/frames.js?v=2026-10-24f","/js/hero.js":"/js/hero.js?v=2026-10-24f","/js/icons.js":"/js/icons.js?v=2026-10-24f","/js/layouts.js":"/js/layouts.js?v=2026-10-24f","/js/main.js":"/js/main.js?v=2026-10-24f","/js/patterns.js":"/js/patterns.js?v=2026-10-24f","/js/placeholders.js":"/js/placeholders.js?v=2026-10-24f","/js/ransom.js":"/js/ransom.js?v=2026-10-24f","/js/render.js":"/js/render.js?v=2026-10-24f","/js/reveal.js":"/js/reveal.js?v=2026-10-24f","/js/sound.js":"/js/sound.js?v=2026-10-24f","/js/state.js":"/js/state.js?v=2026-10-24f","/js/stickers.js":"/js/stickers.js?v=2026-10-24f","/js/story.js":"/js/story.js?v=2026-10-24f","/js/textures.js":"/js/textures.js?v=2026-10-24f","/js/transitions.js":"/js/transitions.js?v=2026-10-24f","/js/ui.js":"/js/ui.js?v=2026-10-24f","/js/utils.js":"/js/utils.js?v=2026-10-24f"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-24f">
-  <script type="module" src="js/main.js?v=2026-10-24f"></script>
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-24p","/js/booth.js":"/js/booth.js?v=2026-10-24p","/js/camera.js":"/js/camera.js?v=2026-10-24p","/js/editor.js":"/js/editor.js?v=2026-10-24p","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-24p","/js/export.js":"/js/export.js?v=2026-10-24p","/js/filters.js":"/js/filters.js?v=2026-10-24p","/js/frames.js":"/js/frames.js?v=2026-10-24p","/js/hero.js":"/js/hero.js?v=2026-10-24p","/js/icons.js":"/js/icons.js?v=2026-10-24p","/js/layouts.js":"/js/layouts.js?v=2026-10-24p","/js/main.js":"/js/main.js?v=2026-10-24p","/js/patterns.js":"/js/patterns.js?v=2026-10-24p","/js/placeholders.js":"/js/placeholders.js?v=2026-10-24p","/js/ransom.js":"/js/ransom.js?v=2026-10-24p","/js/render.js":"/js/render.js?v=2026-10-24p","/js/reveal.js":"/js/reveal.js?v=2026-10-24p","/js/sound.js":"/js/sound.js?v=2026-10-24p","/js/state.js":"/js/state.js?v=2026-10-24p","/js/stickers.js":"/js/stickers.js?v=2026-10-24p","/js/story.js":"/js/story.js?v=2026-10-24p","/js/textures.js":"/js/textures.js?v=2026-10-24p","/js/transitions.js":"/js/transitions.js?v=2026-10-24p","/js/ui.js":"/js/ui.js?v=2026-10-24p","/js/utils.js":"/js/utils.js?v=2026-10-24p"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-24p">
+  <script>
+    (function () {
+      var d = document.documentElement, done = function () { d.classList.remove('fonts-wait'); };
+      if (!document.fonts || !document.fonts.load) return;
+      d.classList.add('fonts-wait');
+      setTimeout(done, 800);
+      Promise.all(['1em UnifrakturMaguntia', '1em "Special Elite"', 'italic 600 1em "Playfair Display"'].map(function (f) { return document.fonts.load(f); })).then(done, done);
+    })();
+  </script>
+  <!-- the hero needs no script: the app starts once the fonts have painted (or at the first touch or key) -->
+  <script>
+    (function () {
+      var started = false;
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-24p'); } };
+      var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
+      var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+      addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
+      ['pointerdown', 'keydown', 'touchstart'].forEach(function (t) { addEventListener(t, start, { once: true, capture: true, passive: true }); });
+      setTimeout(start, 4000);
+    })();
+  </script>
 </head>
 <body data-screen="home">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -103,7 +127,7 @@
               <div class="frame-box"><canvas id="wall-strip" width="180" height="560"></canvas></div>
             </div>
             <div class="film-wall">
-              <div class="film-wrap"><div class="film-strip" id="hero-film"></div></div>
+              <div class="film-wrap"><div class="film-strip" id="hero-film"><canvas width="320" height="240"></canvas><canvas width="320" height="240"></canvas><canvas width="320" height="240"></canvas><canvas width="320" height="240"></canvas></div></div>
               <span class="thumbtack"></span>
             </div>
           </div>
@@ -118,7 +142,118 @@
                 <span class="sign-word">Photos</span>
                 <span class="sign-sub">4 poses · 25¢</span>
               </div>
-              <button type="button" class="hero-booth" id="hero-booth" aria-hidden="true" tabindex="-1"></button>
+              <button type="button" class="hero-booth" id="hero-booth" aria-hidden="true" tabindex="-1">
+                <svg class="booth-art" viewBox="0 0 300 540" role="img" aria-labelledby="booth-art-title">
+  <title id="booth-art-title">A red photo booth with its velvet curtain slightly parted</title>
+  <defs>
+    <linearGradient id="metal" x1="0" x2="1"><stop offset="0" stop-color="#7A1C24"></stop><stop offset=".07" stop-color="#B8323C"></stop><stop offset=".3" stop-color="#9A2630"></stop><stop offset=".52" stop-color="#C2414A"></stop><stop offset=".74" stop-color="#931F29"></stop><stop offset=".93" stop-color="#A92C36"></stop><stop offset="1" stop-color="#6E1820"></stop></linearGradient>
+    <linearGradient id="metalDark" x1="0" x2="1"><stop offset="0" stop-color="#857F76"></stop><stop offset=".5" stop-color="#D4D0C9"></stop><stop offset="1" stop-color="#7C776F"></stop></linearGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D98B"></stop><stop offset=".5" stop-color="#B8934A"></stop><stop offset="1" stop-color="#E7C46A"></stop></linearGradient>
+    <linearGradient id="velvet" x1="0" x2="16" gradientUnits="userSpaceOnUse" spreadMethod="reflect"><stop offset="0" stop-color="#3E0B11"></stop><stop offset=".45" stop-color="#6E1E27"></stop><stop offset=".7" stop-color="#8C2E37"></stop><stop offset="1" stop-color="#5A1820"></stop></linearGradient>
+    <linearGradient id="velvetShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".45"></stop><stop offset=".22" stop-color="#000" stop-opacity="0"></stop><stop offset=".8" stop-color="#000" stop-opacity=".05"></stop><stop offset="1" stop-color="#000" stop-opacity=".35"></stop></linearGradient>
+    <radialGradient id="interior" cx=".5" cy=".5" r=".7"><stop offset="0" stop-color="#FFE3A3"></stop><stop offset=".45" stop-color="#E3A55A"></stop><stop offset="1" stop-color="#3A2418"></stop></radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D98B"></stop><stop offset=".5" stop-color="#B8862E"></stop><stop offset="1" stop-color="#E7C46A"></stop></linearGradient>
+    <linearGradient id="bodyLight" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".1"></stop><stop offset=".4" stop-color="#fff" stop-opacity="0"></stop><stop offset="1" stop-color="#000" stop-opacity=".18"></stop></linearGradient>
+    <!-- surface texture as noise filters (crisp at any density, no images to load) -->
+    <filter id="brushed" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.004 0.9" numOctaves="2" seed="5"></feTurbulence>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .9 0 0 0 -.36"></feColorMatrix>
+      <feComposite in2="SourceGraphic" operator="in"></feComposite>
+    </filter>
+    <filter id="velvetPile" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7 0.012" numOctaves="2" seed="9"></feTurbulence>
+      <feColorMatrix values="0 0 0 0 .62  0 0 0 0 .2  0 0 0 0 .24  2.4 0 0 0 -1.1"></feColorMatrix>
+      <feComposite in2="SourceGraphic" operator="in"></feComposite>
+    </filter>
+    <linearGradient id="gapGlow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9B8" stop-opacity=".2"></stop><stop offset=".35" stop-color="#FFE3A3" stop-opacity=".75"></stop><stop offset=".8" stop-color="#FFD58A" stop-opacity=".65"></stop><stop offset="1" stop-color="#FFD58A" stop-opacity="0"></stop></linearGradient>
+    <filter id="glowBlur" x="-200%" y="-10%" width="500%" height="120%"><feGaussianBlur stdDeviation="5"></feGaussianBlur></filter>
+    <clipPath id="slotOut"><rect x="200" y="277" width="100" height="130"></rect></clipPath>
+    <clipPath id="opening"><rect x="22" y="42" width="172" height="354" rx="2"></rect></clipPath>
+  </defs>
+
+  <!-- cornice -->
+  <rect x="0" y="0" width="300" height="17" rx="3" fill="url(#metalDark)"></rect>
+  <rect x="0" y="0" width="300" height="17" rx="3" fill="#000" filter="url(#brushed)" opacity=".7"></rect>
+  <rect x="0" y="15" width="300" height="3" fill="#4C463F" opacity=".6"></rect>
+
+  <!-- red enamel body, lit from the top left -->
+  <rect x="6" y="17" width="288" height="507" rx="4" fill="url(#metal)"></rect>
+  <rect x="6" y="17" width="288" height="507" rx="4" fill="#000" filter="url(#brushed)" opacity=".3"></rect>
+  <rect x="6" y="17" width="288" height="507" rx="4" fill="url(#bodyLight)"></rect>
+  <circle cx="20.0" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="19.4" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="41.7" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="41.1" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="63.4" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="62.8" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="85.1" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="84.5" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="106.8" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="106.2" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="128.5" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="127.9" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="150.2" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="149.6" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="171.9" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="171.3" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="193.6" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="193.0" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="215.3" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="214.7" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="237.0" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="236.4" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="258.7" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="258.1" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="280.4" cy="28" r="2.2" fill="#5A1218"></circle><circle cx="279.8" cy="27.4" r=".9" fill="#F4D7D9"></circle><circle cx="20.0" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="19.4" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="41.7" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="41.1" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="63.4" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="62.8" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="85.1" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="84.5" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="106.8" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="106.2" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="128.5" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="127.9" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="150.2" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="149.6" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="171.9" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="171.3" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="193.6" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="193.0" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="215.3" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="214.7" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="237.0" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="236.4" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="258.7" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="258.1" cy="403.4" r=".9" fill="#F4D7D9"></circle><circle cx="280.4" cy="404" r="2.2" fill="#5A1218"></circle><circle cx="279.8" cy="403.4" r=".9" fill="#F4D7D9"></circle>
+  <g stroke-linecap="round"><path d="M177.9 201.4 l12.5 1.3" stroke="#2A0A0E" stroke-opacity="0.17" stroke-width="0.8"></path><path d="M184.4 351.6 l8.6 -1.3" stroke="#fff" stroke-opacity="0.20" stroke-width="0.8"></path><path d="M66.4 220.3 l10.8 0.7" stroke="#2A0A0E" stroke-opacity="0.17" stroke-width="1.3"></path><path d="M26.1 253.2 l4.3 -0.6" stroke="#2A0A0E" stroke-opacity="0.13" stroke-width="1.3"></path><path d="M158.4 49.8 l5.6 1.2" stroke="#2A0A0E" stroke-opacity="0.21" stroke-width="0.8"></path><path d="M136.2 53.5 l4.5 0.2" stroke="#fff" stroke-opacity="0.13" stroke-width="1.1"></path><path d="M69.8 149.3 l11.1 2.4" stroke="#fff" stroke-opacity="0.13" stroke-width="0.8"></path><path d="M92.9 66.9 l10.5 1.1" stroke="#fff" stroke-opacity="0.23" stroke-width="0.6"></path><path d="M272.5 195.2 l13.1 -2.9" stroke="#2A0A0E" stroke-opacity="0.10" stroke-width="0.9"></path><path d="M145.0 260.3 l12.6 -3.3" stroke="#fff" stroke-opacity="0.23" stroke-width="0.8"></path><path d="M207.0 104.7 l9.0 1.8" stroke="#2A0A0E" stroke-opacity="0.24" stroke-width="1.1"></path><path d="M264.8 196.2 l9.7 -1.0" stroke="#fff" stroke-opacity="0.15" stroke-width="1.2"></path></g>
+
+  <!-- the opening, warm light behind the parted curtain -->
+  <rect x="18" y="38" width="180" height="362" rx="4" fill="#1F1A17"></rect>
+  <rect x="22" y="42" width="172" height="354" rx="2" fill="url(#interior)"></rect>
+  <g clip-path="url(#opening)">
+    <rect x="22" y="340" width="172" height="56" fill="#2A1A12" opacity=".7"></rect>
+    <ellipse cx="108" cy="354" rx="34" ry="7" fill="#7A2630"></ellipse>
+    <ellipse cx="108" cy="350" rx="32" ry="6" fill="#A63A44"></ellipse>
+    <!-- someone's in the booth: the flash fires behind the curtain... -->
+    <rect class="flash-back" x="22" y="42" width="172" height="354" fill="#FFFDF6" opacity="0"></rect>
+    <g class="curtain-part curtain-part-l"><g>
+      <path d="M22 48 H100 C102 140 96 250 104 382 C92 388 80 380 68 386 C56 392 42 382 30 388 C26 390 24 388 22 386Z" fill="url(#velvet)"></path>
+      <path d="M22 48 H100 C102 140 96 250 104 382 C92 388 80 380 68 386 C56 392 42 382 30 388 C26 390 24 388 22 386Z" fill="#000" filter="url(#velvetPile)" opacity=".45"></path>
+      <path d="M31.8 52 C31.8 160 28.8 270 31.8 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M37.8 52 C37.8 160 35.8 270 37.8 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M51.3 52 C52.5 160 49.5 270 53.2 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M57.3 52 C58.5 160 56.5 270 59.2 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M70.8 52 C73.2 160 70.2 270 74.6 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M76.8 52 C79.2 160 77.2 270 80.6 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M90.3 52 C93.8 160 90.8 270 96.0 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M96.3 52 C99.8 160 97.8 270 102.0 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path>
+      <path d="M22 48 H100 C102 140 96 250 104 382 C92 388 80 380 68 386 C56 392 42 382 30 388 C26 390 24 388 22 386Z" fill="url(#velvetShade)"></path>
+      <path d="M22 380 C36 374 50 386 64 378 C78 370 90 382 104 374" stroke="url(#gold)" stroke-width="2.6" fill="none"></path>
+    </g></g>
+    <g class="curtain-part curtain-part-r"><g>
+      <path d="M116 48 H194 V386 C188 389 182 391 176 388 C164 382 150 392 138 386 C126 380 118 386 110 382 C118 250 114 140 116 48Z" fill="url(#velvet)"></path>
+      <path d="M116 48 H194 V386 C188 389 182 391 176 388 C164 382 150 392 138 386 C126 380 118 386 110 382 C118 250 114 140 116 48Z" fill="#000" filter="url(#velvetPile)" opacity=".45"></path>
+      <path d="M125.8 52 C125.8 160 122.8 270 125.8 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M131.8 52 C131.8 160 129.8 270 131.8 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M145.3 52 C144.1 160 141.1 270 143.3 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M151.3 52 C150.1 160 148.1 270 149.3 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M164.8 52 C162.3 160 159.3 270 160.9 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M170.8 52 C168.3 160 166.3 270 166.9 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M184.3 52 C180.7 160 177.7 270 178.5 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M190.3 52 C186.7 160 184.7 270 184.5 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path>
+      <path d="M116 48 H194 V386 C188 389 182 391 176 388 C164 382 150 392 138 386 C126 380 118 386 110 382 C118 250 114 140 116 48Z" fill="url(#velvetShade)"></path>
+      <path d="M110 374 C126 384 140 372 154 380 C168 388 182 376 194 382" stroke="url(#gold)" stroke-width="2.6" fill="none"></path>
+    </g></g>
+    <!-- ...and lights the velvet from inside -->
+    <rect class="flash-fabric" x="22" y="42" width="172" height="354" fill="#FFE6DC" opacity="0" style="mix-blend-mode: screen"></rect>
+    <!-- warm light spilling through the gap in the curtain -->
+    <rect class="gap-glow" x="99" y="52" width="18" height="330" fill="url(#gapGlow)" filter="url(#glowBlur)"></rect>
+  </g>
+  <ellipse cx="108" cy="402" rx="34" ry="5" fill="#FFD58A" opacity=".35" filter="url(#glowBlur)"></ellipse>
+  <rect x="18" y="42" width="180" height="6" rx="3" fill="url(#metalDark)"></rect>
+  <g><circle cx="30" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="47.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="65" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="82.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="100" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="117.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="135" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="152.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="170" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="187.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle></g>
+
+  <!-- side panel: sample strips, the coin slot, the strip slot -->
+  <rect x="210" y="40" width="70" height="124" rx="4" fill="#1F1A17"></rect>
+  <rect x="214" y="44" width="62" height="116" rx="2" fill="#EFE8DC"></rect>
+  <g transform="rotate(-2.86 229.53 72.53)"><rect x="222.90" y="48.96" width="13.75" height="48.14" fill="#000" opacity=".22"></rect><rect x="222.65" y="48.46" width="13.75" height="48.14" fill="#141110"></rect><rect x="223.75" y="49.56" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="229.53" cy="53.54" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="223.75" y="59.10" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="229.53" cy="63.09" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="223.75" y="68.65" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="229.53" cy="72.63" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="223.75" y="78.19" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="229.53" cy="82.18" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="226.78" y="88.94" width="5.50" height=".35" fill="#B8934A"></rect></g><g transform="rotate(2.01 245.25 74.49)"><rect x="238.62" y="50.92" width="13.75" height="48.14" fill="#000" opacity=".22"></rect><rect x="238.37" y="50.42" width="13.75" height="48.14" fill="#141110"></rect><rect x="239.47" y="51.52" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="245.25" cy="55.51" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="239.47" y="61.07" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="245.25" cy="65.05" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="239.47" y="70.61" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="245.25" cy="74.60" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="239.47" y="80.16" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="245.25" cy="84.14" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="242.49" y="90.90" width="5.50" height=".35" fill="#B8934A"></rect></g><g transform="rotate(-1.15 260.96 72.53)"><rect x="254.34" y="48.96" width="13.75" height="48.14" fill="#000" opacity=".22"></rect><rect x="254.09" y="48.46" width="13.75" height="48.14" fill="#141110"></rect><rect x="255.19" y="49.56" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="260.96" cy="53.54" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="255.19" y="59.10" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="260.96" cy="63.09" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="255.19" y="68.65" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="260.96" cy="72.63" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="255.19" y="78.19" width="11.55" height="8.67" fill="#EFE6D6"></rect><ellipse cx="260.96" cy="82.18" rx="2.31" ry="2.95" fill="none" stroke="#1F1A17" stroke-opacity=".4" stroke-width=".35" stroke-dasharray=".9 .6"></ellipse><rect x="258.21" y="88.94" width="5.50" height=".35" fill="#B8934A"></rect></g>
+  <path d="M214 44 L246 44 L216 112Z" fill="#fff" opacity=".14"></path>
+
+  <rect x="226" y="182" width="38" height="58" rx="5" fill="url(#metalDark)" stroke="#857F76"></rect>
+  <rect x="243" y="192" width="4" height="20" rx="2" fill="#1F1A17"></rect>
+  <text x="245" y="232" text-anchor="middle" font-family="&quot;Playfair Display&quot;, Georgia, serif" font-weight="700" font-size="11" fill="#1F1A17">25¢</text>
+
+  <rect x="212" y="258" width="66" height="58" rx="5" fill="url(#metalDark)" stroke="#857F76"></rect>
+  <rect x="220" y="272" width="50" height="6" rx="3" fill="#120A08"></rect>
+  <rect x="233" y="276" width="24" height="22" fill="#FBF6EC" stroke="#8B7B6D" stroke-width=".6"></rect>
+  <text x="245" y="334" text-anchor="middle" font-family="&quot;Special Elite&quot;, &quot;Courier New&quot;, monospace" font-size="8.5" letter-spacing="1.5" fill="#F4D7D9" opacity=".8">PRINTS</text>
+  <!-- the little strip that drops out of the slot after a session -->
+  <g clip-path="url(#slotOut)"><g class="mini-strip">
+    <rect x="233" y="277" width="24" height="80" fill="#FBF6EC" stroke="#B8A88E" stroke-width=".5"></rect>
+    <rect x="235.5" y="279.5" width="19" height="16" fill="#E9E1D2"></rect><ellipse cx="245" cy="287.5" rx="4.5" ry="5.5" fill="none" stroke="#8B7B6D" stroke-width=".5" stroke-dasharray="1 1"></ellipse><rect x="235.5" y="298" width="19" height="16" fill="#E9E1D2"></rect><ellipse cx="245" cy="306" rx="4.5" ry="5.5" fill="none" stroke="#8B7B6D" stroke-width=".5" stroke-dasharray="1 1"></ellipse><rect x="235.5" y="316.5" width="19" height="16" fill="#E9E1D2"></rect><ellipse cx="245" cy="324.5" rx="4.5" ry="5.5" fill="none" stroke="#8B7B6D" stroke-width=".5" stroke-dasharray="1 1"></ellipse><rect x="235.5" y="335" width="19" height="16" fill="#E9E1D2"></rect><ellipse cx="245" cy="343" rx="4.5" ry="5.5" fill="none" stroke="#8B7B6D" stroke-width=".5" stroke-dasharray="1 1"></ellipse>
+    <rect x="240" y="353" width="10" height="1" fill="#8B7B6D" opacity=".6"></rect>
+  </g></g>
+
+  <!-- kick plate and its brass plaque -->
+  <rect x="6" y="412" width="288" height="112" rx="4" fill="url(#metalDark)"></rect>
+  <rect x="6" y="412" width="288" height="112" rx="4" fill="#000" filter="url(#brushed)" opacity=".6"></rect>
+  <rect x="172" y="456" width="20" height="4" rx="2" fill="#1F1A17" opacity=".4"></rect><rect x="200" y="456" width="20" height="4" rx="2" fill="#1F1A17" opacity=".4"></rect><rect x="228" y="456" width="20" height="4" rx="2" fill="#1F1A17" opacity=".4"></rect><rect x="256" y="456" width="20" height="4" rx="2" fill="#1F1A17" opacity=".4"></rect>
+  <rect x="26" y="444" width="112" height="32" rx="3" fill="url(#brass)" stroke="#7A5C24"></rect>
+  <circle cx="33" cy="460" r="2" fill="#7A5C24"></circle><circle cx="131" cy="460" r="2" fill="#7A5C24"></circle>
+  <text x="82" y="465" text-anchor="middle" font-family="&quot;Special Elite&quot;, &quot;Courier New&quot;, monospace" font-size="12" letter-spacing="2" fill="#3A2A10">EST. 2026</text>
+  <rect x="16" y="524" width="26" height="14" rx="2" fill="#1F1A17"></rect><rect x="258" y="524" width="26" height="14" rx="2" fill="#1F1A17"></rect>
+</svg>
+              </button>
               <!-- easter egg: the 25¢ slot takes a coin -->
               <button type="button" class="coin-slot" id="hero-coin" aria-label="Insert coin and enter the booth"><span class="coin-tip" aria-hidden="true">insert coin</span><span class="coin" aria-hidden="true"></span></button>
             </div>
