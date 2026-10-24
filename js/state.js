@@ -14,6 +14,7 @@ export const state = {
     stream: null,
     camToken: 0,                // bumps to discard a stale getUserMedia result
     session: 0,                 // bumps to cancel a running countdown
+    fave: 0,                    // the photo circled on the contact sheet: the reveal's polaroid
   },
 
   // The strip being made: undo snapshots this (minus photos) and every export renders it

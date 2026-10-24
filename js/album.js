@@ -29,7 +29,8 @@ async function tx(mode, fn) {
   });
 }
 
-export const saveStrip = (blob, width, height) => tx('readwrite', s => s.add({ blob, width, height, created: Date.now() }));
+// fave: a small JPEG of the photo circled on the contact sheet, tucked in beside the strip
+export const saveStrip = (blob, width, height, fave = null) => tx('readwrite', s => s.add({ blob, width, height, fave, created: Date.now() }));
 const listStrips = () => tx('readonly', s => s.getAll());
 const removeStrip = id => tx('readwrite', s => s.delete(id));
 const clearStrips = () => tx('readwrite', s => s.clear());
@@ -67,11 +68,16 @@ export async function renderAlbum() {
   grid.replaceChildren(...items.map(item => {
     const url = URL.createObjectURL(item.blob);
     urls.push(url);
+    const faveUrl = item.fave ? URL.createObjectURL(item.fave) : null;
+    if (faveUrl) urls.push(faveUrl);
     return el('li', { className: 'album-item' }, [
       el('button', {
         className: 'album-open', attrs: { type: 'button', 'aria-label': `Open strip from ${prettyDate(item.created)}` },
         on: { click: () => openItem(item, url) },
-      }, [el('img', { attrs: { src: url, alt: '', loading: 'lazy', width: item.width, height: item.height } })]),
+      }, [
+        el('img', { attrs: { src: url, alt: '', loading: 'lazy', width: item.width, height: item.height } }),
+        ...(faveUrl ? [el('span', { className: 'album-fave' }, [el('img', { attrs: { src: faveUrl, alt: '', loading: 'lazy', width: 160, height: 120 } })])] : []),
+      ]),
       el('div', { className: 'album-meta' }, [
         el('span', { className: 'num', text: prettyDate(item.created) }),
         el('span', { className: 'album-actions' }, [

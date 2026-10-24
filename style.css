@@ -2587,12 +2587,29 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 /* ---------------------------------------------------------
    Contact sheet ("Your takes")
    --------------------------------------------------------- */
-.booth-review { display: grid; justify-items: center; gap: var(--s3); text-align: center; }
+.booth-review {
+  --ease-calm: cubic-bezier(.22, .61, .36, 1);
+  --film: #1B1714;
+  --band: 22px;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--s3);
+  /* the whole block sits centred in the room below the marquee */
+  min-height: calc(100svh - var(--header-h) - var(--s4));
+  margin-bottom: calc(var(--s10) * -1);
+  padding-bottom: var(--s4);
+  text-align: center;
+}
 .booth-review[hidden] { display: none; }
+.review-note { color: rgb(244 238 227 / .75); font: 400 .9375rem / 1.5 var(--font-sans); }
+
+/* a darkroom contact print: the roll laid on cream paper, its edges printed through */
 .contact-sheet {
   width: fit-content;
   max-width: 100%;
-  padding: var(--s3) var(--s4);
+  margin-top: var(--s1);
+  padding: var(--s4) var(--s4) var(--s3);
   color: var(--ink);
   background: var(--grain-paper), #F1EADB;
   box-shadow: inset 0 0 0 1px rgb(92 75 65 / .18), 4px 14px 30px rgb(6 10 20 / .5), 1px 3px 4px rgb(6 10 20 / .4);
@@ -2600,43 +2617,178 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 }
 .review-grid {
   display: grid;
-  grid-template-columns: repeat(var(--cols, 4), minmax(0, 250px));
-  gap: var(--s3) var(--s3);
+  grid-template-columns: repeat(var(--cols, 4), minmax(0, 236px));
+  gap: var(--s1) 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.contact-frame { position: relative; display: grid; justify-items: center; gap: var(--s0); }
-.contact-frame figure { position: relative; display: grid; gap: 6px; width: 100%; }
-.contact-print { position: relative; display: block; padding: 6px; background: #1A1714; }
-.contact-print canvas { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
-/* the grease-pencil circle a picture editor would draw */
+.contact-frame { position: relative; display: grid; gap: var(--s1); min-width: 0; }
+/* each frame's piece of film: sprocket bands above and below, frame lines either side */
+.film-cell {
+  position: relative;
+  padding: var(--band) 9px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='22'%3E%3Crect x='3.5' y='4' width='7' height='5' rx='1.4' fill='%23EDE5D3'/%3E%3C/svg%3E") 0 0 / 14px var(--band) repeat-x,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='22'%3E%3Crect x='3.5' y='13' width='7' height='5' rx='1.4' fill='%23EDE5D3'/%3E%3C/svg%3E") 0 100% / 14px var(--band) repeat-x,
+    var(--film);
+}
+.edge-print {
+  position: absolute;
+  left: 12px; top: calc(var(--band) - 11px);
+  color: #E8873A;
+  font: 700 .5rem / 1 var(--font-sans);
+  letter-spacing: .16em;
+  white-space: nowrap;
+  opacity: .9;
+  pointer-events: none;
+}
+.contact-print {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: #000;
+  cursor: pointer;
+}
+.contact-print canvas { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; }
+/* hover / focus: a soft dark veil and a cream Retake pill in the middle */
 .contact-print::after {
   content: "";
   position: absolute;
-  inset: -12px -14px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 150' preserveAspectRatio='none'%3E%3Cpath d='M30 20 C80 2 160 4 188 34 C204 66 190 122 140 140 C90 152 24 146 10 104 C-2 66 14 34 52 14' fill='none' stroke='%23B3202A' stroke-width='4' stroke-linecap='round' opacity='.85'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  inset: 0;
+  background: rgb(14 8 6 / .42);
   opacity: 0;
-  transform: scale(.94) rotate(-2deg);
-  transition: opacity var(--dur-1) var(--ease-out), transform var(--dur-2) var(--ease-out);
+  transition: opacity 250ms var(--ease-calm);
   pointer-events: none;
 }
-.contact-frame:hover .contact-print::after, .contact-frame:focus-within .contact-print::after { opacity: 1; transform: none; }
-.contact-frame figcaption {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--s1);
+.retake-btn {
+  position: absolute;
+  left: 50%; top: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--cream);
+  font: 500 .8125rem / 1 var(--font-sans);
+  box-shadow: 0 3px 10px rgb(0 0 0 / .35);
+  cursor: pointer;
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 4px));
+  transition: opacity 250ms var(--ease-calm), transform 250ms var(--ease-calm);
+  pointer-events: none;
+}
+.retake-btn:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+.contact-frame:has(:focus-visible) .contact-print::after { opacity: 1; }
+.contact-frame:has(:focus-visible) .retake-btn { opacity: 1; transform: translate(-50%, -50%); pointer-events: auto; }
+.contact-print:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+@media (hover: hover) {
+  .contact-frame:hover .contact-print::after { opacity: 1; }
+  .contact-frame:hover .retake-btn { opacity: 1; transform: translate(-50%, -50%); pointer-events: auto; }
+  .retake-btn:hover { background: #FFF8EC; }
+}
+/* touch: no hover, so a small cream circle sits in the photo's corner */
+@media (hover: none), (pointer: coarse) {
+  .contact-print::after { display: none; }
+  .retake-btn, .contact-frame:has(:focus-visible) .retake-btn {
+    left: auto; right: 15px; top: calc(var(--band) + 6px);
+    justify-content: center;
+    width: 30px; min-height: 30px;
+    padding: 0;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .retake-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .retake-btn::before { content: ""; position: absolute; inset: -7px; }
+}
+
+/* the favourite: a red grease-pencil loop drawn round it, and a scribbled "fave" */
+.fave-mark { position: absolute; inset: calc(var(--band) - 9px) 1px; z-index: 1; visibility: hidden; pointer-events: none; }
+.contact-frame.is-fave .fave-mark { visibility: visible; }
+.fave-loop { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.fave-loop path { fill: none; stroke: #E0383F; stroke-width: 3.6; stroke-linecap: round; stroke-dasharray: 1 2; stroke-dashoffset: 1; opacity: .92; }
+.fave-note {
+  position: absolute;
+  right: 6px; bottom: -40px;
+  color: #D12E36;
+  font: 400 1.875rem / 1 var(--font-script);
+  transform: rotate(-9deg);
+  opacity: 0;
+}
+.contact-frame.is-fave .fave-loop path { stroke-dashoffset: 0; }
+.contact-frame.is-fave .fave-note { opacity: 1; }
+.contact-frame.draw .fave-loop path { animation: loop-draw 400ms var(--ease-calm); }
+.contact-frame.draw .fave-note { animation: fave-note 300ms 300ms var(--ease-calm) both; }
+@keyframes loop-draw { from { stroke-dashoffset: 1; } }
+@keyframes fave-note { from { opacity: 0; transform: rotate(-9deg) translateY(3px); } }
+
+.contact-label {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
   font-family: var(--font-type);
   font-size: var(--fs-12);
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--muted);
 }
-.retake-needed { display: none; color: var(--cherry); }
-.contact-frame.is-failed .retake-needed { display: inline; }
+.retake-needed { color: var(--cherry); }
 .contact-frame.is-failed .contact-print canvas { opacity: .55; }
-.contact-frame .btn-sm { min-height: 36px; padding: 0 var(--s2); font-size: var(--fs-12); }
-#screen-booth .booth-review .btn-row { justify-content: center; }
-@media (hover: none) { .contact-frame .contact-print::after { display: none; } }
+.fave-hint { margin-top: calc(var(--s1) * -1); color: rgb(244 238 227 / .72); font: 400 var(--fs-12) / 1.4 var(--font-type); letter-spacing: .04em; }
+
+.review-actions { display: flex; align-items: center; justify-content: center; gap: var(--s3); margin-top: var(--s1); }
+/* Continue: the velvet family of the menu's START: oxblood, a thin gold rule, cream sans */
+.btn-velvet {
+  min-height: 50px;
+  padding: 0 var(--s4);
+  border: 1px solid #B8934A;
+  border-radius: 3px;
+  color: var(--cream);
+  font: 500 .9375rem / 1 var(--font-sans);
+  letter-spacing: .02em;
+  background: radial-gradient(110% 120% at 0% 0%, rgb(150 52 62 / .35), transparent 62%), #3A0A0E;
+  box-shadow: inset 0 0 0 3px #3A0A0E, inset 0 0 0 4px rgb(226 194 122 / .28), 0 8px 18px rgb(4 6 16 / .45);
+  transition: background-color 250ms var(--ease-calm), border-color 250ms var(--ease-calm);
+}
+.btn-velvet:hover:not(:disabled) { background-color: #4E1218; border-color: #E2C27A; }
+.btn-velvet:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+.btn-velvet:disabled { opacity: .5; cursor: not-allowed; }
+.review-retake-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap);
+  padding: 0 var(--s1);
+  border: 0;
+  background: none;
+  color: rgb(244 238 227 / .75);
+  font: 400 var(--fs-14) / 1 var(--font-sans);
+  text-decoration: underline 1.5px transparent;
+  text-underline-offset: 5px;
+  cursor: pointer;
+  transition: color 250ms var(--ease-calm), text-decoration-color 250ms var(--ease-calm);
+}
+.review-retake-all:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; color: var(--cream); text-decoration-color: #E2C27A; }
+@media (hover: hover) { .review-retake-all:hover { color: var(--cream); text-decoration-color: #E2C27A; } }
+
+/* phones: two frames to a row (three stack), each row its own piece of film; actions stacked */
+@media (max-width: 600px) {
+  .contact-sheet { width: 100%; padding: var(--s3) var(--s2) var(--s2); }
+  .review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3) 0; }
+  .review-grid[data-count="3"] { grid-template-columns: minmax(0, 240px); justify-content: center; }
+  .edge-print { letter-spacing: .1em; }
+  .fave-note { font-size: 1.5rem; right: 2px; bottom: -34px; }
+  .review-actions { flex-direction: column; align-items: stretch; width: 100%; gap: var(--s1); }
+  .review-actions .btn-velvet { order: -1; width: 100%; }
+  .review-retake-all { justify-content: center; }
+}
 
 /* ---------------------------------------------------------
    12. Album: the gold keepsake tin
@@ -2686,6 +2838,9 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 .album-open:hover { transform: translateY(-3px) rotate(-1deg); }
 /* the whole strip always shows, however tall it is */
 .album-open img { position: absolute; inset: var(--s1); width: calc(100% - 2 * var(--s1)); height: calc(100% - 2 * var(--s1)); max-width: none; object-fit: contain; filter: drop-shadow(2px 4px 5px rgb(42 33 28 / .3)); }
+/* the favourite from the contact sheet, a little polaroid tucked in at the corner */
+.album-fave { position: absolute; right: 8%; bottom: 7%; width: 34%; padding: 4% 4% 11%; background: #FBFAF6; box-shadow: 1px 3px 6px rgb(42 33 28 / .3); transform: rotate(6deg); }
+.album-fave img { position: static; inset: auto; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; filter: none; }
 .album-meta { display: flex; justify-content: space-between; align-items: center; gap: 4px; font-family: var(--font-type); font-size: var(--fs-14); color: var(--muted); white-space: nowrap; }
 .album-meta .num { overflow: hidden; text-overflow: ellipsis; }
 .album-actions { display: flex; }
@@ -2863,8 +3018,6 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   .hero { margin-top: calc(var(--s3) * -1); }
   .how { padding-block: var(--s8); }
   .booth-interior { --bulb-d: 20px; }
-  .review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); }
-  .contact-sheet { padding: var(--s2); }
   .ticket-main { padding: 0 var(--s3); font-size: var(--fs-18); }
   .editor-head { gap: var(--s1); }
   .tin-body { padding: 14px; border-radius: 16px; }

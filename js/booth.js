@@ -260,6 +260,7 @@ async function runAll() {
   audio();
   const my = ++state.booth.session;
   setPhase('shooting');
+  state.booth.fave = 0;
   const total = state.settings.shots;
   const pending = [];
   for (let i = 0; i < total; i++) {
@@ -292,32 +293,47 @@ $('#btn-live-back').addEventListener('click', boothBack);
 $('#btn-retry').addEventListener('click', startLive);
 
 /* =========================================================
-   Review: retake any single shot
+   Review: a contact print of the roll. Click a photo to circle it
+   as the favourite; retake from the photo itself (or R)
    ========================================================= */
+// a grease-pencil loop, a little lopsided, drawn over the print
+const LOOP = 'M34 16 C84 2 164 4 190 32 C206 66 194 124 140 141 C88 154 20 146 9 104 C-1 64 18 30 60 12';
+
 function showReview(focusIndex = 0) {
   setPhase('review');
   const photos = state.design.photos;
+  if (!(state.booth.fave < photos.length)) state.booth.fave = 0;
   dom.thumbs.style.setProperty('--cols', Math.min(4, photos.length));
+  dom.thumbs.dataset.count = photos.length;
   dom.thumbs.replaceChildren(...photos.map((p, i) => {
     const h = Math.round(PREVIEW_W / ASPECT);
     const thumb = makeCanvas(PREVIEW_W, h);
     const tx = thumb.getContext('2d');
     tx.imageSmoothingQuality = 'high';
     tx.drawImage(p.src, 0, 0, PREVIEW_W, h);
-    thumb.setAttribute('role', 'img');
-    thumb.setAttribute('aria-label', p.failed ? `Photo ${i + 1} didn't come out, retake needed` : `Photo ${i + 1}`);
-    return el('li', { className: `contact-frame${p.failed ? ' is-failed' : ''}` }, [
-      el('figure', {}, [
-        el('span', { className: 'contact-print' }, [thumb]),
-        el('figcaption', { className: 'num' }, [
-          el('span', { text: `No. ${pad2(i + 1)}` }),
-          ...(p.failed ? [el('span', { className: 'retake-needed', text: 'Retake needed' })] : []),
-        ]),
+    const fave = i === state.booth.fave;
+    const label = `Photo ${i + 1}${p.failed ? ", didn't come out" : ''}. Press R to retake.`;
+    return el('li', { className: `contact-frame${p.failed ? ' is-failed' : ''}${fave ? ' is-fave' : ''}` }, [
+      el('div', { className: 'film-cell' }, [
+        el('span', { className: 'edge-print', attrs: { 'aria-hidden': 'true' }, text: i === 0 ? 'PHOTOMATIC 400 ▸ 1' : `▸ ${i + 1}` }),
+        el('button', {
+          className: 'contact-print',
+          attrs: { type: 'button', 'aria-label': label, 'aria-pressed': String(fave), 'aria-keyshortcuts': 'R' },
+          on: { click: () => setFave(i), keydown: e => { if (e.key === 'r' || e.key === 'R') { e.preventDefault(); retakeOne(i); } } },
+        }, [thumb]),
+        el('button', {
+          className: 'retake-btn', attrs: { type: 'button', tabindex: '-1', 'aria-label': `Retake photo ${i + 1}` },
+          html: `${icon('retake', { size: 14 })}<span>Retake</span>`, on: { click: () => retakeOne(i) },
+        }),
+        el('span', {
+          className: 'fave-mark', attrs: { 'aria-hidden': 'true' },
+          html: `<svg class="fave-loop" viewBox="0 0 200 150" preserveAspectRatio="none"><path d="${LOOP}" pathLength="1"/></svg><span class="fave-note">fave</span>`,
+        }),
       ]),
-      el('button', {
-        className: 'btn btn-paper btn-sm', attrs: { type: 'button', 'aria-label': `Retake photo ${i + 1}` },
-        html: `${icon('retake', { size: 16 })}<span>Retake</span>`, on: { click: () => retakeOne(i) },
-      }),
+      el('p', { className: 'contact-label' }, [
+        el('span', { className: 'num', text: `No. ${pad2(i + 1)}` }),
+        ...(p.failed ? [el('span', { className: 'retake-needed', text: 'Retake needed' })] : []),
+      ]),
     ]);
   }));
   // carry on only once every frame came out
@@ -325,12 +341,25 @@ function showReview(focusIndex = 0) {
   $('#btn-continue').disabled = failed > 0;
   $('#review-note').textContent = failed ? `${failed === 1 ? 'One frame' : `${failed} frames`} didn't come out. Retake ${failed === 1 ? 'it' : 'them'} to carry on.` : 'Retake any frame, or carry on and make it yours.';
   const firstFailed = photos.findIndex(p => p.failed);
-  const btn = dom.thumbs.querySelectorAll('button')[firstFailed >= 0 ? firstFailed : focusIndex];
+  const btn = dom.thumbs.querySelectorAll('.contact-print')[firstFailed >= 0 ? firstFailed : focusIndex];
   (btn || $('#btn-continue')).focus({ preventScroll: true });
 }
 
+// one favourite: the loop draws itself round the new one
+function setFave(i) {
+  if (i === state.booth.fave) return;
+  state.booth.fave = i;
+  [...dom.thumbs.children].forEach((li, j) => {
+    li.classList.toggle('is-fave', j === i);
+    li.classList.remove('draw');
+    li.querySelector('.contact-print').setAttribute('aria-pressed', String(j === i));
+  });
+  restartAnimation(dom.thumbs.children[i], 'draw');
+  announce(`Photo ${i + 1} circled as your favourite`);
+}
+
 $('#btn-retake-all').addEventListener('click', () => { setPhase('live'); runAll(); });
-$('#btn-continue').addEventListener('click', () => { stopCamera(); develop(); });
+$('#btn-continue').addEventListener('click', () => { state.output.polaroid = state.booth.fave; stopCamera(); develop(); });
 
 /* =========================================================
    Upload fallback
@@ -355,6 +384,7 @@ dom.file.addEventListener('change', async () => {
   if (photos.length < want) toast(`Using ${photos.length} photo${photos.length > 1 ? 's' : ''}.`);
   stopCamera();
   state.design.photos = photos;
+  state.output.polaroid = 0;
   develop();
 });
 

@@ -1,5 +1,5 @@
 /* Boot + wiring: navigation, keyboard routing, idle pausing and the reveal actions. */
-import { $, fontsReady } from './utils.js';
+import { $, fontsReady, makeCanvas, canvasToBlob } from './utils.js';
 import { state } from './state.js';
 import { hydrateIcons, icon } from './icons.js';
 import { show, onScreen, toast } from './ui.js';
@@ -9,6 +9,7 @@ import { initHero } from './hero.js';
 import { openBooth, boothBack, snapKey, stopCamera } from './booth.js';
 import { editorKeys, requestRender, refreshPacks, openEditor } from './editor.js';
 import { play, drawReveal, REVEAL_END, swapPolaroid } from './reveal.js';
+import { drawFilteredPhoto } from './filters.js';
 import { deliver, fileName, recordCanvas, videoSupport } from './export.js';
 import { openStory } from './story.js';
 import { saveStrip, renderAlbum } from './album.js';
@@ -65,10 +66,19 @@ $('#btn-polaroid').addEventListener('click', swapPolaroid);
 $('#btn-reveal-edit').addEventListener('click', () => openEditor());
 $('#btn-new-session').addEventListener('click', () => { state.design.caption = state.design.dedication = ''; openBooth(); });
 
+// the photo on the reveal's polaroid (the contact sheet favourite), small, with the strip's filter
+async function faveThumb() {
+  const photos = state.design.photos, p = photos[state.output.polaroid % Math.max(1, photos.length)];
+  if (!p) return null;
+  const c = makeCanvas(160, 120);
+  drawFilteredPhoto(c.getContext('2d'), p, state.design.filter, state.design.intensity, 0, 0, 160, 120);
+  return canvasToBlob(c, 'image/jpeg', 0.85);
+}
+
 $('#btn-album-save').addEventListener('click', async e => {
   const btn = e.currentTarget, c = state.output.canvas;
   try {
-    state.output.savedId = await saveStrip(state.output.blob, c.width, c.height);
+    state.output.savedId = await saveStrip(state.output.blob, c.width, c.height, await faveThumb());
     btn.disabled = true;
     btn.querySelector('.btn-label').textContent = 'Saved to album';
     toast('Saved to your album on this device.');
