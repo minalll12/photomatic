@@ -261,7 +261,7 @@ main {
   overflow-x: clip;
   padding: var(--s4) 0 var(--s10);
 }
-.screen { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+.screen { max-width: var(--max); margin-inline: auto; padding-inline: max(var(--gutter), env(safe-area-inset-left)) max(var(--gutter), env(safe-area-inset-right)); }
 
 /* ---------------------------------------------------------
    3. Paper pieces, tape and attachments
@@ -367,7 +367,7 @@ body[data-screen="booth"] .swash path { stroke: var(--blush); }
   max-width: var(--max);
   height: var(--topbar-h);
   margin-inline: auto;
-  padding-inline: var(--gutter);
+  padding-inline: max(var(--gutter), env(safe-area-inset-left)) max(var(--gutter), env(safe-area-inset-right));
 }
 .wordmark-link { text-decoration: none; display: inline-flex; align-items: center; min-height: var(--tap); padding: var(--s-1) 0; }
 .nav { display: flex; gap: var(--s4); }
@@ -571,7 +571,7 @@ html.fonts-wait .marquee-track { animation-play-state: paused; }
   font-size: var(--fs-22);
   box-shadow: inset 0 0 0 3px var(--red-oxide), inset 0 0 0 4px rgb(244 238 227 / .35);
 }
-.ticket:hover { transform: translateY(-4px) rotate(-2.5deg); filter: drop-shadow(0 5px 3px rgb(14 2 4 / .35)) drop-shadow(0 18px 22px rgb(14 2 4 / .4)); }
+@media (hover: hover) { .ticket:hover { transform: translateY(-4px) rotate(-2.5deg); filter: drop-shadow(0 5px 3px rgb(14 2 4 / .35)) drop-shadow(0 18px 22px rgb(14 2 4 / .4)); } }
 .ticket:active { transform: translateY(-1px) rotate(-2deg); }
 .ticket:focus-visible { outline: 2px solid var(--cream); outline-offset: 6px; }
 
@@ -1086,7 +1086,8 @@ kbd {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='6'%3E%3Cpath d='M2 4 Q18 1 34 3.5 T66 3 T98 3.6 T118 2.6' fill='none' stroke='%23B3202A' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") 0 calc(100% - 8px) / 0 6px no-repeat;
   transition: background-size 600ms var(--ease-calm), color 300ms var(--ease-calm);
 }
-.hero-link:hover, .hero-link:focus-visible { color: var(--cherry); background-size: 100% 6px; }
+.hero-link:focus-visible { color: var(--cherry); background-size: 100% 6px; }
+@media (hover: hover) { .hero-link:hover { color: var(--cherry); background-size: 100% 6px; } }
 
 
 /* --- the booth cluster --- */
@@ -1304,7 +1305,7 @@ body.ambient-busy .hero .bulbs { animation: chase 1s steps(2) infinite; }
   text-transform: uppercase;
   color: #A82B34;
 }
-.sign-sub { font-family: var(--font-type); font-size: max(9px, calc(var(--booth-w) * .04)); letter-spacing: .2em; text-transform: uppercase; color: var(--red-oxide); }
+.sign-sub { font-family: var(--font-type); font-size: max(min(9px, calc(var(--booth-w) * .07)), calc(var(--booth-w) * .04)); letter-spacing: .2em; text-transform: uppercase; color: var(--red-oxide); }
 .hero-booth { position: relative; display: block; width: 100%; aspect-ratio: 300 / 540; margin-top: -2px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(5px 12px 14px rgb(60 30 10 / .4)); }
 .booth-art { width: 100%; height: auto; overflow: visible; }
 /* the moving parts of the booth on their own compositor layer (static drawing below never repaints) */
@@ -2781,8 +2782,9 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
     height: auto;
   }
   .hero-copy { grid-column: 1; height: auto; align-items: center; padding-top: var(--s6); text-align: center; }
-  .wordmark-hero { margin-left: 0; }
+  .wordmark-hero { margin-left: 0; font-size: min(calc((100vw - 2 * var(--gutter)) * .19), 5.2rem); }
   .torn-note { transform-origin: 50% 50%; }
+  .floor-tiles { background-size: 46px 46px; }
   .hero-actions { flex-wrap: wrap; justify-content: center; gap: var(--s1) var(--s3); }
   .hero-art { grid-column: 1; grid-row: 2; height: var(--art-h); }
   .gallery, .stanchion, .pendant { display: none; }
@@ -2791,6 +2793,40 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   .wainscot span:nth-child(n + 9) { display: none; }
   .torn-note .washi { left: -6px; }
   .booth-stand { right: auto; left: 50%; margin-left: calc(var(--booth-w) / -2); }
+}
+
+/* phones on their side: one compact screen, text left and booth right, sized from the visible height (svh,
+   so it does not jump when the browser bar shows or hides). Later than the stacked rules, so it wins. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .hero {
+    --hero-h: max(290px, calc(100svh - var(--header-h)));
+    --floor-h: calc(var(--hero-h) * .2);
+    --wall-h: calc(var(--hero-h) - var(--floor-h));
+    /* the booth stands a little forward on the floor, so it can be taller than the short wall */
+    --booth-w: calc((var(--wall-h) + var(--floor-h) * .5) * .92 / 2.18);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    height: var(--hero-h);
+  }
+  /* the text sits on the wallpaper, above the wainscot */
+  .hero-copy { grid-column: 1 / 8; height: calc(var(--wall-h) - var(--dado-h) - 14px); align-items: flex-start; padding-top: 0; text-align: left; }
+  .hero .kicker { margin-bottom: var(--s-1); font-size: var(--fs-14); }
+  .wordmark-hero { margin: 0 0 var(--s0) -.05em; font-size: min(11.5svh, 3rem); }
+  .torn-note { margin-bottom: var(--s1); padding: 10px 18px 16px 46px; transform-origin: 0 50%; }
+  .torn-note .typed { font-size: .9375rem; line-height: 19px; }
+  .torn-note .washi { left: -10px; top: -8px; transform: rotate(-24deg) scale(.8); }
+  .hero-actions { flex-wrap: nowrap; justify-content: flex-start; gap: var(--s2); }
+  .hero .ticket { min-height: 48px; }
+  .hero .ticket-main { padding: 0 var(--s2); font-size: var(--fs-16); }
+  .hero-art { grid-column: 8 / 13; grid-row: 1; height: var(--hero-h); }
+  .gallery, .stanchion, .pendant { display: none; }
+  .booth-stand { right: auto; left: 50%; bottom: calc(var(--floor-h) * .5 - 6px); margin-left: calc(var(--booth-w) / -2); }
+  .light-pool, .light-warm { right: auto; left: calc(50% - var(--booth-w) * .89); bottom: calc(var(--floor-h) * .5 - var(--booth-w) * .39); }
+  /* a small sign: smaller bulb rows and lettering so PHOTOS fits */
+  .bulbs { left: 6px; right: 6px; height: 6px; background-size: 12px 6px, 12px 6px; }
+  .sign-word { font-size: calc(var(--booth-w) * .1); line-height: .95; }
+  .booth-sign { gap: 0; }
+  .wainscot { grid-row: 1; }
+  .floor-tiles { background-size: 40px 40px; }
 }
 
 /* ---------------------------------------------------------
