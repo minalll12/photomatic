@@ -49,16 +49,22 @@ export async function updatePreview() {
   last = key;
   await ready;
   const stage = root.querySelector('.preview-stage');
-  const box = { w: stage.clientWidth, h: stage.clientHeight };
+  const box = { w: stage.clientWidth - 28, h: stage.clientHeight - 28 };
   if (!box.w || !box.h) { last = ''; return; }
   const [a, b] = stage.querySelectorAll('canvas');
   const next = shown === a ? b : a;
   draw(next, box, shots, layout);
-  // the timer stamp sits on the strip's top-right corner, overlapping it a little
+  // the cream mount is the strip plus a 10px margin; the timer stamp sits on the mount's top-right corner
   const w = parseFloat(next.style.width), h = parseFloat(next.style.height), stamp = root.querySelector('.preview-timer');
-  stamp.style.setProperty('--stamp-x', `${Math.round(w / 2 - stamp.offsetWidth / 2 - 6)}px`);
-  stamp.style.setProperty('--stamp-y', `${Math.round((box.h - h) / 2 - stamp.offsetHeight / 2 + 4)}px`);
+  stage.style.setProperty('--mount-w', `${Math.round(w + 20)}px`);
+  stage.style.setProperty('--mount-h', `${Math.round(h + 20)}px`);
+  stamp.style.setProperty('--stamp-x', `${Math.round(w / 2 + 10 - stamp.offsetWidth / 2 - 4)}px`);
+  stamp.style.setProperty('--stamp-y', `${Math.round((stage.clientHeight - h) / 2 - 10 - stamp.offsetHeight / 2 + 4)}px`);
+  // crossfade: the new strip fades in on top while the old one stays solid underneath, so the
+  // mount never shows through; the old one is hidden once the fade is done
+  const prev = shown;
+  next.style.zIndex = '2'; if (prev) prev.style.zIndex = '1';
   next.classList.add('is-shown');
-  if (shown) shown.classList.remove('is-shown');
+  if (prev) setTimeout(() => { if (shown !== prev) { prev.style.transition = 'none'; prev.classList.remove('is-shown'); prev.getBoundingClientRect(); prev.style.transition = ''; } }, 260);
   shown = next;
 }
