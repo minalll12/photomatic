@@ -1017,12 +1017,20 @@ kbd {
   margin-bottom: 36px;
   padding: 20px 28px 28px 48px;
   color: var(--ink);
-  filter: drop-shadow(3px 6px 6px rgb(90 60 20 / .35));
   transform: rotate(-1.5deg);
-  transform-origin: 0 50%;
-  transition: transform var(--dur-2) var(--ease-out);
+  transform-origin: 10px 6px;           /* the tape corner it hangs from */
 }
-.torn-note:hover { transform: rotate(-.75deg); }
+/* the note's shadow: a blurred layer that shifts against the swing (transform only) */
+.torn-note::after {
+  content: "";
+  position: absolute;
+  inset: 4px 2px 8px;
+  z-index: -2;
+  background: rgb(90 60 20 / .32);
+  filter: blur(6px);
+  transform: translate(calc(3px + var(--sx, 0px)), 6px) scale(var(--ss, 1));
+  pointer-events: none;
+}
 .torn-note::before {
   content: "";
   position: absolute;
@@ -1079,8 +1087,18 @@ kbd {
   position: relative;
   padding: 5px;
   background: #F6F0E4;
-  box-shadow: 0 0 0 5px #5A3A20, 0 0 0 6px #3E2614, 5px 9px 14px rgb(70 44 20 / .4), 16px 22px 22px rgb(70 44 20 / .14);
+  box-shadow: 0 0 0 5px #5A3A20, 0 0 0 6px #3E2614;
 }
+.frame-box::before, .film-wrap::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: rgb(70 44 20 / .42);
+  filter: blur(7px);
+  pointer-events: none;
+}
+.frame-box::before { inset: -6px; transform: translate(calc(7px + var(--sx, 0px)), 11px) scale(var(--ss, 1)); }
+.film-wrap::before { inset: 2px; transform: translate(calc(6px + var(--sx, 0px)), 9px) scale(var(--ss, 1)); }
 .frame-box canvas { width: 100%; height: auto; }
 /* faint warm bounce from the booth on the edges nearest it */
 .frame-box::after, .film-wrap::after {
@@ -1091,7 +1109,7 @@ kbd {
   background: linear-gradient(to left, rgb(255 206 130 / .2), transparent);
   pointer-events: none;
 }
-.film-wall { position: relative; width: calc(var(--booth-w0) * .25); transform: rotate(-1.5deg); transform-origin: 50% 0; }
+.film-wall { position: relative; width: calc(var(--booth-w0) * .25); transform: rotate(-1.5deg); transform-origin: 50% 9px; }
 .thumbtack {
   position: absolute;
   left: 50%; top: 3px;
@@ -1103,7 +1121,7 @@ kbd {
 }
 /* red 35mm film; the sprocket holes are cut out with a mask so the wall shows through.
    A mask also clips filters, so the shadow lives on the wrapper. */
-.film-wrap { position: relative; filter: drop-shadow(4px 7px 7px rgb(70 44 20 / .38)) drop-shadow(12px 18px 14px rgb(70 44 20 / .12)); }
+.film-wrap { position: relative; }
 .film-strip {
   --holes:
     linear-gradient(#000 0 0) center / 76% 100% no-repeat,
@@ -1159,10 +1177,9 @@ kbd {
 }
 .stanchion .rope { transform-box: view-box; transform-origin: 120px 70px; }
 .stanchion .st-card { transform-box: view-box; transform-origin: 120px 129px; }
-.booth-stand:hover ~ .stanchion .rope { animation: rope-sway 1.8s ease-in-out infinite; }
-.booth-stand:hover ~ .stanchion .st-card { animation: card-sway 1.8s ease-in-out infinite; }
-@keyframes rope-sway { 0%, 100% { transform: none; } 30% { transform: skewX(3deg) scaleY(1.04); } 65% { transform: skewX(-2deg) scaleY(.98); } }
-@keyframes card-sway { 0%, 100% { transform: none; } 35% { transform: rotate(4deg); } 70% { transform: rotate(-3deg); } }
+.stanchion .rope { pointer-events: visiblePainted; }
+.stanchion .card-shadow { transform-box: view-box; transform: translate(calc(2px + var(--cx, 0px)), 3px); }
+.stanchion .rope-shadow { transform-box: view-box; transform: translateX(var(--rx, 0px)); }
 
 /* the 25¢ slot is a real button laid over the coin plate in the drawing (x 226-264, y 182-240 of 300 x 540,
    below a sign 0.3 booth-widths tall) */
@@ -1190,7 +1207,8 @@ kbd {
   opacity: 0;
   transition: opacity var(--dur-2) var(--ease-out);
 }
-.coin-slot:hover::before, .coin-slot:focus-visible::before { opacity: 1; }
+.coin-slot:focus-visible::before { opacity: 1; }
+@media (hover: hover) { .coin-slot:hover::before { opacity: 1; } }
 .coin-slot:focus-visible { outline: 2px solid var(--cherry); outline-offset: 3px; }
 .coin-tip {
   position: absolute;
@@ -1209,7 +1227,8 @@ kbd {
   transition: opacity var(--dur-1), transform var(--dur-2) var(--ease-out);
   pointer-events: none;
 }
-.coin-slot:hover .coin-tip, .coin-slot:focus-visible .coin-tip { opacity: 1; transform: translate(-50%, -8px) rotate(-2deg); }
+.coin-slot:focus-visible .coin-tip { opacity: 1; transform: translate(-50%, -8px) rotate(-2deg); }
+@media (hover: hover) { .coin-slot:hover .coin-tip { opacity: 1; transform: translate(-50%, -8px) rotate(-2deg); } }
 .coin {
   position: absolute;
   left: 50%; top: 34%;
@@ -1274,7 +1293,12 @@ kbd {
 .booth-art .curtain-part { transform-box: fill-box; transition: transform 700ms var(--ease-out); }
 .booth-art .curtain-part-l { transform-origin: 0 0; }
 .booth-art .curtain-part-r { transform-origin: 100% 0; }
-.booth-wrap:hover .curtain-part { transform: scaleX(.84); }
+/* the booth never wobbles: the curtain parts a little and the light spill brightens */
+.light-pool { transition: filter var(--dur-3) var(--ease-out); }
+@media (hover: hover) {
+  .booth-wrap:hover .curtain-part { transform: scaleX(.84); }
+  .hero-art:has(.booth-wrap:hover) .light-pool { filter: brightness(1.45); }
+}
 
 /* load-in (1.2s): wall, floor rises, booth drops and settles, bulbs flicker on, gallery swings in, text rises.
    Pure CSS: it runs on first paint and every keyframe set ends visible ("both" fill), so the hero
@@ -1284,8 +1308,8 @@ kbd {
 .hero .booth-stand { animation: booth-drop 500ms var(--spring) 250ms both; }
 .hero .stanchion, .hero .pendant { animation: fade-in 400ms ease-out 500ms both; }
 .hero .booth-sign { animation: sign-on 300ms steps(1) 650ms both; }
-.hero .wall-frame { animation: swing-in 450ms var(--ease-out) 600ms both; }
-.hero .film-wall { animation: swing-in 450ms var(--ease-out) 660ms both; }
+.hero .wall-frame { animation: swing-in 450ms var(--ease-out) 600ms backwards; }
+.hero .film-wall { animation: swing-in 450ms var(--ease-out) 660ms backwards; }
 .hero .hero-copy > * { animation: rise 400ms var(--ease-out) both; }
 .hero .hero-copy > :nth-child(1) { animation-delay: 600ms; }
 .hero .hero-copy > :nth-child(2) { animation-delay: 660ms; }

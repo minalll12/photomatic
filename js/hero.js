@@ -145,6 +145,7 @@ export async function initHero({ onEnter }) {
   else stage.innerHTML = boothSVG();
   $('#booth-wrap').addEventListener('click', onEnter);   // the sign, the booth or its curtain
   insertCoin(photo ? null : $('#hero-coin'), onEnter);
+  hangingThings(hero);
   if (!photo) boothSession(hero);
   $('#hero-cta').addEventListener('click', onEnter);
 
@@ -268,6 +269,90 @@ function insertCoin(slot, onEnter) {
     going = false;
     onEnter();
   });
+}
+
+/* Hover physics: everything that hangs swings on its real pivot (nail, tack, tape, string) as a
+   damped spring. A nudge follows the cursor's side and speed; the shadow shifts the other way and
+   spreads a touch while it tilts. One requestAnimationFrame loop runs only while something moves,
+   and it only ever writes transforms (the `rotate` property, skewX for the rope). */
+function hangingThings(hero) {
+  if (!window.requestAnimationFrame) return;
+  const active = new Set();
+  let raf = 0, last = 0;
+
+  // a pendulum: natural period, settle time (to ~2%), largest angle
+  function swing({ max, period, settle, apply }) {
+    const wn = (2 * Math.PI) / period;
+    return { max, wn, zeta: Math.min(0.9, 4 / (settle * wn)), th: 0, w: 0, apply };
+  }
+  function nudge(s, dir, strength) {
+    if (reducedMotion()) return;
+    // an impulse of v = max * wn peaks just under max; adding to the current motion keeps it lively
+    s.w = Math.max(-s.max * s.wn, Math.min(s.max * s.wn, s.w + dir * strength * s.max * s.wn));
+    active.add(s);
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(step); }
+  }
+  function step(now) {
+    // a frame's timestamp can predate the nudge, so never step backwards
+    const dt = Math.min(0.032, Math.max(0, now - last) / 1000); last = Math.max(last, now);
+    for (const s of active) {
+      // semi-implicit Euler on th'' = -wn^2 th - 2 zeta wn th'
+      s.w += (-s.wn * s.wn * s.th - 2 * s.zeta * s.wn * s.w) * dt;
+      s.th += s.w * dt;
+      // at rest once within 2% of its range and barely moving; the last hair of motion is invisible
+      if (Math.abs(s.th) < s.max * 0.02 && Math.abs(s.w) < s.max * 0.3) { s.th = 0; s.w = 0; active.delete(s); }
+      s.apply(s.th, s.max);
+    }
+    raf = active.size ? requestAnimationFrame(step) : 0;
+  }
+
+  // rotate an item about its pivot; its shadow moves against the tilt and spreads slightly
+  const tilt = (node, shadowVar = '--sx', spreadVar = '--ss', shift = 1.6) => (th, max) => {
+    node.style.rotate = th ? `${th.toFixed(3)}deg` : '';
+    node.style.setProperty(shadowVar, `${(-th * shift).toFixed(2)}px`);
+    if (spreadVar) node.style.setProperty(spreadVar, (1 + (Math.abs(th) / max) * 0.04).toFixed(4));
+  };
+  const frame = $('.wall-frame'), film = $('.film-wall'), note = $('.torn-note');
+  const stanchion = $('.stanchion'), rope = $('.stanchion .rope'), card = $('.stanchion .st-card');
+  const items = [
+    // heavy frame on a nail, red film on a tack, the paper note on its tape
+    { el: frame, s: swing({ max: 1.5, period: 0.8, settle: 1.2, apply: tilt(frame) }) },
+    { el: film, s: swing({ max: 3, period: 0.65, settle: 1.2, apply: tilt(film) }) },
+    { el: note, s: swing({ max: 1.5, period: 0.7, settle: 1.2, apply: tilt(note) }) },
+  ].filter(i => i.el);
+  // the card on its string, and the velvet rope: heavy, slow, swinging only at the sag (skew about the hooks)
+  const cardSwing = card && swing({ max: 6, period: 0.55, settle: 1.2, apply: (th) => { card.style.rotate = th ? `${th.toFixed(3)}deg` : ''; stanchion.style.setProperty('--cx', `${(-th * 0.5).toFixed(2)}px`); } });
+  const ropeSwing = rope && swing({ max: 4, period: 1.4, settle: 2.2, apply: (th) => {
+    rope.style.transform = th ? `skewX(${th.toFixed(3)}deg)` : '';
+    stanchion.style.setProperty('--rx', `${(-th * 1.2).toFixed(2)}px`);
+  } });
+
+  // cursor speed, so a quick pass swings harder than a slow one
+  let vx = 0, px = 0, pt = 0;
+  hero.addEventListener('pointermove', e => {
+    const t = e.timeStamp;
+    // after a pause, start fresh rather than count one long jump as speed
+    vx = pt && t - pt < 100 ? 0.7 * vx + 0.3 * ((e.clientX - px) / Math.max(1, t - pt)) : 0;
+    px = e.clientX; pt = t;
+  }, { passive: true });
+  const strength = () => Math.min(1, Math.max(0.35, 0.35 + Math.abs(vx) * 0.6));
+  // moving right pushes the bottom to the right, which is a negative (anticlockwise) angle
+  // the push follows the cursor's travel; when it is barely moving, the side it came in from
+  const sideOf = (e, el) => {
+    if (e.pointerType === 'mouse' && Math.abs(vx) > 0.05) return vx > 0 ? 1 : -1;
+    const r = el.getBoundingClientRect(); return e.clientX < r.left + r.width / 2 ? 1 : -1;
+  };
+
+  const hook = (el, kick) => {
+    el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') kick(sideOf(e, el), strength()); });
+    // touch and pen: one gentle swing per tap, no hover state left behind
+    el.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') kick(sideOf(e, el), 0.5); });
+  };
+  items.forEach(({ el, s }) => hook(el, (side, k) => nudge(s, -side, k)));
+  if (rope) hook(rope, (side, k) => { nudge(ropeSwing, side, k * 0.8); nudge(cardSwing, -side, k); });
+  // walking up to the booth sets the queue rope moving a little; the booth itself stays still
+  const wrap = $('#booth-wrap');
+  wrap.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { const side = sideOf(e, wrap); nudge(ropeSwing, side, 0.4); nudge(cardSwing, -side, 0.4); } });
 }
 
 /* "How it works": polaroids develop the first time they scroll into view,
