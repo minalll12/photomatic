@@ -2,7 +2,7 @@
    booth standing on it, a framed strip on the wall and the red film strip
    pinned beside it. No people anywhere: example frames are "your face
    here" prints, or the visitor's own latest strip from their album. */
-import { $, $$, rand, wait, loadImage, optionalImage, reducedMotion, isCoarse } from './utils.js';
+import { $, $$, rand, wait, loadImage, optionalImage, reducedMotion } from './utils.js';
 import { heroTexturesReady } from './textures.js';
 import { faceHere, faceHereStrip } from './placeholders.js';
 import { latestStrip } from './album.js';
@@ -26,22 +26,6 @@ export async function initHero({ onEnter }) {
 
   // idle motion only while the hero is on screen
   if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => hero.classList.toggle('is-paused', !en.isIntersecting)).observe(hero);
-
-  // a little parallax on mouse move (wall and gallery 2px, booth 6px)
-  if (!reducedMotion() && !isCoarse()) {
-    const layers = $$('[data-depth]', hero);
-    let raf = 0, mx = 0, my = 0;
-    hero.addEventListener('pointermove', e => {
-      const r = hero.getBoundingClientRect();
-      mx = (e.clientX - r.left) / r.width - 0.5; my = (e.clientY - r.top) / r.height - 0.5;
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        layers.forEach(l => { const d = +l.dataset.depth; l.style.translate = `${Math.round(-mx * d * 2)}px ${Math.round(-my * d)}px`; });
-      });
-    });
-    hero.addEventListener('pointerleave', () => layers.forEach(l => { l.style.translate = ''; }));
-  }
 
   // everything below only decorates; the hero is already visible without it
   howItWorks();
@@ -75,7 +59,7 @@ export async function initHero({ onEnter }) {
    the hero is on screen, the tab is visible, nobody is touching the booth and motion is allowed. */
 function boothSession(hero) {
   const art = $('#hero-booth .booth-art');
-  const back = $('.flash-back', art), fabric = $('.flash-fabric', art), strip = $('.mini-strip', art), pool = $('.light-pool', hero);
+  const back = $('.flash-back', art), fabric = $('#hero-booth .flash-fabric'), strip = $('.mini-strip', art), pool = $('.light-pool', hero);
   let visible = true, busy = false, running = [];
   const stop = () => { running.forEach(a => a.cancel()); running = []; document.body.classList.remove('ambient-busy'); };
   const run = (node, frames, opts) => running.push(node.animate(frames, { fill: 'none', ...opts }));
@@ -202,25 +186,28 @@ function hangingThings(hero) {
     stanchion.style.setProperty('--rx', `${(-th * 1.2).toFixed(2)}px`);
   } });
 
-  // cursor speed, so a quick pass swings harder than a slow one
-  let vx = 0, px = 0, pt = 0;
-  hero.addEventListener('pointermove', e => {
-    const t = e.timeStamp;
-    // after a pause, start fresh rather than count one long jump as speed
-    vx = pt && t - pt < 100 ? 0.7 * vx + 0.3 * ((e.clientX - px) / Math.max(1, t - pt)) : 0;
-    px = e.clientX; pt = t;
-  }, { passive: true });
-  // ~40% gentler than a full push: most peaks stay under a degree
-  const strength = () => 0.6 * Math.min(1, Math.max(0.35, 0.35 + Math.abs(vx) * 0.6));
+  // ~40% gentler than a full push: most peaks stay under a degree; a quick pass swings a little harder
+  const strength = v => 0.6 * Math.min(1, Math.max(0.35, 0.35 + Math.abs(v) * 0.6));
   // moving right pushes the bottom to the right, which is a negative (anticlockwise) angle
-  // the push follows the cursor's travel; when it is barely moving, the side it came in from
-  const sideOf = (e, el) => {
-    if (e.pointerType === 'mouse' && Math.abs(vx) > 0.05) return vx > 0 ? 1 : -1;
-    const r = el.getBoundingClientRect(); return e.clientX < r.left + r.width / 2 ? 1 : -1;
+  const sideOf = (e, el) => { const r = el.getBoundingClientRect(); return e.clientX < r.left + r.width / 2 ? 1 : -1; };
+
+  // No continuous cursor tracking. On entering an item we read the very next move inside it for
+  // direction and speed, then stop listening (or after 60ms fall back to the side it came in from).
+  // How deep past the edge the cursor first lands says how fast it arrived (one frame is ~16ms).
+  const onEnter = (el, kick) => e => {
+    if (e.pointerType !== 'mouse') return;
+    const x0 = e.clientX, t0 = e.timeStamp, r = el.getBoundingClientRect();
+    const arrival = Math.min(x0 - r.left, r.right - x0) / 16;
+    let fired = false;
+    const fire = (dir, v) => { if (fired) return; fired = true; el.removeEventListener('pointermove', first); clearTimeout(timer); kick(dir, strength(Math.max(Math.abs(v), arrival))); };
+    // the move that caused the enter arrives right after it at the same spot; wait for one that moved
+    const first = m => { if (m.clientX === x0) return; const v = (m.clientX - x0) / Math.max(1, m.timeStamp - t0); fire(Math.abs(v) > 0.05 ? Math.sign(v) : sideOf(e, el), v); };
+    el.addEventListener('pointermove', first, { passive: true });
+    const timer = setTimeout(() => fire(sideOf(e, el), 0), 60);
   };
 
   const hook = (el, kick) => {
-    el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') kick(sideOf(e, el), strength()); });
+    el.addEventListener('pointerenter', onEnter(el, kick));
     // touch and pen: one gentle swing per tap, no hover state left behind
     el.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') kick(sideOf(e, el), 0.3); });
   };

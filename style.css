@@ -1196,6 +1196,7 @@ kbd {
   height: auto;
   overflow: visible;
   pointer-events: none;
+  will-change: transform;   /* the rope's swing repaints only this layer */
 }
 .stanchion .rope { transform-box: view-box; transform-origin: 120px 70px; }
 .stanchion .st-card { transform-box: view-box; transform-origin: 120px 129px; }
@@ -1304,15 +1305,17 @@ body.ambient-busy .hero .bulbs { animation: chase 1s steps(2) infinite; }
   color: #A82B34;
 }
 .sign-sub { font-family: var(--font-type); font-size: max(9px, calc(var(--booth-w) * .04)); letter-spacing: .2em; text-transform: uppercase; color: var(--red-oxide); }
-.hero-booth { display: block; width: 100%; aspect-ratio: 300 / 540; margin-top: -2px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(5px 12px 14px rgb(60 30 10 / .4)); }
+.hero-booth { position: relative; display: block; width: 100%; aspect-ratio: 300 / 540; margin-top: -2px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(5px 12px 14px rgb(60 30 10 / .4)); }
 .booth-art { width: 100%; height: auto; overflow: visible; }
+/* the moving parts of the booth on their own compositor layer (static drawing below never repaints) */
+.booth-curtains { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; will-change: transform; }
 .hero-booth img { width: 100%; height: auto; }
 /* idle: the curtain sways a touch; hovering the booth parts it a little more */
-.booth-art .curtain-part { transform-box: fill-box; transition: transform 1100ms var(--ease-calm); }
-.booth-art .curtain-part-l { transform-origin: 0 0; }
-.booth-art .curtain-part-r { transform-origin: 100% 0; }
+.hero-booth .curtain-part { transform-box: fill-box; transition: transform 1100ms var(--ease-calm); }
+.hero-booth .curtain-part-l { transform-origin: 0 0; }
+.hero-booth .curtain-part-r { transform-origin: 100% 0; }
 /* the booth never wobbles: the curtain parts a little and the light spill brightens */
-.light-pool { transition: filter 900ms var(--ease-calm); }
+.light-pool { transition: filter 900ms var(--ease-calm); will-change: filter; }
 @media (hover: hover) {
   .booth-wrap:hover .curtain-part { transform: scaleX(.92); transition-duration: 500ms; }
   .hero-art:has(.booth-wrap:hover) .light-pool { filter: brightness(1.3); transition-duration: 500ms; }

@@ -29,8 +29,8 @@
   <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-24p","/js/booth.js":"/js/booth.js?v=2026-10-24p","/js/camera.js":"/js/camera.js?v=2026-10-24p","/js/editor.js":"/js/editor.js?v=2026-10-24p","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-24p","/js/export.js":"/js/export.js?v=2026-10-24p","/js/filters.js":"/js/filters.js?v=2026-10-24p","/js/frames.js":"/js/frames.js?v=2026-10-24p","/js/hero.js":"/js/hero.js?v=2026-10-24p","/js/icons.js":"/js/icons.js?v=2026-10-24p","/js/layouts.js":"/js/layouts.js?v=2026-10-24p","/js/main.js":"/js/main.js?v=2026-10-24p","/js/patterns.js":"/js/patterns.js?v=2026-10-24p","/js/placeholders.js":"/js/placeholders.js?v=2026-10-24p","/js/ransom.js":"/js/ransom.js?v=2026-10-24p","/js/render.js":"/js/render.js?v=2026-10-24p","/js/reveal.js":"/js/reveal.js?v=2026-10-24p","/js/sound.js":"/js/sound.js?v=2026-10-24p","/js/state.js":"/js/state.js?v=2026-10-24p","/js/stickers.js":"/js/stickers.js?v=2026-10-24p","/js/story.js":"/js/story.js?v=2026-10-24p","/js/textures.js":"/js/textures.js?v=2026-10-24p","/js/transitions.js":"/js/transitions.js?v=2026-10-24p","/js/ui.js":"/js/ui.js?v=2026-10-24p","/js/utils.js":"/js/utils.js?v=2026-10-24p"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-24p">
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-24t","/js/booth.js":"/js/booth.js?v=2026-10-24t","/js/camera.js":"/js/camera.js?v=2026-10-24t","/js/editor.js":"/js/editor.js?v=2026-10-24t","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-24t","/js/export.js":"/js/export.js?v=2026-10-24t","/js/filters.js":"/js/filters.js?v=2026-10-24t","/js/frames.js":"/js/frames.js?v=2026-10-24t","/js/hero.js":"/js/hero.js?v=2026-10-24t","/js/icons.js":"/js/icons.js?v=2026-10-24t","/js/layouts.js":"/js/layouts.js?v=2026-10-24t","/js/main.js":"/js/main.js?v=2026-10-24t","/js/patterns.js":"/js/patterns.js?v=2026-10-24t","/js/placeholders.js":"/js/placeholders.js?v=2026-10-24t","/js/ransom.js":"/js/ransom.js?v=2026-10-24t","/js/render.js":"/js/render.js?v=2026-10-24t","/js/reveal.js":"/js/reveal.js?v=2026-10-24t","/js/sound.js":"/js/sound.js?v=2026-10-24t","/js/state.js":"/js/state.js?v=2026-10-24t","/js/stickers.js":"/js/stickers.js?v=2026-10-24t","/js/story.js":"/js/story.js?v=2026-10-24t","/js/textures.js":"/js/textures.js?v=2026-10-24t","/js/transitions.js":"/js/transitions.js?v=2026-10-24t","/js/ui.js":"/js/ui.js?v=2026-10-24t","/js/utils.js":"/js/utils.js?v=2026-10-24t"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-24t">
   <script>
     (function () {
       var d = document.documentElement, done = function () { d.classList.remove('fonts-wait'); };
@@ -44,7 +44,7 @@
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-24p'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-24t'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
@@ -92,7 +92,7 @@
     <section id="screen-home" class="screen" aria-labelledby="hero-title">
       <div class="hero" id="hero">
         <div class="scene" aria-hidden="true">
-          <div class="wall" data-depth="2"></div>
+          <div class="wall"></div>
           <div class="dado"></div>
           <div class="skirting"></div>
           <div class="floor"><div class="floor-tiles"></div></div>
@@ -121,7 +121,7 @@
 
         <div class="hero-art">
           <!-- a small gallery: two pieces on one hanging line, upper left of the booth -->
-          <div class="gallery" data-depth="2" aria-hidden="true">
+          <div class="gallery" aria-hidden="true">
             <div class="wall-frame">
               <span class="frame-wire"></span><span class="nail"></span>
               <div class="frame-box"><canvas id="wall-strip" width="180" height="560"></canvas></div>
@@ -132,7 +132,7 @@
             </div>
           </div>
           <span class="light-pool" aria-hidden="true"></span><span class="light-warm" aria-hidden="true"></span>
-          <div class="booth-stand" data-depth="6">
+          <div class="booth-stand">
             <span class="sign-glow" aria-hidden="true"></span>
             <span class="booth-reflection" aria-hidden="true"></span>
             <span class="booth-shadow" aria-hidden="true"></span>
@@ -192,36 +192,8 @@
     <ellipse cx="108" cy="350" rx="32" ry="6" fill="#A63A44"></ellipse>
     <!-- someone's in the booth: the flash fires behind the curtain... -->
     <rect class="flash-back" x="22" y="42" width="172" height="354" fill="#FFFDF6" opacity="0"></rect>
-    <g class="curtain-part curtain-part-l"><g>
-      <path d="M22 48 H100 C102 140 96 250 104 382 C92 388 80 380 68 386 C56 392 42 382 30 388 C26 390 24 388 22 386Z" fill="url(#velvet)"></path>
-      <path d="M22 48 H100 C102 140 96 250 104 382 C92 388 80 380 68 386 C56 392 42 382 30 388 C26 390 24 388 22 386Z" fill="#000" filter="url(#velvetPile)" opacity=".45"></path>
-      <path d="M31.8 52 C31.8 160 28.8 270 31.8 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
-      <path d="M37.8 52 C37.8 160 35.8 270 37.8 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M51.3 52 C52.5 160 49.5 270 53.2 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
-      <path d="M57.3 52 C58.5 160 56.5 270 59.2 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M70.8 52 C73.2 160 70.2 270 74.6 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
-      <path d="M76.8 52 C79.2 160 77.2 270 80.6 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M90.3 52 C93.8 160 90.8 270 96.0 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
-      <path d="M96.3 52 C99.8 160 97.8 270 102.0 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path>
-      <path d="M22 48 H100 C102 140 96 250 104 382 C92 388 80 380 68 386 C56 392 42 382 30 388 C26 390 24 388 22 386Z" fill="url(#velvetShade)"></path>
-      <path d="M22 380 C36 374 50 386 64 378 C78 370 90 382 104 374" stroke="url(#gold)" stroke-width="2.6" fill="none"></path>
-    </g></g>
-    <g class="curtain-part curtain-part-r"><g>
-      <path d="M116 48 H194 V386 C188 389 182 391 176 388 C164 382 150 392 138 386 C126 380 118 386 110 382 C118 250 114 140 116 48Z" fill="url(#velvet)"></path>
-      <path d="M116 48 H194 V386 C188 389 182 391 176 388 C164 382 150 392 138 386 C126 380 118 386 110 382 C118 250 114 140 116 48Z" fill="#000" filter="url(#velvetPile)" opacity=".45"></path>
-      <path d="M125.8 52 C125.8 160 122.8 270 125.8 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
-      <path d="M131.8 52 C131.8 160 129.8 270 131.8 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M145.3 52 C144.1 160 141.1 270 143.3 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
-      <path d="M151.3 52 C150.1 160 148.1 270 149.3 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M164.8 52 C162.3 160 159.3 270 160.9 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
-      <path d="M170.8 52 C168.3 160 166.3 270 166.9 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M184.3 52 C180.7 160 177.7 270 178.5 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
-      <path d="M190.3 52 C186.7 160 184.7 270 184.5 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path>
-      <path d="M116 48 H194 V386 C188 389 182 391 176 388 C164 382 150 392 138 386 C126 380 118 386 110 382 C118 250 114 140 116 48Z" fill="url(#velvetShade)"></path>
-      <path d="M110 374 C126 384 140 372 154 380 C168 388 182 376 194 382" stroke="url(#gold)" stroke-width="2.6" fill="none"></path>
-    </g></g>
-    <!-- ...and lights the velvet from inside -->
-    <rect class="flash-fabric" x="22" y="42" width="172" height="354" fill="#FFE6DC" opacity="0" style="mix-blend-mode: screen"></rect>
-    <!-- warm light spilling through the gap in the curtain -->
-    <rect class="gap-glow" x="99" y="52" width="18" height="330" fill="url(#gapGlow)" filter="url(#glowBlur)"></rect>
   </g>
   <ellipse cx="108" cy="402" rx="34" ry="5" fill="#FFD58A" opacity=".35" filter="url(#glowBlur)"></ellipse>
-  <rect x="18" y="42" width="180" height="6" rx="3" fill="url(#metalDark)"></rect>
-  <g><circle cx="30" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="47.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="65" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="82.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="100" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="117.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="135" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="152.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="170" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="187.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle></g>
 
   <!-- side panel: sample strips, the coin slot, the strip slot -->
   <rect x="210" y="40" width="70" height="124" rx="4" fill="#1F1A17"></rect>
@@ -252,6 +224,39 @@
   <circle cx="33" cy="460" r="2" fill="#7A5C24"></circle><circle cx="131" cy="460" r="2" fill="#7A5C24"></circle>
   <text x="82" y="465" text-anchor="middle" font-family="&quot;Special Elite&quot;, &quot;Courier New&quot;, monospace" font-size="12" letter-spacing="2" fill="#3A2A10">EST. 2026</text>
   <rect x="16" y="524" width="26" height="14" rx="2" fill="#1F1A17"></rect><rect x="258" y="524" width="26" height="14" rx="2" fill="#1F1A17"></rect>
+</svg>
+                <svg class="booth-curtains" viewBox="0 0 300 540" aria-hidden="true" focusable="false">
+  <!-- the curtains live on their own layer, so parting them never repaints the booth -->
+  <g clip-path="url(#opening)">
+    <g class="curtain-part curtain-part-l"><g>
+      <path d="M22 48 H100 C102 140 96 250 104 382 C92 388 80 380 68 386 C56 392 42 382 30 388 C26 390 24 388 22 386Z" fill="url(#velvet)"></path>
+      <path d="M22 48 H100 C102 140 96 250 104 382 C92 388 80 380 68 386 C56 392 42 382 30 388 C26 390 24 388 22 386Z" fill="#000" filter="url(#velvetPile)" opacity=".45"></path>
+      <path d="M31.8 52 C31.8 160 28.8 270 31.8 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M37.8 52 C37.8 160 35.8 270 37.8 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M51.3 52 C52.5 160 49.5 270 53.2 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M57.3 52 C58.5 160 56.5 270 59.2 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M70.8 52 C73.2 160 70.2 270 74.6 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M76.8 52 C79.2 160 77.2 270 80.6 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M90.3 52 C93.8 160 90.8 270 96.0 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M96.3 52 C99.8 160 97.8 270 102.0 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path>
+      <path d="M22 48 H100 C102 140 96 250 104 382 C92 388 80 380 68 386 C56 392 42 382 30 388 C26 390 24 388 22 386Z" fill="url(#velvetShade)"></path>
+      <path d="M22 380 C36 374 50 386 64 378 C78 370 90 382 104 374" stroke="url(#gold)" stroke-width="2.6" fill="none"></path>
+    </g></g>
+    <g class="curtain-part curtain-part-r"><g>
+      <path d="M116 48 H194 V386 C188 389 182 391 176 388 C164 382 150 392 138 386 C126 380 118 386 110 382 C118 250 114 140 116 48Z" fill="url(#velvet)"></path>
+      <path d="M116 48 H194 V386 C188 389 182 391 176 388 C164 382 150 392 138 386 C126 380 118 386 110 382 C118 250 114 140 116 48Z" fill="#000" filter="url(#velvetPile)" opacity=".45"></path>
+      <path d="M125.8 52 C125.8 160 122.8 270 125.8 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M131.8 52 C131.8 160 129.8 270 131.8 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M145.3 52 C144.1 160 141.1 270 143.3 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M151.3 52 C150.1 160 148.1 270 149.3 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M164.8 52 C162.3 160 159.3 270 160.9 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M170.8 52 C168.3 160 166.3 270 166.9 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path><path d="M184.3 52 C180.7 160 177.7 270 178.5 378" stroke="#140306" stroke-opacity=".5" stroke-width="4.5" fill="none"></path>
+      <path d="M190.3 52 C186.7 160 184.7 270 184.5 376" stroke="#E2848C" stroke-opacity=".22" stroke-width="2.2" fill="none"></path>
+      <path d="M116 48 H194 V386 C188 389 182 391 176 388 C164 382 150 392 138 386 C126 380 118 386 110 382 C118 250 114 140 116 48Z" fill="url(#velvetShade)"></path>
+      <path d="M110 374 C126 384 140 372 154 380 C168 388 182 376 194 382" stroke="url(#gold)" stroke-width="2.6" fill="none"></path>
+    </g></g>
+    <!-- ...and lights the velvet from inside -->
+    <rect class="flash-fabric" x="22" y="42" width="172" height="354" fill="#FFE6DC" opacity="0" style="mix-blend-mode: screen"></rect>
+    <!-- warm light spilling through the gap in the curtain -->
+    <rect class="gap-glow" x="99" y="52" width="18" height="330" fill="url(#gapGlow)" filter="url(#glowBlur)"></rect>
+  </g>
+  <rect x="18" y="42" width="180" height="6" rx="3" fill="url(#metalDark)"></rect>
+  <g><circle cx="30" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="47.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="65" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="82.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="100" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="117.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="135" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="152.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="170" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle><circle cx="187.5" cy="46" r="3.6" fill="none" stroke="#C9C4BA" stroke-width="1.8"></circle></g>
 </svg>
               </button>
               <!-- easter egg: the 25¢ slot takes a coin -->
