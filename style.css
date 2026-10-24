@@ -1692,25 +1692,26 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 .booth-setup, .booth-live, .booth-review, .booth-develop { position: relative; z-index: 1; }
 
 .booth-setup { display: grid; justify-items: center; gap: var(--s3); }
-/* the menu: a well-typeset diner card. Cream paper, one thin oxblood border, the gold clip on top,
-   settings in strict rows on the left and the coin-op start on the right */
+/* the menu: a well-typeset diner card, a little whiter than the cream wall. Settings in strict rows
+   on the left, the live preview and the coin-op start on the right */
 .menu-board {
+  --ease-calm: cubic-bezier(.22, .61, .36, 1);
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
-  column-gap: var(--s6);
-  width: min(100%, 880px);
-  padding: var(--s6) var(--s6) var(--s5);
+  grid-template-columns: minmax(0, 58fr) minmax(0, 42fr);
+  column-gap: var(--s5);
+  width: min(100%, 960px);
+  padding: var(--s5);
   color: var(--ink);
-  background: var(--grain-paper), var(--cream);
-  box-shadow: inset 0 0 0 10px var(--cream), inset 0 0 0 11px var(--red-oxide), 0 18px 40px rgb(6 10 24 / .5);
+  background: var(--grain-subtle), #FBF8F2;
+  box-shadow: inset 0 0 0 1px var(--red-oxide), 0 14px 34px rgb(70 44 20 / .16), 0 2px 6px rgb(70 44 20 / .1);
 }
 .menu-board .bulldog-clip { left: 50%; top: -24px; width: 60px; margin-left: -30px; z-index: 3; }
 .menu-title {
   grid-column: 1 / -1;
-  margin: -8px 0 var(--s4);
-  padding-bottom: var(--s1);
-  border-bottom: 1px solid rgb(94 28 35 / .35);
+  margin-bottom: var(--s3);
+  padding: var(--s0) 0 var(--s1);
+  border-bottom: 1px solid rgb(94 28 35 / .3);
   font-family: var(--font-type);
   font-size: var(--fs-14);
   letter-spacing: .3em;
@@ -1718,23 +1719,22 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   text-transform: uppercase;
   color: var(--red-oxide);
 }
-.menu-settings { display: grid; gap: var(--s4); }
-/* every row: a fixed label column, then its options */
-.menu-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); column-gap: var(--s2); align-items: start; }
+.menu-settings { display: grid; align-content: center; gap: 28px; }
+/* every row: a fixed label column, centred to its controls */
+.menu-row { display: grid; grid-template-columns: 110px minmax(0, 1fr); column-gap: 12px; align-items: center; }
 .menu-label {
-  padding-top: 6px;
   font-family: var(--font-type);
   font-size: .8125rem;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--ink);
 }
-.menu-row-options { padding-top: var(--s4); border-top: 1px solid rgb(92 75 65 / .22); }
+.menu-row-options { padding-top: 28px; border-top: 1px solid rgb(92 75 65 / .22); }
 .menu-hint { margin-top: var(--s0); color: var(--muted); font-family: var(--font-sans); font-size: .8125rem; line-height: 1.4; }
 .menu-hint:empty { display: none; }
 
-/* one chip style for every choice: a cream ticket with a perforated left edge (a real radio underneath) */
-.ticket-chips { display: flex; align-items: flex-end; gap: var(--s1); }
+/* one chip style for every choice (a real radio underneath): 56px tall, a clean 1px linen border */
+.ticket-chips { display: flex; align-items: center; gap: 12px; }
 .ticket-chip { position: relative; display: block; cursor: pointer; }
 .ticket-chip input { position: absolute; inset: 0; z-index: 1; margin: 0; opacity: 0; cursor: pointer; }
 .ticket-chip-face {
@@ -1742,21 +1742,20 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   display: grid;
   place-items: center;
   align-content: center;
-  gap: 2px;
-  width: 96px; height: 64px;
+  gap: 3px;
+  width: 96px; height: 56px;
   color: var(--ink);
-  background: var(--grain-paper), var(--cream);
-  box-shadow: inset 0 0 0 1px rgb(92 75 65 / .38);
-  /* perforations down the left edge */
-  -webkit-mask: radial-gradient(circle 2.5px at 0 5px, #0000 97%, #000) 0 0 / 100% 10px repeat-y;
-          mask: radial-gradient(circle 2.5px at 0 5px, #0000 97%, #000) 0 0 / 100% 10px repeat-y;
-  transition: background-color 250ms var(--ease-out), box-shadow 250ms var(--ease-out);
+  background: var(--grain-subtle), #FBF8F2;
+  box-shadow: inset 0 0 0 1px #D2C6B0;
+  transition: background-color 250ms var(--ease-calm), box-shadow 250ms var(--ease-calm), transform 250ms var(--ease-calm);
 }
-.ticket-chip-face b { font-family: var(--font-serif); font-weight: 700; font-size: 1.5rem; line-height: 1; }
+.ticket-chip-face b { font-family: var(--font-serif); font-weight: 600; font-size: 1.25rem; line-height: 1; }
 .ticket-chip-face small { font-family: var(--font-type); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-.ticket-chips-pair .ticket-chip-face { width: 60px; height: 48px; }
-.ticket-chips-pair .ticket-chip-face b { font-size: var(--fs-18); }
-@media (hover: hover) { .ticket-chip:hover input:not(:checked) + .ticket-chip-face { box-shadow: inset 0 0 0 1px var(--ink); } }
+.ticket-chips-pair .ticket-chip-face { width: 72px; }
+.ticket-chips-pair .ticket-chip-face b { font-weight: 500; }
+@media (hover: hover) {
+  .ticket-chip:hover input:not(:checked) + .ticket-chip-face { box-shadow: inset 0 0 0 1px #8E7F6C; transform: translateY(-1px); }
+}
 /* the one selected state: cherry border, butter-tinted paper and a small check stamp */
 .ticket-chip input:checked + .ticket-chip-face,
 .menu-layouts .layout-opt input:checked + .layout-card { background-color: #F6E7B8; box-shadow: inset 0 0 0 2px var(--cherry); }
@@ -1778,55 +1777,85 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 .ticket-chip input:focus-visible + .ticket-chip-face,
 .menu-layouts .layout-opt input:focus-visible + .layout-card { outline: 2px solid var(--oxblood); outline-offset: 3px; }
 
-/* layouts: four equal cells, every illustration at one scale and on one baseline */
-.menu-layouts { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s1); }
+/* layouts: four equal cells, every illustration at one scale in a 64px box, names on one baseline */
+.menu-layouts { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .menu-layouts .layout-card {
   position: relative;
+  grid-template-rows: 64px auto;
+  align-content: start;
   gap: 6px;
   padding: var(--s0) 4px;
   border: 0;
   border-radius: 0;
-  background: var(--grain-paper), var(--cream);
-  box-shadow: inset 0 0 0 1px rgb(92 75 65 / .38);
-  transition: background-color 250ms var(--ease-out), box-shadow 250ms var(--ease-out);
+  background: var(--grain-subtle), #FBF8F2;
+  box-shadow: inset 0 0 0 1px #D2C6B0;
+  transition: background-color 250ms var(--ease-calm), box-shadow 250ms var(--ease-calm), transform 250ms var(--ease-calm);
 }
-@media (hover: hover) { .menu-layouts .layout-opt:hover input:not(:checked):not(:disabled) + .layout-card { box-shadow: inset 0 0 0 1px var(--ink); } }
-.menu-layouts .layout-thumb { height: 72px; align-items: end; }
+@media (hover: hover) { .menu-layouts .layout-opt:hover input:not(:checked):not(:disabled) + .layout-card { box-shadow: inset 0 0 0 1px #8E7F6C; transform: translateY(-1px); } }
+.menu-layouts .layout-thumb { height: 64px; }
 .menu-layouts .layout-thumb svg { max-height: none; filter: none; }
-.menu-layouts .layout-name { font-family: var(--font-type); font-weight: 400; font-size: var(--fs-12); letter-spacing: .04em; }
+.menu-layouts .layout-name { font-family: var(--font-type); font-weight: 400; font-size: var(--fs-12); line-height: 1.25; letter-spacing: .02em; }
 .menu-layouts .layout-opt.is-disabled .layout-card { opacity: .5; }
 
-/* options: the setting and a one-line description, the On/Off pair on the right */
-.opt-list { display: grid; gap: var(--s1); }
+/* options: the setting and a one-line description on the left, the On/Off pair centred to it */
+.opt-list { display: grid; gap: 12px; }
 .opt-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
 .opt-text { display: grid; gap: 2px; min-width: 0; }
 .opt-name { font-family: var(--font-type); font-size: var(--fs-14); color: var(--ink); }
 .opt-desc { font-family: var(--font-sans); font-size: .8125rem; line-height: 1.35; color: var(--muted); }
 
-/* the start panel: centred against the settings */
+/* the right column: live preview, its caption, START and Upload photos, centred against the settings */
 .menu-start { display: grid; justify-items: center; align-content: center; gap: var(--s2); }
-.menu-summary { font-family: var(--font-type); font-size: var(--fs-12); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
-.menu-upload { min-height: var(--tap); font-size: .8125rem; background-size: 0 6px; transition: background-size 400ms var(--ease-out); }
+.menu-preview { margin: 0; }
+.preview-stage { position: relative; width: 210px; height: 230px; }
+.preview-stage canvas {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  opacity: 0;
+  filter: drop-shadow(3px 8px 10px rgb(60 36 14 / .28));
+  transform: rotate(-3deg);
+  transition: opacity 250ms var(--ease-calm);
+}
+.preview-stage canvas.is-shown { opacity: 1; }
+.preview-timer {
+  position: absolute;
+  left: 50%; top: 0;
+  z-index: 2;
+  padding: 2px 6px;
+  border: 1.5px solid var(--cherry);
+  border-radius: 3px;
+  color: var(--cherry);
+  background: rgb(251 248 242 / .92);
+  font-family: var(--font-type);
+  font-size: var(--fs-12);
+  letter-spacing: .08em;
+  transform: translate(var(--stamp-x, 0px), var(--stamp-y, 0px)) rotate(8deg);
+  transition: transform 250ms var(--ease-calm);
+}
+.menu-summary { font-family: var(--font-type); font-size: var(--fs-12); letter-spacing: .06em; color: var(--muted); text-align: center; }
+.menu-upload { min-height: var(--tap); font-size: .8125rem; background-size: 0 6px; transition: background-size 400ms var(--ease-calm); }
 .menu-upload:focus-visible { background-size: 100% 6px; }
 @media (hover: hover) { .menu-upload:hover { background-size: 100% 6px; } }
 
-/* a vintage coin-op push button: matte cherry enamel in an aged brass bezel */
+/* a vintage coin-op push button: matte cherry enamel with one soft highlight, a brushed-brass bezel */
 .coin-bezel {
   display: grid;
   place-items: center;
-  width: 104px; height: 104px;
+  width: 88px; height: 88px;
+  margin-top: var(--s0);
   border-radius: 50%;
-  background: var(--tex-brushed) 0 0 / 256px 128px, radial-gradient(circle at 40% 30%, #D9BC72, var(--gold) 55%, #7A5C24);
-  box-shadow: inset 0 0 0 2px rgb(255 240 200 / .35), inset 0 0 0 10px rgb(60 40 10 / .12), 3px 8px 14px rgb(6 10 24 / .3);
+  background: var(--tex-brushed) 0 0 / 256px 128px, radial-gradient(circle at 42% 32%, #D9BC72, var(--gold) 58%, #7A5C24);
+  box-shadow: inset 0 0 0 1.5px rgb(255 240 200 / .35), inset 0 0 0 8px rgb(60 40 10 / .1), 2px 6px 12px rgb(70 44 20 / .28);
 }
 .coin-btn {
-  width: 74px; height: 74px;
+  width: 63px; height: 63px;
   padding: 0;
   border: 0;
   border-radius: 50%;
   cursor: pointer;
   background: #3A2410;
-  box-shadow: inset 0 2px 6px rgb(0 0 0 / .55);
+  box-shadow: inset 0 2px 5px rgb(0 0 0 / .5);
 }
 .coin-dome {
   display: grid;
@@ -1835,32 +1864,47 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   border-radius: 50%;
   color: var(--cream);
   font-family: var(--font-type);
-  font-size: var(--fs-14);
+  font-size: .8125rem;
   letter-spacing: .16em;
   text-transform: uppercase;
-  background: radial-gradient(circle at 50% 22%, rgb(255 255 255 / .16), transparent 42%), var(--cherry);
-  box-shadow: 0 4px 0 #7A141A, 0 6px 7px rgb(0 0 0 / .35);
+  background: radial-gradient(60% 42% at 50% 26%, rgb(255 236 230 / .14), transparent 72%), #A92330;
+  box-shadow: 0 4px 0 #6E141A, 0 5px 6px rgb(0 0 0 / .3);
   transform: translateY(-4px);
   transition: transform 100ms var(--ease-out), box-shadow 100ms var(--ease-out);
 }
 @media (hover: hover) { .coin-btn:hover .coin-dome { transform: translateY(-5px); } }
-.coin-btn:active .coin-dome { transform: translateY(-1px); box-shadow: 0 1px 0 #7A141A, 0 2px 3px rgb(0 0 0 / .35); }
-.coin-btn:focus-visible { outline: 2px solid var(--oxblood); outline-offset: 14px; }
+.coin-btn:active .coin-dome { transform: translateY(-1px); box-shadow: 0 1px 0 #6E141A, 0 2px 3px rgb(0 0 0 / .3); }
+.coin-btn:focus-visible { outline: 2px solid var(--oxblood); outline-offset: 12px; }
 .coin-btn:disabled { cursor: not-allowed; }
 .coin-btn:disabled .coin-dome { background: #8E8478; box-shadow: 0 2px 0 #5E564C; transform: translateY(-2px); }
 
-/* narrower: the start panel moves under the settings; phones: labels sit above their options */
+/* narrower: the preview and START move under the settings; phones: labels sit above their controls */
 @media (max-width: 900px) {
-  .menu-board { grid-template-columns: minmax(0, 1fr); width: min(100%, 600px); }
-  .menu-start { margin-top: var(--s5); padding-top: var(--s4); border-top: 1px solid rgb(92 75 65 / .22); }
+  .menu-board { grid-template-columns: minmax(0, 1fr); width: min(100%, 620px); }
+  .menu-start { margin-top: var(--s4); padding-top: var(--s4); border-top: 1px solid rgb(92 75 65 / .22); }
+  .preview-stage { width: 180px; height: 196px; }
 }
 @media (max-width: 600px) {
-  .menu-board { padding: var(--s6) var(--s3) var(--s3); box-shadow: inset 0 0 0 6px var(--cream), inset 0 0 0 7px var(--red-oxide), 0 14px 30px rgb(6 10 24 / .5); }
-  .menu-title { margin-bottom: var(--s3); }
+  .menu-board { padding: var(--s6) 20px 20px; }
   .menu-row { grid-template-columns: minmax(0, 1fr); row-gap: var(--s1); }
-  .menu-label { padding-top: 0; }
   .menu-layouts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* the booth menu shares How it works' room: warm cream paper with the same grain, and the same thin
+   wood rail under the marquee and at the foot of the screen. The camera screens keep the navy room. */
+body[data-screen="booth"].booth-menu { --fg: var(--ink); --fg-muted: var(--muted); --focus: var(--oxblood); --kicker: var(--cherry); --accent: var(--cherry); }
+body[data-screen="booth"].booth-menu::before { background: var(--grain-subtle), var(--cream); }
+html:has(body[data-screen="booth"].booth-menu) { background: var(--cream); }
+body[data-screen="booth"].booth-menu::after {
+  background:
+    linear-gradient(#2A190D 0 2px, #6E4626 2px 5px, #9A6A42 5px 6px, #5A3A20 6px 8px, #D8BF86 8px 16px, rgb(60 36 14 / .16) 16px, transparent 22px) 0 var(--header-h) / 100% 22px no-repeat,
+    linear-gradient(to top, #2A190D 0 2px, #6E4626 2px 5px, #9A6A42 5px 6px, #5A3A20 6px 8px, #D8BF86 8px 16px, rgb(60 36 14 / .12) 16px, transparent 21px) 0 100% / 100% 21px no-repeat;
+}
+body[data-screen="booth"].booth-menu .swash path { stroke: var(--cherry); }
+body[data-screen="booth"].booth-menu .room-curtains { display: none; }
+/* 32px of wall between the rail and the kicker (main already pads the top) */
+.booth-setup { padding-top: calc(48px - var(--s4)); padding-bottom: var(--s5); }
+@media (max-width: 640px) { .booth-setup { padding-top: calc(48px - var(--s3)); } }
 
 /* the editor's cards keep their small "Selected" stamp */
 .frame-opt[aria-pressed="true"]::before,

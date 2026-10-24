@@ -1,5 +1,6 @@
 /* Booth: the menu card, camera, countdown capture, per-shot retakes,
    upload fallback and the "developing" moment. */
+import { updatePreview } from './menu-preview.js';
 import { $, $$, el, wait, pick, makeCanvas, restartAnimation, reducedMotion, pad2 } from './utils.js';
 import { state } from './state.js';
 import { createLayoutPicker, LAYOUTS } from './layouts.js';
@@ -46,6 +47,8 @@ window.addEventListener('pagehide', stopCamera);
    ========================================================= */
 function setPhase(phase) {
   state.booth.phase = phase;
+  // the menu has its own cream room; the camera screens keep the navy one
+  document.body.classList.toggle('booth-menu', phase === 'setup');
   dom.frame.dataset.state = phase;
   dom.setup.hidden = phase !== 'setup';
   dom.live.hidden = !['loading', 'live', 'shooting', 'error'].includes(phase);
@@ -64,18 +67,27 @@ const announce = msg => { dom.announcer.textContent = msg; };
    ========================================================= */
 const picker = createLayoutPicker($('#booth-layouts'), 'layout', id => { state.settings.layout = id; refreshPicker(); });
 
+addEventListener('resize', () => { if (state.booth.phase === 'setup') { sameScale($('#booth-layouts')); updatePreview(); } });
 function refreshPicker(note = '') {
   picker.update(state.settings.shots, state.settings.layout);
   $('#booth-layout-hint').textContent = note;
   sameScale($('#booth-layouts'));
 }
-// every layout illustration at one scale: the tallest fills its 72px box, the rest keep proportion
+// every layout illustration at one scale: the photos in each are drawn the same size, as large as
+// lets every illustration fit its 64px box and its cell
 function sameScale(root) {
-  const svgs = $$('.layout-thumb svg', root);
-  const boxes = svgs.map(svg => svg.viewBox.baseVal).filter(Boolean);
-  if (!boxes.length) return;
-  const k = Math.min(...boxes.map(v => 72 / v.height), ...boxes.map(v => 64 / v.width));
-  svgs.forEach(svg => { const v = svg.viewBox.baseVal; svg.style.width = `${(v.width * k).toFixed(1)}px`; svg.style.height = `${(v.height * k).toFixed(1)}px`; });
+  const thumbs = $$('.layout-thumb', root), svgs = thumbs.map(t => t.querySelector('svg'));
+  const info = svgs.map(svg => {
+    const v = svg && svg.viewBox.baseVal, o = svg && svg.querySelector('ellipse');
+    return v && o ? { v, slot: +o.getAttribute('rx') / 0.16 } : null;
+  });
+  if (info.some(i => !i)) return;
+  const maxW = Math.max(40, Math.min(...thumbs.map(t => t.clientWidth)) - 8);
+  const photoW = Math.min(...info.map(({ v, slot }) => Math.min(64 / v.height, maxW / v.width) * slot));
+  svgs.forEach((svg, i) => {
+    const { v, slot } = info[i], k = photoW / slot;
+    svg.style.width = `${(v.width * k).toFixed(1)}px`; svg.style.height = `${(v.height * k).toFixed(1)}px`;
+  });
 }
 
 function readForm() {
@@ -88,11 +100,8 @@ function readForm() {
   syncMenu();
 }
 
-// the line under the start button sums up the choice
-function syncMenu() {
-  const s = state.settings;
-  $('#coin-plate').textContent = `${s.shots} photos · ${s.timer}s timer`;
-}
+// the live preview (and its caption) shows the strip these choices make
+function syncMenu() { updatePreview(); }
 
 dom.form.addEventListener('change', e => {
   const t = e.target, s = state.settings;
@@ -122,7 +131,12 @@ export function openBooth({ via = 'curtain' } = {}) {
   readForm();
   refreshPicker();
   setPhase('setup');
-  return show('booth', { via });
+  const shown = show('booth', { via });
+  // the preview and the layout illustrations measure themselves once the menu is on screen
+  const measure = () => { sameScale($('#booth-layouts')); updatePreview(); };
+  requestAnimationFrame(measure);
+  shown.then(measure);
+  return shown;
 }
 
 async function startLive() {
@@ -149,6 +163,7 @@ export async function boothBack() {
   cancelCountdown();
   stopCamera();
   setPhase('setup');
+  requestAnimationFrame(() => { sameScale($('#booth-layouts')); updatePreview(); });
 }
 
 /* =========================================================
