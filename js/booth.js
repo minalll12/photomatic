@@ -67,38 +67,39 @@ const picker = createLayoutPicker($('#booth-layouts'), 'layout', id => { state.s
 function refreshPicker(note = '') {
   picker.update(state.settings.shots, state.settings.layout);
   $('#booth-layout-hint').textContent = note;
+  sameScale($('#booth-layouts'));
+}
+// every layout illustration at one scale: the tallest fills its 72px box, the rest keep proportion
+function sameScale(root) {
+  const svgs = $$('.layout-thumb svg', root);
+  const boxes = svgs.map(svg => svg.viewBox.baseVal).filter(Boolean);
+  if (!boxes.length) return;
+  const k = Math.min(...boxes.map(v => 72 / v.height), ...boxes.map(v => 64 / v.width));
+  svgs.forEach(svg => { const v = svg.viewBox.baseVal; svg.style.width = `${(v.width * k).toFixed(1)}px`; svg.style.height = `${(v.height * k).toFixed(1)}px`; });
 }
 
 function readForm() {
   const s = state.settings, f = dom.form;
   s.shots = +$('input[name="shots"]:checked', f).value;
   s.timer = +$('input[name="timer"]:checked', f).value;
-  s.prompts = $('#opt-prompts').checked;
-  s.mirror = $('#opt-mirror').checked;
+  s.prompts = $('input[name="prompts"]:checked', f).value === 'on';
+  s.mirror = $('input[name="mirror"]:checked', f).value === 'on';
   dom.frame.classList.toggle('is-unmirrored', !s.mirror);
   syncMenu();
 }
 
-// switches say On/Off in words and to assistive tech; the brass plate shows the choice
+// the line under the start button sums up the choice
 function syncMenu() {
-  $$('.brass-row input', dom.form).forEach(i => {
-    i.setAttribute('aria-checked', String(i.checked));
-    i.closest('.brass-row').querySelector('.brass-state').textContent = i.checked ? '· On' : '· Off';
-  });
   const s = state.settings;
   $('#coin-plate').textContent = `${s.shots} photos · ${s.timer}s timer`;
 }
-// Enter flips a switch too (Space already does)
-$$('.brass-row input', dom.form).forEach(i => i.addEventListener('keydown', e => {
-  if (e.key === 'Enter') { e.preventDefault(); i.click(); }
-}));
 
 dom.form.addEventListener('change', e => {
   const t = e.target, s = state.settings;
-  if (t.type === 'checkbox') switchClick(); else if (t.name === 'shots' || t.name === 'timer') punch();
+  if (t.name === 'prompts' || t.name === 'mirror') switchClick(); else if (t.name === 'shots' || t.name === 'timer') punch();
   if (t.name === 'timer') s.timer = +t.value;
-  else if (t.id === 'opt-prompts') s.prompts = t.checked;
-  else if (t.id === 'opt-mirror') { s.mirror = t.checked; dom.frame.classList.toggle('is-unmirrored', !s.mirror); }
+  else if (t.name === 'prompts') s.prompts = t.value === 'on';
+  else if (t.name === 'mirror') { s.mirror = t.value === 'on'; dom.frame.classList.toggle('is-unmirrored', !s.mirror); }
   else if (t.name === 'shots') {
     s.shots = +t.value;
     let note = '';
