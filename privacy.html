@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Privacy · Photomatic</title>
+  <meta name="description" content="Photomatic has no accounts and no uploads. Your photos are taken, edited and kept only in your browser, on your device.">
+  <meta name="theme-color" content="#2A070B">
+  <!-- absolute URL: the site's address lives in one place, SITE_URL in tools/set-site-url.py -->
+  <link rel="canonical" href="https://photomatic.vercel.app/privacy.html" data-site>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preload" href="/assets/fonts/playfair-display-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    @font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("/assets/fonts/playfair-display-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 400 900; font-display: swap; src: url("/assets/fonts/playfair-display-italic.woff2") format("woff2"); }
+    @font-face { font-family: "DM Sans"; font-style: normal; font-weight: 400 800; font-display: swap; src: url("/assets/fonts/dm-sans-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Special Elite"; font-style: normal; font-weight: 400; font-display: swap; src: url("/assets/fonts/special-elite-normal.woff2") format("woff2"); }
+    @font-face { font-family: "UnifrakturMaguntia"; font-style: normal; font-weight: 400; font-display: swap; src: url("/assets/fonts/unifrakturmaguntia-normal.woff2") format("woff2"); }
+    :root {
+      --ink: #1F1A17; --muted: #5C4B41; --cream: #F4EEE3; --oxblood: #3A0A0E; --cherry: #B3202A; --gold: #B8934A;
+      --ease-calm: cubic-bezier(.22, .61, .36, 1);
+      --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .165 0 0 0 0 .13 0 0 0 0 .11 .34 0 0 0 -.17'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 256px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100svh;
+      color: var(--ink);
+      font: 400 1rem / 1.6 "DM Sans", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip;
+      background: var(--grain), var(--cream);
+    }
+    a { color: inherit; }
+    :focus-visible { outline: 2px solid var(--oxblood); outline-offset: 3px; border-radius: 2px; }
+    .skip { position: absolute; left: 16px; top: -100px; display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; background: var(--cream); color: var(--ink); font-weight: 700; border-radius: 4px; z-index: 5; }
+    .skip:focus { top: 16px; }
+
+    /* the same oxblood bar as the site, with the wood rail of How it works under it */
+    .bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      height: 60px; padding: 0 max(16px, 4vw, env(safe-area-inset-left));
+      background: #2A070B;
+    }
+    .bar a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+    .mark { color: var(--cream); font: 400 1.75rem / 1 "UnifrakturMaguntia", Georgia, serif; text-shadow: 2px 2px 0 #5E1C23; }
+    .back { color: rgb(244 238 227 / .82); font: 400 .875rem / 1 "Special Elite", "Courier New", monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .back:hover { color: var(--cream); }
+    .rail { height: 16px; background: linear-gradient(#2A190D 0 2px, #6E4626 2px 5px, #9A6A42 5px 6px, #5A3A20 6px 8px, transparent 8px), var(--grain), #D8BF86; box-shadow: 0 3px 6px rgb(60 36 14 / .22); }
+
+    main { width: min(100% - 32px, 680px); margin: 0 auto; padding: 64px 0 80px; }
+    .head { display: grid; justify-items: center; gap: 12px; margin-bottom: 48px; text-align: center; }
+    .kicker { margin: 0; font: 400 .875rem / 1 "Special Elite", "Courier New", monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--cherry); }
+    h1 { margin: 0; font: 700 clamp(2.25rem, 1.6rem + 2.8vw, 4rem) / 1.08 "Playfair Display", Georgia, serif; }
+    h1 em { font-weight: 500; color: var(--cherry); }
+    .lede { max-width: 44ch; margin: 4px 0 0; color: var(--muted); font-size: 1.0625rem; }
+
+    /* each point is a short paragraph under a typewritten label on a ruled line */
+    section { padding: 24px 0; border-top: 1px solid rgb(92 75 65 / .28); }
+    section:last-of-type { border-bottom: 1px solid rgb(92 75 65 / .28); }
+    h2 { margin: 0 0 6px; font: 700 1.375rem / 1.3 "Playfair Display", Georgia, serif; }
+    h2 span { margin-right: 10px; color: var(--cherry); font: 400 .875rem / 1 "Special Elite", "Courier New", monospace; letter-spacing: .1em; vertical-align: 3px; }
+    p { margin: 0; }
+    p + p { margin-top: 10px; }
+    .note { margin-top: 32px; color: var(--muted); font-size: .875rem; text-align: center; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; min-height: 48px; margin-top: 32px; padding: 0 32px;
+      border: 1px solid var(--gold); border-radius: 3px; color: var(--cream); text-decoration: none;
+      font: 500 .9375rem / 1 "DM Sans", system-ui, sans-serif; letter-spacing: .02em;
+      background: radial-gradient(110% 120% at 0% 0%, rgb(150 52 62 / .35), transparent 62%), var(--oxblood);
+      box-shadow: inset 0 0 0 3px var(--oxblood), inset 0 0 0 4px rgb(226 194 122 / .28), 0 6px 14px rgb(42 33 28 / .3);
+      transition: background-color 250ms var(--ease-calm), border-color 250ms var(--ease-calm), transform 250ms var(--ease-calm);
+    }
+    .btn:hover { background-color: #4E1218; border-color: #E2C27A; transform: translateY(-1px); }
+    .center { text-align: center; }
+
+    /* the site footer */
+    footer { padding: 40px max(16px, 4vw) calc(40px + env(safe-area-inset-bottom)); color: rgb(244 238 227 / .82); background: var(--grain), #2A070B; box-shadow: inset 0 1px 0 var(--gold), inset 0 2px 0 rgb(0 0 0 / .35); }
+    .foot { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "mark line links" "mark copy links"; align-items: center; column-gap: 40px; max-width: 1200px; margin: 0 auto; }
+    .foot .mark { grid-area: mark; display: inline-flex; align-items: center; min-height: 44px; font-size: 1.75rem; text-decoration: none; }
+    .foot-line { grid-area: line; color: var(--cream); font: 400 .875rem / 1.4 "Special Elite", "Courier New", monospace; letter-spacing: .06em; }
+    .foot-copy { grid-area: copy; font-size: .75rem; }
+    .foot nav { grid-area: links; display: flex; gap: 16px; }
+    .foot nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; color: var(--cream); font: 500 .875rem / 1 "DM Sans", system-ui, sans-serif; text-decoration: underline 1.5px transparent; text-underline-offset: 6px; transition: text-decoration-color 250ms var(--ease-calm); }
+    .foot nav a:hover { text-decoration-color: var(--gold); }
+    footer :focus-visible { outline-color: var(--cream); }
+    @media (max-width: 640px) {
+      main { padding-top: 48px; }
+      .foot { grid-template-columns: 1fr; grid-template-areas: "mark" "line" "links" "copy"; justify-items: center; row-gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <div class="bar">
+      <a class="mark" href="/" aria-label="Photomatic, home">Photomatic</a>
+      <a class="back" href="/">Back to the booth</a>
+    </div>
+    <div class="rail" aria-hidden="true"></div>
+  </header>
+
+  <main id="main">
+    <div class="head">
+      <p class="kicker">— Privacy —</p>
+      <h1>Kept on your <em>device</em></h1>
+      <p class="lede">Photomatic is a photo booth that lives entirely in your browser. Here is everything it does with your photos, in plain words.</p>
+    </div>
+
+    <section aria-labelledby="p-accounts">
+      <h2 id="p-accounts"><span>01</span>No accounts</h2>
+      <p>There’s nothing to sign up for and nothing to log in to. We never ask for your name, email or phone number.</p>
+    </section>
+
+    <section aria-labelledby="p-uploads">
+      <h2 id="p-uploads"><span>02</span>No uploads</h2>
+      <p>Your photos are taken, edited and printed inside your browser. They are never sent to us or to anyone else: not the photos, not the finished strips, not the videos or story collages.</p>
+      <p>A file only leaves your device when you choose to download or share it yourself.</p>
+    </section>
+
+    <section aria-labelledby="p-stored">
+      <h2 id="p-stored"><span>03</span>Stored only in this browser</h2>
+      <p>Strips you save to <b>My Album</b> are kept in this browser’s own storage on this device. Another browser or another device won’t see them, and we can’t see them either.</p>
+      <p>Photomatic also remembers two small settings here: whether sound and the screen flash are on.</p>
+    </section>
+
+    <section aria-labelledby="p-clear">
+      <h2 id="p-clear"><span>04</span>Clearing your album</h2>
+      <p>Open <b>My Album</b> and choose <b>Clear album</b> to remove every strip, or open a single strip and choose <b>Delete</b>.</p>
+      <p>Clearing this site’s data in your browser settings removes the album and the settings too.</p>
+    </section>
+
+    <section aria-labelledby="p-camera">
+      <h2 id="p-camera"><span>05</span>The camera</h2>
+      <p>Your browser asks before the camera is used. Photomatic uses it only while you’re in the booth, and switches it off as soon as you carry on to editing, leave the booth or close the page.</p>
+      <p>Nothing is recorded in the background, and you can always upload photos you already have instead.</p>
+    </section>
+
+    <p class="note">Like any website, the host that serves these pages may keep standard server logs (such as IP addresses and the pages requested) to keep the site running. Photomatic adds no cookies, analytics or trackers.</p>
+    <p class="center"><a class="btn" href="/#booth">Back to the booth <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+  </main>
+
+  <footer>
+    <div class="foot">
+      <a class="mark" href="/" aria-label="Photomatic, home">Photomatic</a>
+      <p class="foot-line">Your photos never leave your device.</p>
+      <nav aria-label="Footer"><a href="/privacy.html" aria-current="page">Privacy</a><a href="/#booth">Booth</a></nav>
+      <p class="foot-copy">© 2026 Photomatic</p>
+    </div>
+  </footer>
+</body>
+</html>

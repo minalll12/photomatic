@@ -73,8 +73,6 @@
   /* the subtle grain is a static noise tile, so it is there on the first paint (no script needed) */
   --tex-grain-subtle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .165 0 0 0 0 .13 0 0 0 0 .11 .34 0 0 0 -.17'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
   --tex-grain-strong: none;
-  --tex-walnut: none;
-  --img-scissors: none; --img-washi-tape: none; --img-pencil: none; --img-stamps: none;
   /* grain tokens: subtle for big surfaces, paper for cards, strong only for small accents */
   --grain-subtle: var(--tex-grain-subtle) 0 0 / 256px;
   --grain-paper: var(--tex-grain-subtle) 0 0 / 256px;
@@ -188,20 +186,20 @@ body[data-screen="booth"]::before {
   /* a warm spotlight from above on the menu card */
   background: radial-gradient(36% 46% at 50% 34%, rgb(255 214 150 / .16), transparent 72%), radial-gradient(60% 55% at 50% 38%, rgb(80 104 150 / .4), transparent 70%), var(--grain-subtle), linear-gradient(#22304D, #131A2C);
 }
-/* editor: a kraft and cork desk */
-body[data-screen="editor"] { --fg: var(--cream); --fg-muted: rgb(244 238 227 / .8); --focus: var(--butter); --kicker: var(--butter); --accent: var(--butter); }
-/* a walnut writing desk, a desk lamp glowing from the top left */
+/* editor: a craft table in the same room as How it works: the cream paper wall, the same thin wood
+   rail under the marquee, ink text */
+body[data-screen="editor"] { --fg: var(--ink); --fg-muted: var(--muted); --focus: var(--oxblood); --kicker: var(--cherry); --accent: var(--cherry); }
 body[data-screen="editor"]::before {
   background:
-    radial-gradient(80% 70% at 14% 6%, rgb(255 226 160 / .26), rgb(255 226 160 / .07) 45%, transparent 70%),
-    var(--tex-walnut) 0 0 / 512px,
-    #4A3123;
+    linear-gradient(#2A190D 0 2px, #6E4626 2px 5px, #9A6A42 5px 6px, #5A3A20 6px 8px, #D8BF86 8px 16px, rgb(60 36 14 / .16) 16px, transparent 22px) 0 var(--header-h) / 100% 22px no-repeat,
+    radial-gradient(70% 60% at 40% 30%, rgb(255 236 200 / .45), transparent 75%),
+    var(--grain-subtle),
+    var(--cream);
 }
-/* reveal: a dark oxblood velvet table, a warm spotlight behind the strip */
+/* reveal: a dark oxblood velvet table; the warm spotlight behind the strip is .reveal-spot */
 body[data-screen="reveal"] { --fg: var(--cream); --fg-muted: rgb(244 238 227 / .78); --focus: var(--butter); --kicker: var(--dusty-blue, #A9BCD0); --accent: var(--butter); }
 body[data-screen="reveal"]::before {
   background:
-    radial-gradient(45% 55% at 40% 45%, rgb(255 214 150 / .22), rgb(255 214 150 / .06) 50%, transparent 72%),
     var(--tex-velvet) 0 0 / 512px,
     var(--grain-subtle),
     var(--oxblood);
@@ -217,8 +215,8 @@ body[data-screen="album"]::before {
     var(--grain-subtle),
     #320A0E;
 }
-body[data-screen="editor"]::after { background: radial-gradient(120% 95% at 30% 25%, transparent 45%, rgb(14 8 4 / .55) 100%); }
-body[data-screen="reveal"]::after { background: radial-gradient(110% 90% at 42% 45%, transparent 45%, rgb(14 2 4 / .6) 100%); }
+body[data-screen="editor"]::after { background: radial-gradient(120% 100% at 45% 35%, transparent 60%, rgb(90 60 30 / .14) 100%); }
+body[data-screen="reveal"]::after { background: radial-gradient(105% 88% at 50% 45%, transparent 36%, rgb(14 2 4 / .76) 100%); }
 body[data-screen="album"]::after {
   background: radial-gradient(110% 90% at 50% 42%, transparent 48%, rgb(10 2 4 / .6) 100%);
 }
@@ -243,7 +241,10 @@ a { color: inherit; }
   position: absolute;
   left: var(--s2); top: -100px;
   z-index: 200;
-  padding: var(--s0) var(--s2);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 var(--s2);
   background: var(--cream); color: var(--ink);
   border-radius: var(--r-sm);
   font-weight: 700;
@@ -530,6 +531,7 @@ body.ambient-busy .marquee-track { animation-play-state: paused; }
 @media (hover: hover) { .text-link:hover { text-decoration-color: var(--gold-line); } }
 .text-link:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; text-decoration-color: var(--gold-line); }
 .text-link-light { color: rgb(244 238 227 / .75); }
+#develop-skip { min-width: var(--tap); justify-content: center; }
 @media (hover: hover) { .text-link-light:hover { color: var(--cream); } }
 
 /* ticket stub (hero CTA) */
@@ -728,7 +730,7 @@ body.ambient-busy .marquee-track { animation-play-state: paused; }
 .chips { display: flex; flex-wrap: wrap; gap: var(--s0); }
 .chip {
   position: relative;
-  min-height: 40px;
+  min-height: var(--tap);
   padding: 0 var(--s2);
   border: 0;
   border-radius: 3px;
@@ -755,6 +757,7 @@ body.ambient-busy .marquee-track { animation-play-state: paused; }
   position: relative;
   transition: transform 250ms var(--ease-calm), box-shadow 250ms var(--ease-calm);
 }
+@media (pointer: coarse) { .swatch { width: var(--tap); height: var(--tap); } }
 .swatch[aria-pressed="true"] { box-shadow: inset 0 0 0 1px rgb(42 33 28 / .25), 0 0 0 2px var(--chip-cream), 0 0 0 4px var(--gold-edge); }
 
 .pattern-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); margin-top: var(--s2); }
@@ -912,7 +915,6 @@ kbd {
   transition: opacity var(--t-fast), transform var(--t-fast);
 }
 .layout-opt[data-tip]:hover::after, .layout-opt[data-tip]:focus-within::after { opacity: 1; transform: translate(-50%, 0); }
-.layout-picker-sm { grid-template-columns: repeat(3, 1fr); }
 .layout-picker-sm .layout-thumb { height: 60px; }
 .layout-picker-sm .layout-thumb svg { max-height: 60px; }
 
@@ -1418,11 +1420,11 @@ body.ambient-busy .hero .bulbs { animation: chase 1s steps(2) infinite; }
   --fg: var(--ink); --kicker: var(--cherry); --accent: var(--cherry);
   background: var(--grain-subtle), var(--cream);
 }
-/* landing here from the nav leaves a little breathing room under the marquee */
-#how { scroll-margin-top: calc(var(--header-h) + 24px); }
+/* landing here from the nav puts the wood rail right under the marquee (none of the hero's floor shows) */
+#how { scroll-margin-top: var(--header-h); }
 /* below the fold: laid out only when it comes near the screen (keeps the first load light) */
-#how, .site-footer { content-visibility: auto; contain-intrinsic-size: auto 1100px; }
-.site-footer { contain-intrinsic-size: auto 90px; }
+#how, #screen-home .site-footer { content-visibility: auto; contain-intrinsic-size: auto 1100px; }
+#screen-home .site-footer { contain-intrinsic-size: auto 130px; }
 /* one rail style, top and bottom: a dark joint, the wood rail, a narrow butter-kraft band */
 .how::before, .how::after { content: ""; position: absolute; left: 0; right: 0; height: 16px; pointer-events: none; }
 .how::before {
@@ -1638,9 +1640,15 @@ html:not(.js-develop) .develop-veil { display: none; }
 .mini i { display: block; aspect-ratio: 4 / 3; background: radial-gradient(ellipse 22% 34% at 50% 50%, transparent 86%, rgb(31 26 23 / .38) 90% 100%, transparent 104%), #F4ECDC; }
 .mini b { display: block; margin-top: 4%; font-size: 8px; text-align: center; letter-spacing: .1em; text-transform: uppercase; }
 .demo-custom .mini { opacity: 0; animation: skin 6s var(--ease-calm) infinite; }
-.mini-black { background: #141110; }
-.mini-black i { box-shadow: 0 0 0 2px #F7F4EE; }
-.mini-mark { padding-top: 3px; border-top: 1px solid var(--gold); color: var(--cream); font-family: var(--font-logo); font-weight: 400; font-size: 11px !important; letter-spacing: 0 !important; text-transform: none !important; }
+/* 02 reads like 01 and 03 at a glance: a warm mid-charcoal backdrop under a soft lamp, light strips
+   with clearly drawn frames */
+.demo-custom { background: radial-gradient(70% 62% at 50% 40%, rgb(255 222 170 / .28), transparent 72%), var(--grain-subtle), #5A4C44; }
+.demo-custom .mini i {
+  background: radial-gradient(ellipse 22% 34% at 50% 50%, transparent 84%, rgb(31 26 23 / .62) 88% 100%, transparent 103%), #EADFCB;
+  box-shadow: inset 0 0 0 1px rgb(31 26 23 / .35);
+}
+.mini-classic { background: var(--grain-paper), #F4ECDC; box-shadow: inset 0 0 0 1px rgb(92 75 65 / .3), 3px 8px 14px rgb(0 0 0 / .4); }
+.mini-mark { padding-top: 3px; border-top: 1px solid var(--gold); color: var(--ink); font-family: var(--font-logo); font-weight: 400; font-size: 11px !important; letter-spacing: 0 !important; text-transform: none !important; }
 .mini-ticket { background: var(--cream); border-radius: 6px; box-shadow: inset 0 0 0 2px var(--red-oxide), 3px 8px 14px rgb(0 0 0 / .45); animation-delay: 2s !important; }
 .mini-ticket b { color: var(--red-oxide); font-family: var(--font-type); font-weight: 400; }
 .mini-receipt {
@@ -1720,16 +1728,45 @@ html:not(.js-develop) .develop-veil { display: none; }
 /* the string from the end of the line to the tag's hole */
 .drying-line::after { content: ""; position: absolute; right: calc(var(--end) - 1px); top: 24px; width: 1.5px; height: 74px; background: #8B6A42; transform-origin: top; transform: rotate(-39deg); }
 
+/* the footer (landing and album): an oxblood band, cream text, a gold hairline above; full width,
+   flush with the bottom of the page */
 .site-footer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  position: relative;
+  margin: 0 calc(50% - 50vw) calc(var(--s10) * -1);
+  padding: var(--s5) var(--gutter) calc(var(--s5) + env(safe-area-inset-bottom));
+  color: rgb(244 238 227 / .82);
+  background: var(--grain-subtle), #2A070B;
+  box-shadow: inset 0 1px 0 var(--gold-line), inset 0 2px 0 rgb(0 0 0 / .35);
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "mark line links" "mark copy links";
   align-items: center;
-  gap: var(--s1);
-  margin-top: var(--s8);
-  padding-top: var(--s3);
-  border-top: 1px solid rgb(244 238 227 / .14);
-  color: var(--fg-muted);
+  column-gap: var(--s5);
+  max-width: var(--max);
+  margin-inline: auto;
+}
+.footer-mark { grid-area: mark; color: var(--cream); }
+.footer-line { grid-area: line; font: 400 var(--fs-14) / 1.4 var(--font-type); letter-spacing: .06em; color: var(--cream); }
+.footer-copy { grid-area: copy; font-size: var(--fs-12); }
+.footer-links { grid-area: links; display: flex; gap: var(--s2); }
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 var(--s0);
+  color: var(--cream);
+  font: 500 var(--fs-14) / 1 var(--font-sans);
+  text-decoration: underline 1.5px transparent;
+  text-underline-offset: 6px;
+  transition: text-decoration-color 250ms var(--ease-calm);
+}
+@media (hover: hover) { .footer-links a:hover { text-decoration-color: var(--gold-line); } }
+.site-footer :focus-visible { outline-color: var(--cream); }
+@media (max-width: 640px) {
+  .footer-inner { grid-template-columns: 1fr; grid-template-areas: "mark" "line" "links" "copy"; justify-items: center; row-gap: var(--s0); text-align: center; }
+  .footer-links { margin-block: var(--s0); }
 }
 
 /* ---------------------------------------------------------
@@ -2032,48 +2069,13 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
     linear-gradient(#5A4B3B, #2E241C);
   box-shadow: inset 0 0 0 1px rgb(255 240 200 / .2), 0 0 60px rgb(247 200 102 / .16), var(--lift-3);
 }
-/* ring light: a cream wash on the room round the frame (::before) and the same bulbs burning
-   warm-white (::after); each capture boosts both to white for a moment */
-.booth-interior::before,
-.booth-interior::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 450ms var(--ease-calm);
-}
-.booth-interior::before {
-  inset: -150px -190px;
-  z-index: -1;
-  background: radial-gradient(farthest-side, rgb(255 247 232 / .85) 56%, rgb(255 240 216 / .45) 72%, rgb(255 236 208 / .12) 88%, rgb(255 236 208 / 0));
-}
-.booth-interior::after {
-  --bulb: radial-gradient(circle, #FFFFFF 0 3.6px, #FFFBF0 4.6px, rgb(255 250 238 / .7) 6.5px, transparent 9.5px);
-  inset: 0;
-  z-index: 2;
-  border-radius: inherit;
-  background:
-    var(--bulb) calc(var(--bulb-g) / 2) 0 / var(--bulb-g) var(--bulb-d) repeat-x,
-    var(--bulb) calc(var(--bulb-g) / 2) 100% / var(--bulb-g) var(--bulb-d) repeat-x,
-    var(--bulb) 0 calc(var(--bulb-g) / 2) / var(--bulb-d) var(--bulb-g) repeat-y,
-    var(--bulb) 100% calc(var(--bulb-g) / 2) / var(--bulb-d) var(--bulb-g) repeat-y;
-  box-shadow: 0 0 40px rgb(255 248 234 / .6), inset 0 0 26px rgb(255 248 234 / .35);
-}
-.camera video { transition: filter 450ms var(--ease-calm); }
-.booth-live.ring-on .camera video { filter: brightness(1.14) contrast(.96) saturate(1.04); }
-.booth-live.ring-on .booth-interior::before,
-.booth-live.ring-on .booth-interior::after { opacity: 1; }
-.booth-live.ring-on.is-boost .booth-interior::before { animation: ring-boost 700ms var(--ease-out); }
-.booth-live.ring-on.is-boost .booth-interior::after { animation: ring-boost-bulbs 700ms var(--ease-out); }
-@keyframes ring-boost { from { filter: saturate(0) brightness(1.5); transform: scale(1.1); } }
-@keyframes ring-boost-bulbs { from { filter: brightness(1.6); box-shadow: 0 0 60px #fff; } }
-
-.ring-toggle {
+/* Flash chip: a light-surface chip in the room's colours; pressed = cream with the gold ✓ */
+.flash-toggle {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
+  min-height: var(--tap);
   padding: 0 14px 0 12px;
   border: 0;
   border-radius: 3px;
@@ -2084,11 +2086,11 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   cursor: pointer;
   transition: background-color 250ms var(--ease-calm), box-shadow 250ms var(--ease-calm), transform 250ms var(--ease-calm);
 }
-.ring-bulb { flex: none; transition: color 250ms var(--ease-calm), filter 250ms var(--ease-calm); }
-@media (hover: hover) { .ring-toggle:hover:not([aria-pressed="true"]) { box-shadow: inset 0 0 0 1px rgb(244 238 227 / .6); transform: translateY(-1px); } }
-.ring-toggle[aria-pressed="true"] { padding-right: 30px; color: var(--ink); background: var(--grain-subtle), #F4EEE3; box-shadow: inset 0 0 0 2px var(--gold-edge), 0 0 0 3px rgb(226 194 122 / .22), 0 0 16px rgb(226 194 122 / .32); }
-.ring-toggle[aria-pressed="true"] .ring-bulb { color: #8A6420; fill: #FFE9A8; }
-.ring-toggle[aria-pressed="true"]::after {
+.flash-bulb { flex: none; transition: color 250ms var(--ease-calm); }
+@media (hover: hover) { .flash-toggle:hover { transform: translateY(-1px); } .flash-toggle:hover:not([aria-pressed="true"]) { box-shadow: inset 0 0 0 1px rgb(244 238 227 / .6); } }
+.flash-toggle[aria-pressed="true"] { padding-right: 30px; color: var(--ink); background: var(--grain-subtle), #F4EEE3; box-shadow: inset 0 0 0 2px var(--gold-edge), 0 0 0 3px rgb(226 194 122 / .22); }
+.flash-toggle[aria-pressed="true"] .flash-bulb { color: #8A6420; fill: #FFE9A8; }
+.flash-toggle[aria-pressed="true"]::after {
   content: "✓";
   position: absolute;
   right: 8px; top: 50%;
@@ -2102,7 +2104,20 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   box-shadow: 0 0 0 1px rgb(122 92 36 / .5);
   font: 700 11px / 1 var(--font-sans);
 }
-.ring-toggle:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+.flash-toggle:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+/* the screen flash: pure white over everything except the live preview (a cut-out made by a huge
+   spread shadow round a box the preview's size); in over 120ms, held for the capture, out over 250ms */
+.screen-flash {
+  position: fixed;
+  z-index: 950;
+  border-radius: 3px;
+  box-shadow: 0 0 0 300vmax #FFFFFF;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 250ms ease-out;
+}
+.screen-flash.is-up { opacity: 1; transition: opacity 120ms ease-in; }
+@media (prefers-reduced-motion: reduce) { .screen-flash, .screen-flash.is-up { transition: none; } }
 .camera {
   position: relative;
   aspect-ratio: 4 / 3;
@@ -2253,29 +2268,120 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   text-transform: uppercase;
   vertical-align: 1px;
 }
-.cam-error { width: min(100%, 560px); }
+/* camera problems: a cream card clipped up in the navy room, the same family as the menu card */
+.booth-live.is-error .booth-interior, .booth-live.is-error .camera-actions, .booth-live.is-error .flash-toggle { display: none; }
+.cam-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--s1);
+  width: min(100%, 520px);
+  margin-top: var(--s4);
+  padding: var(--s6) var(--s5) var(--s4);
+  color: var(--ink);
+  text-align: center;
+  background: var(--grain-paper), var(--cream);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgb(184 147 74 / .45), inset 0 0 0 6px var(--cream), inset 0 0 0 7px rgb(184 147 74 / .3), var(--lift-3);
+}
+.cam-card .bulldog-clip { left: 50%; top: -30px; margin-left: -38px; }
+.cam-card :focus-visible { outline-color: var(--oxblood); }
+.cam-card-icon { display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: var(--s0); border-radius: 50%; color: var(--oxblood); background: rgb(184 147 74 / .16); box-shadow: inset 0 0 0 1px rgb(184 147 74 / .5); }
+.cam-card-slash { stroke: var(--cherry); stroke-width: 1.9; }
+.cam-card[data-kind="busy"] .cam-card-slash, .cam-card[data-kind="unknown"] .cam-card-slash { display: none; }
+.cam-card .kicker { color: var(--cherry); }
+.cam-card-title { font: 700 var(--fs-36) / var(--lh-tight) var(--font-serif); }
+.cam-card-title em { font-style: italic; font-weight: 500; color: var(--cherry); }
+.cam-card-reason { max-width: 42ch; color: var(--muted); }
+.cam-card-help { width: min(100%, 380px); margin-top: var(--s1); padding: var(--s2) var(--s3); text-align: left; background: rgb(255 253 248 / .7); border-left: 3px solid var(--gold-line); }
+.cam-card-label { margin-bottom: var(--s0); font: 600 var(--fs-12) / 1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.cam-card-steps { display: grid; gap: 6px; padding-left: 1.4em; list-style: decimal; font-size: var(--fs-14); line-height: 1.45; }
+.cam-card-steps li::marker { color: var(--cherry); font-weight: 700; }
+.cam-card-steps b { font-weight: 600; }
+.cam-card-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--s1) var(--s3); margin-top: var(--s2); }
+.cam-card-actions .text-link { color: var(--ink); }
+@media (max-width: 600px) { .cam-card { padding: var(--s6) var(--s3) var(--s3); } .cam-card-title { font-size: var(--fs-28); } }
 
 
-.booth-develop { display: grid; justify-items: center; gap: var(--s3); }
+/* Developing: the print side of the hero's booth. Booth-red brushed enamel with rivets, the small
+   25¢ coin plate, the chrome PRINTS slot the strip feeds out of (clipped at the slit) and, beside it,
+   a cream enamel sign with a lamp that glows warm, then green when the strip is ready. */
+.booth-develop { display: grid; justify-items: center; gap: var(--s3); padding-bottom: var(--s2); }
 .develop-label { color: var(--kicker); }
-.develop-machine { display: grid; justify-items: center; width: min(100%, 420px); }
-.develop-slot {
+.develop-machine {
+  --sh: clamp(240px, calc(100svh - 470px), 500px);            /* the strip's height for a portrait strip */
+  --sw: min(calc(var(--sh) * var(--arn, .33)), 78vw, 420px);  /* its width (wide layouts are capped) */
+  --rivet: radial-gradient(circle at 45% 40%, #F4D7D9 0 .8px, #7A1C24 1.2px 2.2px, #4A0E14 2.6px, transparent 3.2px);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  column-gap: var(--s4);
+  width: min(100%, calc(var(--sw) + 600px));
+  padding: 30px 28px 44px;
+  border-radius: 6px;
+  background:
+    var(--rivet) 14px 10px / 28px 12px repeat-x,
+    var(--rivet) 14px calc(100% - 4px) / 28px 12px repeat-x,
+    linear-gradient(rgb(255 255 255 / .06), rgb(30 0 4 / .2) 40%, rgb(20 0 4 / .34)),
+    var(--tex-brushed) 0 0 / 256px 128px,
+    linear-gradient(90deg, #6E1820, #A92C36 7%, #8E2430 30%, #B03A44 52%, #861D27 74%, #9A2832 93%, #5E141B);
+  background-blend-mode: normal, normal, normal, overlay, normal;
+  box-shadow: inset 0 0 0 1px rgb(255 220 220 / .18), inset 0 -3px 0 rgb(0 0 0 / .25), var(--lift-3);
+}
+/* the 25¢ coin plate: chrome, a coin slit, centred over the PRINTS slot */
+.dm-coin {
+  grid-column: 2;
+  justify-self: center;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 4px;
+  width: 58px; height: 64px;
+  margin-bottom: 18px;
+  border-radius: 6px;
+  background: var(--tex-brushed) 0 0 / 256px 128px, linear-gradient(90deg, #857F76, #D4D0C9 50%, #7C776F);
+  box-shadow: inset 0 0 0 1px #857F76, inset 0 1px 0 rgb(255 255 255 / .6), 0 3px 6px rgb(20 4 6 / .45);
+}
+.dm-coin-slit { width: 5px; height: 20px; border-radius: 3px; background: #1F1A17; box-shadow: inset 0 2px 2px #000; }
+.dm-coin b { font: 700 var(--fs-16) / 1 var(--font-serif); color: var(--ink); text-shadow: 0 1px 0 rgb(255 255 255 / .5); }
+.dm-feed { grid-column: 2; grid-row: 2; display: grid; justify-items: center; }
+.dm-slot {
   position: relative;
   z-index: 2;
-  width: 100%;
+  width: calc(var(--sw) + 44px);
   height: 58px;
-  border-radius: 10px;
-  background: var(--tex-brushed) 0 0 / 256px 128px, linear-gradient(#D9D4CA, #8E8778);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .6), var(--lift-2);
+  border-radius: 7px;
+  background: var(--tex-brushed) 0 0 / 256px 128px, linear-gradient(#E4E0D8, #9A948A 60%, #C9C4BA);
+  box-shadow: inset 0 0 0 1px #857F76, inset 0 1px 0 rgb(255 255 255 / .7), 0 4px 8px rgb(20 4 6 / .45);
 }
-.develop-slot span { position: absolute; left: 10%; right: 10%; top: 50%; height: 8px; margin-top: -4px; border-radius: 4px; background: #120A08; box-shadow: inset 0 2px 3px #000; }
-.develop-window { width: 72%; margin-top: -29px; overflow: hidden; padding: 0 12px 24px; }
-.develop-strip { position: relative; width: min(100%, calc(62vh * var(--arn, .33))); aspect-ratio: var(--ar, 1 / 3); margin-inline: auto; transform: translateY(-101%); box-shadow: var(--lift-2); }
+.dm-slot small { position: absolute; left: 0; right: 0; top: 8px; color: #3A3530; font: 400 .6875rem / 1 var(--font-type); letter-spacing: .3em; text-align: center; text-transform: uppercase; }
+/* the slit glows warm while the strip is printing */
+.dm-slit {
+  position: absolute;
+  left: 14px; right: 14px; bottom: 14px;
+  height: 9px;
+  border-radius: 5px;
+  background: linear-gradient(#120A08 40%, #5A3418);
+  box-shadow: inset 0 2px 3px #000, 0 0 10px rgb(255 200 120 / .55);
+  transition: box-shadow 600ms var(--ease-calm);
+}
+.develop-window {
+  position: relative;
+  z-index: 1;
+  width: calc(var(--sw) + 120px);
+  margin-top: -18px;
+  padding: 0 60px 30px;
+  /* clipped at the slit only: the shadow is free at the sides and below */
+  clip-path: inset(0 -80px -80px -80px);
+}
+.develop-strip { position: relative; width: var(--sw); aspect-ratio: var(--ar, 1 / 3); margin-inline: auto; transform: translateY(-101%); box-shadow: 0 2px 3px rgb(20 4 6 / .35), 4px 14px 22px rgb(20 4 6 / .45); transition: translate 380ms cubic-bezier(.5, 0, .75, 0); }
 .develop-strip canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .develop-strip .develop-photo, .develop-strip .develop-grey { opacity: 0; }
 .develop-strip.is-printing { animation: feed-smooth 2400ms cubic-bezier(.4, 0, .2, 1) forwards; }
 .develop-strip.is-printing .develop-grey { animation: develop 1300ms ease-in 1300ms forwards; }
 .develop-strip.is-printing .develop-photo { animation: develop 1500ms ease-in-out 2500ms forwards; }
+/* warm light spilling from the slot down onto the strip */
+.dm-spill { position: absolute; left: 50%; top: 0; z-index: 2; width: calc(var(--sw) + 80px); height: 170px; margin-left: calc((var(--sw) + 80px) / -2); background: radial-gradient(50% 70% at 50% 0, rgb(255 214 150 / .5), rgb(255 200 130 / .14) 55%, transparent 80%); mix-blend-mode: screen; pointer-events: none; transition: opacity 600ms var(--ease-calm); }
 @keyframes feed-smooth {
   0% { transform: translateY(-101%); }
   15% { transform: translateY(-84%); } 22% { transform: translateY(-84%); }
@@ -2285,6 +2391,61 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   100% { transform: translateY(0); }
 }
 @keyframes develop { from { opacity: 0; } to { opacity: 1; } }
+/* done: the strip drops free of the slot, the light goes out, the lamp turns green */
+.develop-machine.is-done .develop-strip { translate: 0 22px; }
+.develop-machine.is-done .dm-spill { opacity: 0; }
+.develop-machine.is-done .dm-slit { box-shadow: inset 0 2px 3px #000; }
+/* the enamel sign: cream, an oxblood border, a couple of chipped corners showing the dark steel */
+.dm-sign {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: start;
+  justify-self: start;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--s1);
+  width: 176px;
+  margin-top: 2px;
+  padding: 16px 14px 14px;
+  color: var(--oxblood);
+  text-align: center;
+  background: radial-gradient(120% 90% at 30% 20%, #FBF4E4, #EFE3C8);
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 3px #EFE3C8, inset 0 0 0 6px #5E1C23, inset 0 0 0 8px #EFE3C8, 0 1px 0 rgb(255 255 255 / .5), 2px 6px 10px rgb(20 4 6 / .45);
+  transform: rotate(1.2deg);
+}
+.dm-sign::before, .dm-sign::after { content: ""; position: absolute; background: #2A2420; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .3); }
+.dm-sign::before { left: -1px; top: -1px; width: 15px; height: 11px; clip-path: polygon(0 0, 100% 0, 62% 38%, 70% 70%, 24% 100%, 0 82%); border-radius: 8px 0 0 0; }
+.dm-sign::after { right: -1px; bottom: -1px; width: 12px; height: 14px; clip-path: polygon(100% 0, 100% 100%, 0 100%, 34% 70%, 22% 44%, 70% 30%); border-radius: 0 0 8px 0; }
+.dm-sign-text { font: 400 var(--fs-14) / 1.35 var(--font-type); letter-spacing: .12em; text-transform: uppercase; }
+.dm-lamp { display: inline-flex; align-items: center; gap: 8px; padding-top: var(--s0); border-top: 1px solid rgb(94 28 35 / .35); color: var(--ink); font: 400 var(--fs-12) / 1 var(--font-type); letter-spacing: .18em; text-transform: uppercase; }
+/* a small round indicator lamp in a chrome bezel */
+.dm-bulb {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #FFF1C8, #F4B24A 45%, #B8641E);
+  box-shadow: 0 0 0 2px #CFC9BF, 0 0 0 3px #857F76, 0 0 10px 2px rgb(247 178 74 / .75);
+  transition: background 400ms var(--ease-calm), box-shadow 400ms var(--ease-calm);
+}
+.develop-machine.is-done .dm-bulb { background: radial-gradient(circle at 38% 32%, #EAFFE8, #5FCB74 45%, #217A3A); box-shadow: 0 0 0 2px #CFC9BF, 0 0 0 3px #857F76, 0 0 12px 3px rgb(95 203 116 / .7); }
+.develop-machine.is-done #develop-lamp-text { color: #1F6B34; font-weight: 700; }
+/* phones: the panel narrows and the sign moves under the slot and its strip */
+@media (max-width: 720px) {
+  .booth-develop { gap: var(--s2); }
+  .develop-machine { --sh: clamp(240px, calc(100svh - 480px), 400px); grid-template-columns: minmax(0, 1fr); width: min(100%, 340px); padding: 22px 14px 22px; }
+  .dm-coin, .dm-feed, .dm-sign { grid-column: 1; }
+  .dm-coin { width: 44px; height: 48px; margin-bottom: 12px; }
+  .dm-coin-slit { height: 14px; }
+  .dm-slot { height: 46px; }
+  .dm-slot small { top: 6px; font-size: .625rem; }
+  .dm-slit { bottom: 10px; }
+  .develop-window { width: calc(var(--sw) + 60px); margin-top: -15px; padding: 0 30px 22px; }
+  /* a compact sign: the words on the left, the lamp on the right */
+  .dm-sign { grid-row: 3; justify-self: center; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--s2); width: min(100%, 300px); margin-top: var(--s0); padding: 12px 16px; text-align: left; transform: rotate(-.6deg); }
+  .dm-sign-text { font-size: var(--fs-12); }
+  .dm-lamp { flex-direction: column; gap: 5px; padding: 0 0 0 var(--s2); border-top: 0; border-left: 1px solid rgb(94 28 35 / .35); font-size: .625rem; }
+}
 
 /* ---------------------------------------------------------
    10. Editor
@@ -2300,56 +2461,117 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 /* undo, redo and Surprise me sit on the heading's baseline at the right */
 .editor-tools { display: flex; align-items: center; gap: var(--s0); padding-bottom: 6px; }
 
-/* heading, blotter and panel are one centred group, top-aligned */
-#screen-editor { width: fit-content; max-width: min(100%, 1100px); }
+/* heading, mat and panel are one centred group, top-aligned */
+#screen-editor { width: fit-content; max-width: min(100%, 1200px); }
 .editor {
+  --panel-w: 440px;
+  --gap: 48px;
   position: relative;
   display: grid;
-  grid-template-columns: auto 440px;
-  gap: 48px;
+  grid-template-columns: auto var(--panel-w);
+  gap: var(--gap);
   align-items: stretch;
 }
-/* the strip sits on a cream blotter with a faint cutting grid, ~40px all round */
+/* a large oxblood felt cutting mat: soft rounded corners, a faint gold grid (every fifth line a little
+   stronger). Its sides leave room for the props; the strip sits in the middle. */
 .stage {
+  --mat-side: clamp(116px, 10.5vw, 150px);
+  --grid: rgb(214 178 104 / .16);
+  --grid-major: rgb(214 178 104 / .3);
   position: relative;
   display: grid;
   justify-items: center;
-  align-content: start;
+  align-content: center;
   align-self: start;
-  padding: 40px;
-  border-radius: 14px;
+  min-height: 460px;
+  padding: 44px var(--mat-side);
+  border-radius: 22px;
   background:
-    linear-gradient(rgb(92 75 65 / .09) 1px, transparent 1px) 12px 12px / 24px 24px,
-    linear-gradient(90deg, rgb(92 75 65 / .09) 1px, transparent 1px) 12px 12px / 24px 24px,
-    var(--grain-paper), #EEE5D3;
-  box-shadow: inset 0 0 0 6px #E3D7C0, inset 0 0 0 7px rgb(92 75 65 / .25), 4px 14px 30px rgb(14 8 4 / .5), 1px 3px 4px rgb(14 8 4 / .35);
+    linear-gradient(var(--grid-major) 1px, transparent 1px) 22px 22px / 120px 120px,
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px) 22px 22px / 120px 120px,
+    linear-gradient(var(--grid) 1px, transparent 1px) 22px 22px / 24px 24px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 22px 22px / 24px 24px,
+    radial-gradient(80% 70% at 30% 20%, rgb(150 52 62 / .35), transparent 75%),
+    var(--grain-subtle),
+    #4E1219;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 220 200 / .08), inset 0 2px 10px rgb(0 0 0 / .25),
+    3px 8px 18px rgb(60 30 14 / .28), 1px 2px 3px rgb(60 30 14 / .25);
 }
-/* props on the desk, only in the margins around the composition */
-.desk-prop { position: absolute; z-index: 0; pointer-events: none; background: center / contain no-repeat; filter: drop-shadow(4px 10px 10px rgb(14 8 4 / .5)); }
-.prop-scissors { left: -200px; top: 10%; width: 170px; aspect-ratio: 220 / 120; background-image: var(--img-scissors); transform: rotate(-24deg); }
-.prop-washi { left: -160px; bottom: 12%; width: 112px; aspect-ratio: 160 / 120; background-image: var(--img-washi-tape); transform: rotate(8deg); }
-.prop-pencil { right: -210px; top: 26%; width: 200px; aspect-ratio: 260 / 40; background-image: var(--img-pencil); transform: rotate(68deg); }
-.prop-stamps { right: -180px; bottom: 8%; width: 140px; aspect-ratio: 170 / 130; background-image: var(--img-stamps); transform: rotate(-6deg); }
-@media (max-width: 1500px) { .prop-scissors, .prop-pencil { display: none; } }
-@media (max-width: 1400px) { .desk-prop { display: none; } }
-/* undo / redo: small round cream-outline buttons with a tooltip */
+/* props: tucked into the mat's side margins, lit from the top left; hover lifts and swings a touch */
+.mat-prop {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  filter: drop-shadow(3px 6px 5px rgb(14 2 4 / .5));
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 300ms var(--ease-calm), filter 300ms var(--ease-calm);
+}
+@media (hover: hover) {
+  .mat-prop:hover { transform: translateY(-4px) rotate(calc(var(--tilt, 0deg) + 2deg)); filter: drop-shadow(5px 11px 8px rgb(14 2 4 / .48)); }
+}
+.mat-prop:focus-visible { outline: 2px solid var(--butter); outline-offset: 6px; border-radius: 4px; }
+/* a small sheet of the real stickers, two already peeled off */
+.prop-sheet { --tilt: -7deg; left: calc(var(--mat-side) * .12); top: 34px; width: calc(var(--mat-side) * .74); }
+.sheet-paper {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 10px 8px 14px;
+  background: linear-gradient(135deg, rgb(255 255 255 / .5), transparent 40%), var(--grain-paper), #F7F1E4;
+  border-radius: 2px;
+}
+/* the bottom right corner lifts off the mat */
+.sheet-paper::after { content: ""; position: absolute; right: 0; bottom: 0; width: 18px; height: 18px; background: linear-gradient(315deg, #4E1219 50%, #E2D6C0 50%, #FBF6EC); box-shadow: -2px -2px 3px rgb(42 33 28 / .18); }
+.sheet-cell { display: grid; place-items: center; aspect-ratio: 1; border-radius: 6px; box-shadow: inset 0 0 0 1px rgb(92 75 65 / .14); }
+.sheet-cell canvas { width: 92%; height: 92%; object-fit: contain; filter: drop-shadow(0 1px 1px rgb(42 33 28 / .3)); }
+.sheet-cell.is-peeled { background: linear-gradient(160deg, rgb(255 255 255 / .55), rgb(220 212 196 / .55)); box-shadow: inset 0 0 0 1px rgb(92 75 65 / .3); outline: 1px dashed rgb(92 75 65 / .4); outline-offset: -4px; }
+/* a mini paper swatch fan of the film looks, on a brass rivet */
+.prop-fan { --tilt: 4deg; left: calc(var(--mat-side) * .1); bottom: 40px; width: calc(var(--mat-side) * .78); aspect-ratio: 1 / 1.05; }
+.fan { position: absolute; inset: 0; }
+.fan-blade {
+  position: absolute;
+  left: calc(50% - 9px); bottom: 8px;
+  width: 18px; height: 88%;
+  border-radius: 3px 3px 2px 2px;
+  background: linear-gradient(transparent 70%, rgb(255 255 255 / .55) 70% 72%, #FBF6EC 72%), var(--c);
+  box-shadow: 1px 1px 2px rgb(20 4 6 / .35), inset 0 0 0 1px rgb(255 255 255 / .2);
+  transform: rotate(var(--a));
+  transform-origin: 50% calc(100% - 9px);
+}
+.fan-rivet { position: absolute; left: calc(50% - 5px); bottom: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--seal); box-shadow: 0 1px 2px rgb(20 4 6 / .5); }
+/* a brass date stamper set to today */
+.prop-stamper { --tilt: 6deg; right: calc(var(--mat-side) * .12); top: 42%; width: calc(var(--mat-side) * .64); }
+.stamper { width: 100%; height: auto; overflow: visible; }
+.stamp-date { fill: #E6D9C2; font: 400 9.5px var(--font-type); letter-spacing: .06em; }
+/* the strip, held at two corners by dusty-blue washi tape you can see through */
+.mat-tape { z-index: 2; width: 70px; height: 22px; opacity: .78; background: repeating-linear-gradient(90deg, rgb(255 255 255 / .28) 0 3px, #0000 3px 11px), rgb(159 180 199 / .86); }
+.mat-tape-tl { left: -24px; top: 4px; transform: rotate(-42deg); }
+.mat-tape-br { right: -24px; bottom: 4px; transform: rotate(-42deg); }
+/* undo / redo: small round ink-outline buttons with a tooltip */
 .desk-btn {
   position: relative;
   display: inline-grid;
   place-items: center;
-  width: 40px; height: 40px;
+  width: 44px; height: 44px;
   padding: 0;
-  border: 1px solid rgb(244 238 227 / .55);
+  border: 1px solid rgb(31 26 23 / .45);
   border-radius: 50%;
-  color: var(--cream);
+  color: var(--ink);
   background: transparent;
   cursor: pointer;
   transition: border-color 250ms var(--ease-calm), transform 250ms var(--ease-calm), opacity 250ms var(--ease-calm);
 }
 .desk-btn .icon { width: 18px; height: 18px; }
-@media (hover: hover) { .desk-btn:hover:not(:disabled) { border-color: var(--cream); transform: translateY(-1px); } }
+@media (hover: hover) { .desk-btn:hover:not(:disabled) { border-color: var(--ink); transform: translateY(-1px); } }
 .desk-btn:disabled { opacity: .35; cursor: not-allowed; }
-.desk-btn:focus-visible { outline: 2px solid var(--butter); outline-offset: 3px; }
+.desk-btn:focus-visible { outline: 2px solid var(--oxblood); outline-offset: 3px; }
 .desk-btn::after {
   content: attr(data-tip);
   position: absolute;
@@ -2368,14 +2590,14 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 }
 .desk-btn:hover::after, .desk-btn:focus-visible::after { opacity: 1; }
 .surprise-tag { --hole-x: 18px; width: auto; min-height: var(--tap); margin-left: var(--s1); padding: 0 var(--s3) 0 40px; font-size: var(--fs-14); }
-.surprise-tag:focus-visible { outline: 2px solid var(--butter); outline-offset: 3px; }
+.surprise-tag:focus-visible { outline: 2px solid var(--oxblood); outline-offset: 3px; }
 /* panel section labels: DM Sans 12px semibold caps */
 .panel .label { display: flex; align-items: baseline; gap: var(--s0); margin-bottom: var(--s1); font: 600 var(--fs-12) / 1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .canvas-wrap { position: relative; z-index: 1; }
 #strip {
   touch-action: pan-y;
   cursor: default;
-  box-shadow: 2px 3px 3px rgb(70 40 18 / .35), 8px 20px 34px rgb(70 40 18 / .45);
+  box-shadow: 2px 3px 3px rgb(14 2 4 / .4), 8px 18px 30px rgb(14 2 4 / .45);
 }
 .sticker-bar {
   position: absolute;
@@ -2458,10 +2680,19 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 .panel-actions .btn { white-space: nowrap; }
 .panel-actions .btn-primary { flex: 1; }
 
-/* every grid: three equal columns, 16px apart; the four layouts as a 2×2 in the first two columns */
+/* every grid: three equal columns, 16px apart, and every row full: a short last row spreads its cards
+   (2 left over: two halves; 1 left over: the last four as two pairs). The four layouts: one row of four. */
 .frame-group + .frame-group { margin-top: var(--s4); }
 .frame-grid, .filter-grid, .sticker-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: var(--s2); }
-.layout-picker-sm { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); width: calc((100% - 2 * var(--s2)) * 2 / 3 + var(--s2)); }
+.even-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.even-grid > * { grid-column: span 4; }
+.even-grid[data-r3="2"] > :nth-last-child(-n+2) { grid-column: span 6; }
+.even-grid[data-r3="1"] > :nth-last-child(-n+4) { grid-column: span 3; }
+.layout-picker-sm { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s1); }
+.layout-picker-sm .layout-card { height: 100%; padding: var(--s0) 4px; }
+.layout-picker-sm .layout-name { font-size: var(--fs-12); }
+/* the disabled 2×2 says why in a tooltip just under it (above would be cut off by the panel's top) */
+.layout-picker-sm .layout-opt[data-tip]::after { top: calc(100% + 6px); bottom: auto; max-width: 150px; text-align: center; }
 .frame-opt, .filter-card {
   position: relative;
   display: grid;
@@ -2532,11 +2763,20 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   margin-inline: auto;
 }
 .reveal-stage { position: relative; height: 100%; min-height: 0; }
+/* a soft warm spotlight centred behind the strip (reveal.js puts it on the strip's centre) */
+.reveal-spot {
+  position: absolute;
+  left: var(--spot-x, 50%); top: var(--spot-y, 45%);
+  width: min(1000px, 160vw); aspect-ratio: 1 / 1.1;
+  background: radial-gradient(closest-side, rgb(255 214 150 / .5), rgb(255 205 140 / .28) 38%, rgb(255 200 140 / .1) 66%, transparent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
 .reveal-canvas { position: relative; width: 100%; height: 100%; }
 .confetti { position: absolute; inset: 0; pointer-events: none; }
 .confetti i { position: absolute; left: 0; top: 0; display: block; will-change: transform; box-shadow: 1px 2px 2px rgb(90 40 40 / .3); }
 
-/* the action column is centred on the strip: label, the clip right under it, tags, links */
+/* the action column is centred on the strip (reveal.js measures it): label, the clip right under it, tags, links */
 .reveal-actions {
   display: flex;
   flex-direction: column;
@@ -2544,7 +2784,6 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   align-items: flex-start;
   gap: var(--s3);
   width: min(100%, 360px);
-  min-height: var(--strip-h, auto);
   margin-top: var(--strip-top, 0px);
   opacity: 0;
   visibility: hidden;
@@ -2626,6 +2865,7 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   white-space: nowrap;
 }
 .pencil-link {
+  min-width: var(--tap);
   min-height: var(--tap);
   padding: 0 6px;
   border: 0;
@@ -2978,7 +3218,7 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
 
 .toast {
   position: fixed;
-  left: 50%; bottom: var(--s4);
+  left: 50%; bottom: calc(var(--s4) + env(safe-area-inset-bottom));
   z-index: var(--z-toast);
   max-width: min(92vw, 460px);
   padding: var(--s1) var(--s3);
@@ -3035,11 +3275,11 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
     linear-gradient(90deg, #000 25%, #0000 25% 75%, #000 75%) right / 48px 100% no-repeat,
     repeating-linear-gradient(#000 0 12px, #0000 12px 28px) right / 48px 100% no-repeat;
 }
-/* the desk sliding away like a turned page */
+/* the craft table's cream page sliding away like a turned page */
 .tx-desk {
   position: absolute;
   inset: -4vh -2vw;
-  background: var(--tex-walnut) 0 0 / 512px, #4A3123;
+  background: var(--grain-subtle), var(--cream);
   box-shadow: -24px 0 40px rgb(40 20 10 / .45);
 }
 .tx-fade { position: absolute; inset: 0; background: var(--tex-velvet) 0 0 / 512px, var(--oxblood); }
@@ -3048,7 +3288,7 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
    15. Responsive
    --------------------------------------------------------- */
 @media (max-width: 1100px) {
-  .editor { grid-template-columns: minmax(0, 1fr) 360px; gap: var(--s3); }
+  .editor { --panel-w: 360px; --gap: var(--s3); }
 }
 
 /* the hero stacks: text first, then the booth on its floor */
@@ -3063,10 +3303,13 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   .icon-btn.menu-toggle { display: inline-grid; }
 
   .editor { grid-template-columns: 1fr; }
-  .stage { padding: 24px var(--s2); margin-bottom: calc(var(--s10) * 2); }
+  /* phones: the mat and strip on top, the panel a bottom sheet; only the washi tape stays */
+  .stage { --mat-side: var(--s3); min-height: 0; padding: 28px var(--mat-side); border-radius: 16px; margin-bottom: calc(var(--s10) * 2); }
+  .mat-prop { display: none; }
   .panel {
     position: fixed;
     left: 0; right: 0; bottom: 0; top: auto;
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
     z-index: var(--z-sheet);
     min-height: 0;
     max-height: 58vh;
@@ -3085,6 +3328,8 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
     cursor: pointer;
   }
   .sheet-handle::after { content: ""; position: absolute; left: 22px; right: 22px; top: 11px; height: 4px; border-radius: 2px; background: var(--line-strong); }
+  /* a 44px touch area round the small handle */
+  .sheet-handle::before { content: ""; position: absolute; inset: -12px -8px -6px; }
   .tabs { padding-left: 0; gap: 2px; }
   .tab { font-size: var(--fs-12); letter-spacing: .04em; }
   .panel-body { max-height: 30vh; padding-left: 48px; background-position: -6px 0, 0 0, 0 0; }
@@ -3110,7 +3355,6 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   .album-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4) var(--s2); padding: 0; }
   .album-meta { flex-wrap: wrap; }
   .album-meta .num { flex-basis: 100%; }
-  .site-footer { justify-content: center; text-align: center; }
 }
 
 @media (max-width: 400px) {
@@ -3118,6 +3362,9 @@ body[data-screen="booth"] .rc { animation: part var(--dur-4) var(--ease-out) bot
   .dev-label { white-space: normal; }
   .segmented span { min-width: 56px; }
   .frame-grid, .filter-grid { grid-template-columns: repeat(2, 1fr); }
+  /* two per row; one left over: the last three share a row */
+  .even-grid[data-r3] > * { grid-column: span 6; }
+  .even-grid[data-r2="1"] > :nth-last-child(-n+3) { grid-column: span 4; }
   .field-pair { grid-template-columns: 1fr; }
 }
 
@@ -3255,7 +3502,6 @@ section[id], .how, [id].heading-block { scroll-margin-top: calc(var(--header-h) 
   .booth-live { --frame-w: 100%; }
   .booth-interior { --bulb-g: 36px; }
   .booth-interior::before { inset: -120px -16px; }
-  .ring-toggle { min-height: 44px; }
   .cam-leader { width: 84px; right: calc(4.2% + 10px); top: 10px; }
   .pose-line { left: calc(4.2% + 10px); top: 12px; max-width: calc(100% - 84px - 2 * (4.2% + 10px) - 12px); padding: 6px 10px; font-size: var(--fs-14); text-align: left; transform: translateY(-8px) rotate(-1.5deg); }
   .pose-line.is-on { transform: rotate(-1.5deg); }

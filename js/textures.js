@@ -111,31 +111,6 @@ function makeBrushed() {
   return c;
 }
 
-// Walnut for the writing desk: warm, muted, low-contrast grain that tiles
-function makeWalnut() {
-  const S = 512, c = makeCanvas(S, S), x = c.getContext('2d'), rnd = mulberry32(29);
-  x.fillStyle = '#4A3123'; x.fillRect(0, 0, S, S);
-  // long, gently wavy grain lines; the waves repeat every tile so it tiles cleanly
-  for (let i = 0; i < 170; i++) {
-    const y0 = rnd() * S, amp = 2 + rnd() * 7, ph = rnd() * Math.PI * 2, k = (Math.PI * 2 * (1 + Math.floor(rnd() * 2))) / S;
-    const light = rnd() > 0.55;
-    x.strokeStyle = light ? `rgba(150,105,70,${(0.05 + rnd() * 0.08).toFixed(3)})` : `rgba(25,14,8,${(0.06 + rnd() * 0.1).toFixed(3)})`;
-    x.lineWidth = 0.6 + rnd() * 2.4;
-    wrapped(x, S, () => {
-      x.beginPath();
-      for (let px = 0; px <= S; px += 8) {
-        const py = y0 + Math.sin(px * k + ph) * amp;
-        if (px) x.lineTo(px, py); else x.moveTo(px, py);
-      }
-      x.stroke();
-    });
-  }
-  const n = makeCanvas(S, S);
-  speckle(n.getContext('2d'), S, S, rnd, [20, 12, 6], 12);
-  x.drawImage(n, 0, 0);
-  return c;
-}
-
 /* Handwritten letter paper: cream laid paper with faded script lines */
 const LETTER = [
   'My dearest,',
@@ -231,68 +206,10 @@ function bulldogSVG() {
     <circle cx="29" cy="65" r="1.5" fill="#FFF3C8"/><circle cx="89" cy="65" r="1.5" fill="#FFF3C8"/>`);
 }
 
-/* --- desk props for the editor (drawn when /assets/props/*.png is missing) --- */
-function scissorsSVG() {
-  return svg('0 0 220 120', `<defs>
-    <linearGradient id="br" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3D98B"/><stop offset=".5" stop-color="#B8934A"/><stop offset="1" stop-color="#7A5C24"/></linearGradient>
-    <linearGradient id="st" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F4F0"/><stop offset=".5" stop-color="#A9A9A3"/><stop offset="1" stop-color="#6E6E68"/></linearGradient></defs>
-    <path d="M92 52 L214 30 L216 36 L98 64Z" fill="url(#st)" stroke="#55554F" stroke-width="1"/>
-    <path d="M92 68 L212 92 L210 98 L96 80Z" fill="url(#st)" stroke="#55554F" stroke-width="1"/>
-    <path d="M120 50 L210 33" stroke="#fff" stroke-opacity=".6" stroke-width="1"/>
-    <g fill="none" stroke="url(#br)" stroke-width="9"><ellipse cx="44" cy="36" rx="34" ry="24" transform="rotate(-14 44 36)"/><ellipse cx="44" cy="86" rx="34" ry="24" transform="rotate(14 44 86)"/></g>
-    <g fill="none" stroke="#6B4F1C" stroke-width="1.2" opacity=".7"><ellipse cx="44" cy="36" rx="38.5" ry="28.5" transform="rotate(-14 44 36)"/><ellipse cx="44" cy="86" rx="38.5" ry="28.5" transform="rotate(14 44 86)"/></g>
-    <path d="M74 44 L98 58 M74 78 L98 66" stroke="url(#br)" stroke-width="10" stroke-linecap="round"/>
-    <circle cx="98" cy="62" r="7" fill="url(#br)" stroke="#6B4F1C" stroke-width="1.2"/><circle cx="96.5" cy="60.5" r="2" fill="#FBEBB8"/>`);
-}
-function washiRollSVG() {
-  const rings = range(6).map(i => `<circle cx="70" cy="60" r="${50 - i * 4}" fill="none" stroke="#FFFFFF" stroke-opacity=".12"/>`).join('');
-  const dots = range(8).map(i => `<circle cx="${(70 + Math.cos(i * 0.785) * 44).toFixed(1)}" cy="${(60 + Math.sin(i * 0.785) * 44).toFixed(1)}" r="4" fill="#F4EEE3" opacity=".7"/>`).join('');
-  return svg('0 0 160 120', `<defs><radialGradient id="cr" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#E8DCC4"/><stop offset="1" stop-color="#B9A684"/></radialGradient></defs>
-    <path d="M118 74 L156 96 L150 108 L112 86Z" fill="#9FB4C7" opacity=".9"/>
-    <circle cx="70" cy="60" r="56" fill="#9FB4C7"/>
-    <circle cx="70" cy="60" r="56" fill="none" stroke="#7E95A8" stroke-width="2"/>
-    ${rings}${dots}
-    <circle cx="70" cy="60" r="28" fill="url(#cr)" stroke="#8C7A5C" stroke-width="1.5"/>
-    <circle cx="70" cy="60" r="20" fill="#2E1E14" opacity=".55"/>`);
-}
-function pencilSVG() {
-  return svg('0 0 260 40', `<defs><linearGradient id="pb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D14A52"/><stop offset=".5" stop-color="#B3202A"/><stop offset="1" stop-color="#7A141A"/></linearGradient>
-    <linearGradient id="fe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D98B"/><stop offset=".5" stop-color="#B8934A"/><stop offset="1" stop-color="#7A5C24"/></linearGradient></defs>
-    <rect x="40" y="10" width="170" height="20" fill="url(#pb)"/>
-    <path d="M40 16.5 H210 M40 23.5 H210" stroke="#000" stroke-opacity=".18"/>
-    <rect x="22" y="9" width="20" height="22" fill="url(#fe)"/>
-    <path d="M27 9 V31 M32 9 V31 M37 9 V31" stroke="#6B4F1C" stroke-opacity=".6"/>
-    <rect x="6" y="10" width="17" height="20" rx="4" fill="#E8B4B8"/>
-    <path d="M210 10 L246 20 L210 30Z" fill="#E2C49A"/>
-    <path d="M236 17.2 L254 20 L236 22.8Z" fill="#2A211C"/>
-    <text x="118" y="23.5" font-family="Special Elite, monospace" font-size="9" fill="#F4EEE3" letter-spacing="1.5">PHOTOMATIC No.2</text>`);
-}
-function stampsSVG() {
-  const perf = (x, y, w, h) => {
-    let d = '';
-    for (let i = 0; i <= w; i += 8) d += `<circle cx="${x + i}" cy="${y}" r="2.6"/><circle cx="${x + i}" cy="${y + h}" r="2.6"/>`;
-    for (let j = 8; j < h; j += 8) d += `<circle cx="${x}" cy="${y + j}" r="2.6"/><circle cx="${x + w}" cy="${y + j}" r="2.6"/>`;
-    return d;
-  };
-  return svg('0 0 170 130', `<defs>
-    <mask id="m1"><rect width="170" height="130" fill="#fff"/><g fill="#000">${perf(12, 30, 80, 96)}</g></mask>
-    <mask id="m2"><rect width="170" height="130" fill="#fff"/><g fill="#000">${perf(70, 6, 88, 70)}</g></mask></defs>
-    <g transform="rotate(-8 52 78)" mask="url(#m1)"><rect x="12" y="30" width="80" height="96" fill="#F7F1E4"/><rect x="20" y="38" width="64" height="68" fill="#9FB4C7"/>
-      <path d="M52 52 l5 11 12 1 -9 8 3 12 -11 -6 -11 6 3 -12 -9 -8 12 -1Z" fill="#F4EEE3"/>
-      <text x="52" y="118" text-anchor="middle" font-family="Special Elite, monospace" font-size="9" fill="#5E1C23">25¢ POST</text></g>
-    <g transform="rotate(10 114 41)" mask="url(#m2)"><rect x="70" y="6" width="88" height="70" fill="#F7F1E4"/><rect x="78" y="14" width="72" height="42" fill="#E8B4B8"/>
-      <path d="M114 24 c-8 -9 -20 2 0 16 c20 -14 8 -25 0 -16Z" fill="#B3202A"/>
-      <text x="114" y="68" text-anchor="middle" font-family="Special Elite, monospace" font-size="9" fill="#5E1C23">AIR MAIL</text></g>`);
-}
-
 const PROPS = {
   waxSeal: waxSealSVG,
   safetyPin: safetyPinSVG,
   bulldog: bulldogSVG,
-  scissors: scissorsSVG,
-  washiRoll: washiRollSVG,
-  pencil: pencilSVG,
-  stamps: stampsSVG,
 };
 export const propUrl = (name, ...args) => svgUrl(PROPS[name](...args));
 
@@ -300,7 +217,6 @@ export const propUrl = (name, ...args) => svgUrl(PROPS[name](...args));
    Boot: prefer real PNGs from /assets/textures/ (when listed in assets/overrides.json)
    ========================================================= */
 const asset = name => optionalImage(`assets/textures/${name}.png`);
-const DESK_PROPS = [['scissors', 'scissors'], ['washi-tape', 'washiRoll'], ['pencil', 'pencil'], ['stamps', 'stamps']];
 // PNG encoding is the slow part, so it happens in a worker when the browser has OffscreenCanvas;
 // otherwise (or if the worker is slow to answer) on the main thread as before
 const encodeOnMain = canvas => new Promise(res => canvas.toBlob(b => res(URL.createObjectURL(b)), 'image/png'));
@@ -343,17 +259,13 @@ export const heroTexturesReady = (async () => {
 // everything the other screens use, made in idle time after the hero has settled
 export const texturesReady = (async () => {
   await heroTexturesReady;
-  const [velvet, crumple, brushed, letter, walnut, ...props] = await Promise.all([
-    asset('velvet'), asset('crumpled-paper'), asset('brushed-metal'), asset('letter-paper'), asset('walnut'),
-    ...DESK_PROPS.map(([file]) => optionalImage(`assets/props/${file}.png`)),
+  const [velvet, crumple, brushed, letter] = await Promise.all([
+    asset('velvet'), asset('crumpled-paper'), asset('brushed-metal'), asset('letter-paper'),
   ]);
   await idle(); IMG.velvet = velvet || makeVelvet(); TEX.velvet = velvet ? velvet.src : await blobUrl(IMG.velvet); setVar('--tex-velvet', TEX.velvet);
   await idle(); IMG.brushed = brushed || makeBrushed(); TEX.brushed = brushed ? brushed.src : await blobUrl(IMG.brushed); setVar('--tex-brushed', TEX.brushed);
   await idle(); IMG.crumple = crumple || makeCrumple();
   await idle(); setVar('--tex-grain-strong', await blobUrl(makeGrain(GRAIN.strong, 20)));
-  await idle(); setVar('--tex-walnut', walnut ? walnut.src : await blobUrl(makeWalnut()));
-  // desk props: real PNGs from /assets/props/ when listed, otherwise drawn
-  DESK_PROPS.forEach(([file, prop], i) => setVar(`--img-${file}`, props[i] ? props[i].src : propUrl(prop)));
   setVar('--img-bulldog', propUrl('bulldog'));
   [IMG.waxSeal, IMG.safetyPin, IMG.bulldog] = await Promise.all([loadImage(propUrl('waxSeal')), loadImage(propUrl('safetyPin')), loadImage(propUrl('bulldog'))]);
   // the letter needs Pinyon Script, so it comes last

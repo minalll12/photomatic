@@ -190,6 +190,9 @@ export function drawSticker(ctx, s, { quality = 'screen', lifted = false } = {})
   ctx.restore();
 }
 
+// The art of a Type-your-own sticker with given words (the editor's sticker-sheet prop)
+export const stickerArt = (def, text = '', variant = '') => getArt({ def: def.id, text, variant: variant || (def.variants ? def.variants[0][0] : '') });
+
 // Lightweight thumbnail for the picker (downscaled, square-fitted)
 export async function stickerThumb(def, px = 128) {
   if (def.kind === 'png') { if (!(await loadSource(def))) return null; }

@@ -35,6 +35,10 @@ export async function startCamera(video) {
   }
   state.booth.stream = stream;
   tuneExposure(stream);
+  // iOS Safari only plays a camera stream inline when it is muted and marked playsinline
+  video.muted = true;
+  video.playsInline = true;
+  video.setAttribute('playsinline', '');
   video.srcObject = stream;
   await video.play().catch(() => {});
   if (!video.videoWidth) await new Promise(r => video.addEventListener('loadedmetadata', r, { once: true }));
@@ -93,27 +97,36 @@ async function freshFrame(video) {
   }
 }
 
-// Average luminance (0..1) and whether the image is effectively empty
+// Average luminance (0..1), the share of near-white pixels, and whether the image is effectively empty
 function measure(src) {
   const c = makeCanvas(48, 36), x = c.getContext('2d', { willReadFrequently: true });
   x.drawImage(src, 0, 0, 48, 36);
   const d = x.getImageData(0, 0, 48, 36).data;
-  let sum = 0, max = 0;
+  let sum = 0, max = 0, hot = 0;
   for (let i = 0; i < d.length; i += 4) {
     const l = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
     sum += l; if (l > max) max = l;
+    if (l > 236) hot++;
   }
-  const avg = sum / (d.length / 4) / 255;
-  return { avg, blank: max < 14 };
+  const n = d.length / 4;
+  return { avg: sum / n / 255, hot: hot / n, blank: max < 14 };
 }
 
-// A gentle lift for dark, backlit shots: a gamma curve keeps whites at white
+// A gentle lift for dark, backlit shots (a gamma curve), and a soft shoulder on the brightest tones
+// when a lot of the frame is near white (a bright ceiling, or the screen flash on a close face),
+// so highlights roll off instead of clipping flat
+const KNEE = 0.74, CEIL = 0.955;
 function autoExpose(canvas) {
-  const { avg } = measure(canvas);
-  if (avg >= 0.35 || avg <= 0) return canvas;
-  const g = Math.min(1, Math.max(0.62, Math.log(0.42) / Math.log(avg)));
+  const { avg, hot } = measure(canvas);
+  const lift = avg > 0 && avg < 0.35, shoulder = hot > 0.03;
+  if (!lift && !shoulder) return canvas;
+  const g = lift ? Math.min(1, Math.max(0.62, Math.log(0.42) / Math.log(avg))) : 1;
   const lut = new Uint8ClampedArray(256);
-  for (let v = 0; v < 256; v++) lut[v] = 255 * Math.pow(v / 255, g);
+  for (let v = 0; v < 256; v++) {
+    let y = Math.pow(v / 255, g);
+    if (shoulder && y > KNEE) { const t = (y - KNEE) / (1 - KNEE); y = KNEE + (CEIL - KNEE) * (1 - Math.pow(1 - t, 2)); }
+    lut[v] = 255 * y;
+  }
   const x = canvas.getContext('2d', { willReadFrequently: true });
   const img = x.getImageData(0, 0, canvas.width, canvas.height), d = img.data;
   for (let i = 0; i < d.length; i += 4) { d[i] = lut[d[i]]; d[i + 1] = lut[d[i + 1]]; d[i + 2] = lut[d[i + 2]]; }
@@ -123,27 +136,39 @@ function autoExpose(canvas) {
 
 // Take one still. Waits for a real frame, rejects blank frames and retries
 // once; resolves to a canvas, or null if the camera gave us nothing usable.
-export async function capture(video, { aspect, mirror }) {
-  for (let attempt = 0; attempt < 2; attempt++) {
-    await freshFrame(video);
-    const vw = video.videoWidth, vh = video.videoHeight;
-    if (!vw || !vh) { await pause(200); continue; }
-    // grab the frame now, so the moment matches the flash even if takePhoto is slow
-    const frame = cropToCanvas(video, vw, vh, aspect, mirror);
-    if (measure(frame).blank) { await pause(200); continue; }
-    let best = frame;
-    const track = state.booth.stream && state.booth.stream.getVideoTracks()[0];
-    if (track && 'ImageCapture' in window) {
-      try {
-        const blob = await withTimeout(new window.ImageCapture(track).takePhoto(), PHOTO_TIMEOUT);
-        const bmp = await createImageBitmap(blob);
-        const still = cropToCanvas(bmp, bmp.width, bmp.height, aspect, mirror, vw / vh);
-        bmp.close && bmp.close();
-        if (still.width > frame.width && !measure(still).blank) best = still;
-      } catch { /* keep the video frame */ }
-      if (video.paused) video.play().catch(() => {});
+// `onGrab` fires as soon as the frame is in hand (the screen flash can let go then);
+// `still: false` keeps that video frame instead of asking for a full-resolution photo,
+// which would only arrive after the flash has faded.
+export async function capture(video, { aspect, mirror, onGrab = () => {}, still = true }) {
+  try {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await freshFrame(video);
+      const vw = video.videoWidth, vh = video.videoHeight;
+      if (!vw || !vh) { await pause(200); continue; }
+      // grab the frame now, so the moment matches the flash even if takePhoto is slow
+      const frame = cropToCanvas(video, vw, vh, aspect, mirror);
+      if (measure(frame).blank) { await pause(200); continue; }
+      onGrab();
+      return autoExpose(still ? await fullStill(video, frame, vw, vh, aspect, mirror) : frame);
     }
-    return autoExpose(best);
+    return null;
+  } finally {
+    onGrab();
   }
-  return null;
+}
+
+// The camera's own full-resolution photo, when it is larger than the video frame
+async function fullStill(video, frame, vw, vh, aspect, mirror) {
+  const track = state.booth.stream && state.booth.stream.getVideoTracks()[0];
+  if (!track || !('ImageCapture' in window)) return frame;
+  let best = frame;
+  try {
+    const blob = await withTimeout(new window.ImageCapture(track).takePhoto(), PHOTO_TIMEOUT);
+    const bmp = await createImageBitmap(blob);
+    const still = cropToCanvas(bmp, bmp.width, bmp.height, aspect, mirror, vw / vh);
+    bmp.close && bmp.close();
+    if (still.width > frame.width && !measure(still).blank) best = still;
+  } catch { /* keep the video frame */ }
+  if (video.paused) video.play().catch(() => {});
+  return best;
 }

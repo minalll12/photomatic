@@ -8,33 +8,38 @@
   <meta name="theme-color" content="#2A070B">
   <meta name="color-scheme" content="light">
 
+  <!-- absolute URLs: the site's address lives in one place, SITE_URL in tools/set-site-url.py -->
+  <link rel="canonical" href="https://photomatic.vercel.app/" data-site>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Photomatic">
+  <meta property="og:url" content="https://photomatic.vercel.app/" data-site>
   <meta property="og:title" content="Photomatic · the online photo booth">
   <meta property="og:description" content="Take four photos, pick a frame and a film look, and keep the strip. A little photo booth that lives in your browser.">
-  <meta property="og:image" content="assets/og-image.png">
+  <meta property="og:image" content="https://photomatic.vercel.app/assets/og-image.png" data-site>
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="The Photomatic wordmark beside a red vintage photo booth on a striped wall">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Photomatic · the online photo booth">
   <meta name="twitter:description" content="Take four photos, pick a frame and a film look, and keep the strip.">
-  <meta name="twitter:image" content="assets/og-image.png">
+  <meta name="twitter:image" content="https://photomatic.vercel.app/assets/og-image.png" data-site>
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-title" content="Photomatic">
 
   <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-25v","/js/booth.js":"/js/booth.js?v=2026-10-25v","/js/camera.js":"/js/camera.js?v=2026-10-25v","/js/editor.js":"/js/editor.js?v=2026-10-25v","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-25v","/js/export.js":"/js/export.js?v=2026-10-25v","/js/filters.js":"/js/filters.js?v=2026-10-25v","/js/frames.js":"/js/frames.js?v=2026-10-25v","/js/hero.js":"/js/hero.js?v=2026-10-25v","/js/icons.js":"/js/icons.js?v=2026-10-25v","/js/layouts.js":"/js/layouts.js?v=2026-10-25v","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-25v","/js/main.js":"/js/main.js?v=2026-10-25v","/js/patterns.js":"/js/patterns.js?v=2026-10-25v","/js/placeholders.js":"/js/placeholders.js?v=2026-10-25v","/js/ransom.js":"/js/ransom.js?v=2026-10-25v","/js/render.js":"/js/render.js?v=2026-10-25v","/js/reveal.js":"/js/reveal.js?v=2026-10-25v","/js/sound.js":"/js/sound.js?v=2026-10-25v","/js/state.js":"/js/state.js?v=2026-10-25v","/js/stickers.js":"/js/stickers.js?v=2026-10-25v","/js/story.js":"/js/story.js?v=2026-10-25v","/js/textures.js":"/js/textures.js?v=2026-10-25v","/js/transitions.js":"/js/transitions.js?v=2026-10-25v","/js/ui.js":"/js/ui.js?v=2026-10-25v","/js/utils.js":"/js/utils.js?v=2026-10-25v"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-25v">
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-25x","/js/booth.js":"/js/booth.js?v=2026-10-25x","/js/camera.js":"/js/camera.js?v=2026-10-25x","/js/editor.js":"/js/editor.js?v=2026-10-25x","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-25x","/js/export.js":"/js/export.js?v=2026-10-25x","/js/filters.js":"/js/filters.js?v=2026-10-25x","/js/frames.js":"/js/frames.js?v=2026-10-25x","/js/hero.js":"/js/hero.js?v=2026-10-25x","/js/icons.js":"/js/icons.js?v=2026-10-25x","/js/layouts.js":"/js/layouts.js?v=2026-10-25x","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-25x","/js/main.js":"/js/main.js?v=2026-10-25x","/js/patterns.js":"/js/patterns.js?v=2026-10-25x","/js/placeholders.js":"/js/placeholders.js?v=2026-10-25x","/js/ransom.js":"/js/ransom.js?v=2026-10-25x","/js/render.js":"/js/render.js?v=2026-10-25x","/js/reveal.js":"/js/reveal.js?v=2026-10-25x","/js/sound.js":"/js/sound.js?v=2026-10-25x","/js/state.js":"/js/state.js?v=2026-10-25x","/js/stickers.js":"/js/stickers.js?v=2026-10-25x","/js/story.js":"/js/story.js?v=2026-10-25x","/js/textures.js":"/js/textures.js?v=2026-10-25x","/js/transitions.js":"/js/transitions.js?v=2026-10-25x","/js/ui.js":"/js/ui.js?v=2026-10-25x","/js/utils.js":"/js/utils.js?v=2026-10-25x"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-25x">
   <!-- the page is complete without script; the app starts once the fonts have painted (or at the first touch or key) -->
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-25v'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-25x'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
@@ -339,9 +344,9 @@
               <li class="polaroid" style="--tilt:1deg; --hang:72px" tabindex="0" aria-labelledby="step-2 step-2-desc">
                 <span class="clothespin" aria-hidden="true"></span>
                 <div class="polaroid-photo" aria-hidden="true">
-                  <!-- 02 customise: the strip changes frame (Midnight, Train Ticket, Receipt) and a sticker lands -->
+                  <!-- 02 customise: a cream strip changes frame (Classic Cream, Train Ticket, Receipt) and a heart sticker lands -->
                   <div class="demo demo-custom">
-                    <div class="mini mini-black"><i></i><i></i><i></i><b class="mini-mark">Photomatic</b></div>
+                    <div class="mini mini-classic"><i></i><i></i><i></i><b class="mini-mark">Photomatic</b></div>
                     <div class="mini mini-ticket"><i></i><i></i><i></i><b class="mini-line">admit one</b></div>
                     <div class="mini mini-receipt"><i></i><i></i><i></i><b class="mini-line">total: priceless</b></div>
                     <span class="drop-sticker"></span>
@@ -372,8 +377,12 @@
       </section>
 
       <footer class="site-footer">
-        <span class="wordmark wordmark-xs">Photomatic</span>
-        <span class="typed-sm">a photo booth in your browser · est. 2026</span>
+        <div class="footer-inner">
+          <a class="wordmark-link footer-mark" href="#" data-nav="home" aria-label="Photomatic, home"><span class="wordmark wordmark-sm">Photomatic</span></a>
+          <p class="footer-line">Your photos never leave your device.</p>
+          <nav class="footer-links" aria-label="Footer"><a href="privacy.html">Privacy</a><a href="#booth" data-nav="booth">Booth</a></nav>
+          <p class="footer-copy">© 2026 Photomatic</p>
+        </div>
       </footer>
     </section>
 
@@ -454,7 +463,7 @@
       <div class="booth-live" id="booth-live" hidden>
         <div class="camera-head">
           <button type="button" class="text-link text-link-light" id="btn-live-back"><span class="i"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Menu</button>
-          <button type="button" class="ring-toggle" id="ring-toggle" aria-pressed="false"><svg class="ring-bulb" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 17.5h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V17.5h5.2v-1.7c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>Ring light <span aria-hidden="true">·</span> <span class="ring-state">Off</span></button>
+          <button type="button" class="flash-toggle" id="flash-toggle" aria-pressed="true" title="The screen turns white for a moment to light your face"><svg class="flash-bulb" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 17.5h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V17.5h5.2v-1.7c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>Flash <span aria-hidden="true">·</span> <span class="flash-state">On</span></button>
         </div>
         <div class="booth-interior" id="booth-interior">
           <div class="camera" id="camera" data-state="loading">
@@ -466,12 +475,20 @@
           </div>
           <p class="brass-plate" id="shot-counter" aria-hidden="true">Ready</p>
         </div>
-        <div class="paper-card cam-error" id="cam-error" role="alert" hidden>
-          <h3>The camera isn’t available</h3>
-          <p id="cam-error-msg"></p>
-          <div class="btn-row">
-            <button type="button" class="btn btn-primary" data-action="upload"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9.5" r="1.5"/><path d="m4.5 17 4.5-4.5 3 3 2.5-2.5 5 5"/></svg></span> Upload photos instead</button>
-            <button type="button" class="btn btn-quiet" id="btn-retry"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9"/><path d="M4.5 4.5V9H9"/></svg></span> Try again</button>
+        <!-- camera problems: one card, its words chosen by booth.js (denied, missing, busy, unavailable) -->
+        <div class="cam-card" id="cam-error" role="alert" aria-labelledby="cam-error-title" hidden>
+          <span class="bulldog-clip" aria-hidden="true"></span>
+          <span class="cam-card-icon" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2.2l1.4-2h5.8l1.4 2h2.2A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="13" r="3.5"/><path class="cam-card-slash" d="M3.5 3.5l17 17"/></svg></span>
+          <p class="kicker">— Before we start —</p>
+          <h3 class="cam-card-title" id="cam-error-title">Camera access <em>needed</em></h3>
+          <p class="cam-card-reason" id="cam-error-msg"></p>
+          <div class="cam-card-help">
+            <p class="cam-card-label" id="cam-error-label">How to allow it</p>
+            <ol class="cam-card-steps" id="cam-error-steps" aria-labelledby="cam-error-label"></ol>
+          </div>
+          <div class="cam-card-actions">
+            <button type="button" class="btn btn-primary" id="btn-retry"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9"/><path d="M4.5 4.5V9H9"/></svg></span> Try again</button>
+            <button type="button" class="text-link" data-action="upload"><span class="i"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9.5" r="1.5"/><path d="m4.5 17 4.5-4.5 3 3 2.5-2.5 5 5"/></svg></span> Upload photos instead</button>
           </div>
         </div>
         <div class="camera-actions">
@@ -503,10 +520,19 @@
       <!-- developing -->
       <div class="booth-develop" id="booth-develop" hidden>
         <p class="kicker develop-label">— Developing… —</p>
-        <div class="develop-machine">
-          <div class="develop-slot" aria-hidden="true"><span></span></div>
-          <div class="develop-window">
-            <div class="develop-strip" id="develop-strip" role="img" aria-label="Your strip developing"></div>
+        <!-- the print side of the hero's booth: red brushed panel, coin plate, the chrome PRINTS slot and an enamel sign -->
+        <div class="develop-machine" id="develop-machine">
+          <div class="dm-coin" aria-hidden="true"><span class="dm-coin-slit"></span><b>25¢</b></div>
+          <div class="dm-feed">
+            <div class="dm-slot" aria-hidden="true"><span class="dm-slit"></span><small>Prints</small></div>
+            <div class="develop-window">
+              <div class="develop-strip" id="develop-strip" role="img" aria-label="Your strip developing"></div>
+              <span class="dm-spill" aria-hidden="true"></span>
+            </div>
+          </div>
+          <div class="dm-sign">
+            <p class="dm-sign-text">Pictures in approx. <span class="num">10</span> seconds</p>
+            <p class="dm-lamp"><span class="dm-bulb" aria-hidden="true"></span><span id="develop-lamp-text">Developing</span></p>
           </div>
         </div>
         <button type="button" class="text-link text-link-light" id="develop-skip">Skip</button>
@@ -520,7 +546,7 @@
     <section id="screen-editor" class="screen" aria-labelledby="editor-title" hidden>
       <header class="editor-head">
         <div class="heading-block heading-left">
-          <p class="kicker">— The darkroom desk —</p>
+          <p class="kicker">— The craft table —</p>
           <h2 class="title" id="editor-title" tabindex="-1" data-focus>Make it <em>yours</em></h2>
         </div>
         <div class="editor-tools" role="toolbar" aria-label="History">
@@ -531,12 +557,38 @@
       </header>
 
       <div class="editor">
-        <span class="desk-prop prop-scissors" aria-hidden="true"></span>
-        <span class="desk-prop prop-washi" aria-hidden="true"></span>
-        <span class="desk-prop prop-pencil" aria-hidden="true"></span>
-        <span class="desk-prop prop-stamps" aria-hidden="true"></span>
+        <!-- an oxblood felt cutting mat; the props on its edges are shortcuts to the panel's tabs -->
         <div class="stage" id="stage">
+          <button type="button" class="mat-prop prop-sheet" data-tab="tab-stickers" aria-label="Sticker sheet: open the Stickers tab" title="Stickers">
+            <span class="sheet-paper" id="prop-sheet-cells" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="mat-prop prop-fan" data-tab="tab-filter" aria-label="Swatch fan of the film looks: open the Filter tab" title="Film looks">
+            <span class="fan" id="prop-fan" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="mat-prop prop-stamper" data-tab="tab-text" aria-label="Date stamper: open the Text tab" title="Date and words">
+            <svg class="stamper" viewBox="0 0 100 132" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="stp-brass" x1="0" x2="1"><stop offset="0" stop-color="#7A5C24"/><stop offset=".18" stop-color="#E7C46A"/><stop offset=".32" stop-color="#FFF1C8"/><stop offset=".5" stop-color="#C9A24E"/><stop offset=".85" stop-color="#8E6C2C"/><stop offset="1" stop-color="#5E4416"/></linearGradient>
+                <linearGradient id="stp-wood" x1="0" x2="1"><stop offset="0" stop-color="#3E2614"/><stop offset=".3" stop-color="#9A6A42"/><stop offset=".55" stop-color="#6E4626"/><stop offset="1" stop-color="#2A190D"/></linearGradient>
+                <radialGradient id="stp-knob" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#C08A58"/><stop offset=".5" stop-color="#7A4E2A"/><stop offset="1" stop-color="#3A2414"/></radialGradient>
+              </defs>
+              <!-- frame, knob and stem -->
+              <path d="M16 112 V58 C16 40 30 34 50 34 C70 34 84 40 84 58 V112" fill="none" stroke="url(#stp-brass)" stroke-width="9"/>
+              <rect x="44" y="16" width="12" height="22" rx="2" fill="url(#stp-wood)"/>
+              <ellipse cx="50" cy="15" rx="17" ry="11" fill="url(#stp-knob)"/>
+              <ellipse cx="45" cy="11" rx="6" ry="3" fill="#F3D7B0" opacity=".35"/>
+              <!-- the rubber date bands, set to today -->
+              <rect x="22" y="70" width="56" height="26" rx="3" fill="#2A2220"/>
+              <path d="M22 76 H78 M22 90 H78" stroke="#000" stroke-opacity=".35"/>
+              <text class="stamp-date" id="stamp-date" x="50" y="87" text-anchor="middle">OCT 25 ’26</text>
+              <!-- base plate -->
+              <rect x="8" y="108" width="84" height="14" rx="3" fill="url(#stp-brass)"/>
+              <rect x="8" y="119" width="84" height="3" rx="1.5" fill="#3A2A10" opacity=".45"/>
+            </svg>
+          </button>
           <div class="canvas-wrap" id="canvas-wrap">
+            <span class="washi washi-blue mat-tape mat-tape-tl" aria-hidden="true"></span>
+            <span class="washi washi-blue mat-tape mat-tape-br" aria-hidden="true"></span>
             <canvas id="strip" role="img" aria-label="Your Photomatic strip"></canvas>
             <div class="sticker-bar" id="sticker-bar" role="toolbar" aria-label="Selected sticker" hidden>
               <button type="button" data-act="edit" aria-label="Edit text" title="Edit text"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></span></button>
@@ -564,7 +616,6 @@
               <fieldset class="field">
                 <legend class="label">Layout</legend>
                 <div class="layout-picker layout-picker-sm" id="editor-layouts"></div>
-                <p class="hint" id="editor-layout-hint"></p>
               </fieldset>
               <div class="field" id="frame-groups"></div>
               <div class="field" id="variant-field" hidden>
@@ -657,6 +708,7 @@
       <h2 class="visually-hidden" id="reveal-title" tabindex="-1" data-focus>Your keepsake is printing</h2>
       <div class="reveal">
         <div class="reveal-stage" id="reveal-stage">
+          <span class="reveal-spot" aria-hidden="true"></span>
           <canvas class="reveal-canvas" id="reveal-canvas" role="img" aria-label="Your finished strip printing from a slot and pinned to a letter, with a polaroid tucked behind"></canvas>
           <div class="confetti" id="confetti" aria-hidden="true"></div>
         </div>
@@ -701,6 +753,14 @@
           </footer>
         </div>
       </div>
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <a class="wordmark-link footer-mark" href="#" data-nav="home" aria-label="Photomatic, home"><span class="wordmark wordmark-sm">Photomatic</span></a>
+          <p class="footer-line">Your photos never leave your device.</p>
+          <nav class="footer-links" aria-label="Footer"><a href="privacy.html">Privacy</a><a href="#booth" data-nav="booth">Booth</a></nav>
+          <p class="footer-copy">© 2026 Photomatic</p>
+        </div>
+      </footer>
     </section>
   </main>
 

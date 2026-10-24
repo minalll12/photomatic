@@ -31,6 +31,8 @@ export const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 export const reducedMotion = () => motionQuery.matches;
 export const isCoarse = () => matchMedia('(pointer: coarse)').matches;
+// iPhone, iPod and iPad (iPadOS reports itself as a Mac with a touch screen)
+export const isIOS = () => /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
 // Tiny element factory: el('button', { className, text, html, attrs, dataset, style, on }, children)
 /* Optional art (see assets/README.md): only files listed in assets/overrides.json are requested,

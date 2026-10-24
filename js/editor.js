@@ -7,7 +7,7 @@ import { LAYOUTS, createLayoutPicker, fitLayout } from './layouts.js';
 import { FRAMES, FRAME_GROUPS, variantOf } from './frames.js';
 import { BG_SWATCHES, PATTERNS } from './patterns.js';
 import { FILTERS, filterThumb } from './filters.js';
-import { PACKS, TYPE_STYLES, DEFS, isEditable, stickerThumb, stickerBox, setArtListener } from './stickers.js';
+import { PACKS, TYPE_STYLES, DEFS, isEditable, stickerThumb, stickerArt, stickerBox, setArtListener } from './stickers.js';
 import { texturesReady } from './textures.js';
 import { computeLayout, render, handlePositions } from './render.js';
 import { openBooth } from './booth.js';
@@ -46,6 +46,7 @@ export async function newDesign() {
 export function openEditor({ via = 'fade' } = {}) {
   selectTab($('#tab-frame'));
   if (window.innerWidth <= 860) setSheetCollapsed(true);
+  buildProps();
   const shown = show('editor', { via });
   syncUI();
   return shown;
@@ -66,11 +67,12 @@ function drawDisplay() {
   const v = E.view;
   const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
   // fit the whole strip in the space left below the heading: above the sheet on phones (its handle
-  // sticks out 26px), above the fold on desktop; the blotter pads it on each side
+  // sticks out 26px), above the fold on desktop; the mat pads it on each side
   const top = stage.getBoundingClientRect().top + window.scrollY;
+  const padY = parseFloat(getComputedStyle(stage).paddingTop) || 0;
   const maxH = window.innerWidth <= 860
-    ? Math.max(140, panel.getBoundingClientRect().top - 26 - top - 2 * 24)
-    : Math.max(280, window.innerHeight - top - 2 * BLOTTER_PAD - 24);
+    ? Math.max(140, panel.getBoundingClientRect().top - 26 - top - 2 * padY)
+    : Math.max(280, window.innerHeight - top - 2 * padY - 24);
   v.scale = Math.min(E.stageW / L.W, maxH / L.H, MAX_VIEW_SCALE);
   v.k = v.scale * dpr; v.W = L.W; v.H = L.H;
   const pw = Math.round(L.W * v.k), ph = Math.round(L.H * v.k);
@@ -83,15 +85,64 @@ function drawDisplay() {
   placeBar();
 }
 
-// the room for the strip: the page's content width, minus the panel, the gap and the blotter padding.
-// Measured from the page, not the editor, because the editor shrinks to fit the strip.
-const PANEL_W = 420, GAP = 48, BLOTTER_PAD = 40, MAX = 1200;
+// the room for the strip: the page's content width, minus the panel, the gap and the mat's padding
+// (its sides leave room for the props). Measured from the page, not the editor, because the editor
+// shrinks to fit the strip; the panel width, gap and padding come from the stylesheet.
+const MAX = 1200;
+const editorGrid = $('#screen-editor .editor');
 new ResizeObserver(() => {
   const vw = document.documentElement.clientWidth;
   const w = Math.min(vw - 2 * Math.min(40, Math.max(16, vw * 0.04)), MAX);
-  E.stageW = Math.floor(window.innerWidth <= 860 ? w - 32 : w - PANEL_W - GAP - BLOTTER_PAD * 2);
+  const cs = getComputedStyle(editorGrid), ss = getComputedStyle(stage);
+  const padX = (parseFloat(ss.paddingLeft) || 0) + (parseFloat(ss.paddingRight) || 0);
+  const side = window.innerWidth <= 860 ? 0 : (parseFloat(cs.getPropertyValue('--panel-w')) || 0) + (parseFloat(cs.getPropertyValue('--gap')) || 0);
+  E.stageW = Math.floor(w - side - padX);
   requestRender();
 }).observe(document.documentElement);
+
+/* =========================================================
+   Props on the mat: a sheet of the real stickers (two already peeled off),
+   a date stamper set to today and a swatch fan of the film looks. Each one
+   opens its tab in the panel.
+   ========================================================= */
+let propsBuilt = false;
+function buildProps() {
+  $('#stamp-date').textContent = dateTypewriter(D.shotDate || new Date()).replace("'", '’');
+  if (propsBuilt) return;
+  propsBuilt = true;
+  // the photo packs' first stickers when there are any, otherwise the Type-your-own styles
+  const png = PACKS.flatMap(p => p.items).slice(0, 2);
+  const items = [
+    ...png.map(def => ({ def })),
+    { def: DEFS.get('ransom'), text: 'xoxo' },
+    { def: DEFS.get('label'), text: 'fragile', variant: 'red' },
+    { def: DEFS.get('note'), text: 'keep this one' },
+    { def: DEFS.get('label'), text: 'besties', variant: 'black' },
+  ].slice(0, 4);
+  const cells = items.map(({ def, text, variant }) => {
+    const cell = el('span', { className: 'sheet-cell' });
+    const put = c => { if (c) cell.replaceChildren(c); };
+    if (def.kind === 'png') stickerThumb(def, 96).then(put);
+    else put(stickerArt(def, text, variant));
+    return cell;
+  });
+  // two die-cut spaces where stickers have already been peeled off
+  const peeled = () => el('span', { className: 'sheet-cell is-peeled' });
+  $('#prop-sheet-cells').replaceChildren(cells[0], peeled(), cells[1], cells[2], peeled(), cells[3]);
+  const n = FILTERS.length;
+  $('#prop-fan').replaceChildren(...FILTERS.map((f, i) => el('span', {
+    className: 'fan-blade', style: { '--a': `${(-34 + (i * 60) / Math.max(1, n - 1)).toFixed(1)}deg`, '--c': f.tone || '#B9B2A8' },
+  })), el('span', { className: 'fan-rivet' }));
+}
+$$('.mat-prop').forEach(b => b.addEventListener('click', () => selectTab($(`#${b.dataset.tab}`), true)));
+
+// grids fill every row: a short last row spreads its cards across the row (see .even-grid)
+function evenGrid(grid, n = grid.children.length) {
+  grid.classList.add('even-grid');
+  grid.dataset.r3 = String(n % 3);
+  grid.dataset.r2 = String(n % 2);
+  return grid;
+}
 
 /* =========================================================
    History
@@ -214,7 +265,7 @@ const layoutPicker = createLayoutPicker($('#editor-layouts'), 'editor-layout', i
 const frameButtons = new Map();
 $('#frame-groups').replaceChildren(...FRAME_GROUPS.map(g => el('div', { className: 'frame-group' }, [
   el('span', { className: 'label', text: g.name, attrs: { id: `fg-${g.id}` } }),
-  el('div', { className: 'frame-grid', attrs: { role: 'group', 'aria-labelledby': `fg-${g.id}` } },
+  evenGrid(el('div', { className: 'frame-grid', attrs: { role: 'group', 'aria-labelledby': `fg-${g.id}` } },
     Object.entries(FRAMES).filter(([, f]) => f.group === g.id).map(([id, f]) => {
       const btn = el('button', {
         className: 'frame-opt', attrs: { type: 'button', 'aria-pressed': 'false' }, dataset: { value: id },
@@ -222,7 +273,7 @@ $('#frame-groups').replaceChildren(...FRAME_GROUPS.map(g => el('div', { classNam
       }, [el('span', { className: 'frame-thumb', attrs: { 'aria-hidden': 'true' } }), el('span', { className: 'frame-name', text: f.name })]);
       frameButtons.set(id, btn);
       return btn;
-    })),
+    }))),
 ])));
 
 /* thumbnails: rendered lazily, cached by everything that changes their look */
@@ -364,7 +415,7 @@ function showPack(id) {
   E.pack = pack.id;
   syncPressed(packNav, v => v === pack.id);
   if (!builtPacks.has(pack.id)) {
-    builtPacks.set(pack.id, pack.id === 'type' ? buildComposer() : el('div', { className: 'sticker-grid' }, pack.items.map(stickerButton)));
+    builtPacks.set(pack.id, pack.id === 'type' ? buildComposer() : evenGrid(el('div', { className: 'sticker-grid' }, pack.items.map(stickerButton))));
   }
   packBody.replaceChildren(builtPacks.get(pack.id));
 }
@@ -507,7 +558,6 @@ $('#btn-surprise').addEventListener('click', () => edit(() => {
 function syncUI() {
   const f = FRAMES[D.frame];
   layoutPicker.update(D.photos.length, D.layout);
-  $('#editor-layout-hint').textContent = LAYOUTS.grid.supports(D.photos.length) ? '' : `${LAYOUTS.grid.name} needs exactly 4 photos.`;
   frameButtons.forEach((b, id) => b.setAttribute('aria-pressed', String(id === D.frame)));
   // colour variants for the chosen frame
   const vf = $('#variant-field');

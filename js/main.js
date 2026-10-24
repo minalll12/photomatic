@@ -87,10 +87,11 @@ $('#btn-album-save').addEventListener('click', async e => {
   }
 });
 
+// browsers that can't record a canvas (no MediaRecorder) simply don't offer the video
 const videoBtn = $('#btn-video');
-if (!videoSupport()) videoBtn.title = 'Video export isn’t supported in this browser';
+videoBtn.hidden = !videoSupport();
 videoBtn.addEventListener('click', async () => {
-  if (!videoSupport()) { toast('Video export isn’t supported in this browser. Try Chrome, Edge or Safari.'); return; }
+  if (!videoSupport()) return;
   const label = videoBtn.querySelector('.btn-label'), original = label.textContent;
   videoBtn.disabled = true;
   const strip = state.output.canvas, scale = 1080 / 400, LH = 1920 / scale;

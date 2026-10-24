@@ -1,0 +1,19 @@
+{
+  "name": "Photomatic · the online photo booth",
+  "short_name": "Photomatic",
+  "description": "A little photo booth in your browser. Take four photos, pick a frame and a film look, and keep the strip.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#2A070B",
+  "theme_color": "#2A070B",
+  "icons": [
+    { "src": "/assets/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "/assets/favicon-32.png", "type": "image/png", "sizes": "32x32" },
+    { "src": "/assets/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" },
+    { "src": "/assets/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "/assets/icon-maskable-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}

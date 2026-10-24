@@ -8,38 +8,39 @@ import { makeCanvas, range } from './utils.js';
 import { state } from './state.js';
 
 const NEUTRAL = [0.5, 0.5, 0.5];
+// `tone` is the look's colour on the editor's swatch-fan prop
 export const FILTERS = [
   {
-    id: 'natural', name: 'Natural',
+    id: 'natural', tone: '#C79A74', name: 'Natural',
     warmth: 0.04, sat: 1.06, vignette: 0.1, grain: 0.012, grainSize: 1,
     curve: [[0, 0], [0.25, 0.235], [0.5, 0.5], [0.75, 0.77], [1, 1]],
   },
   {
-    id: 'silver', name: 'Silver',
+    id: 'silver', tone: '#A3A09A', name: 'Silver',
     mono: [0.36, 0.54, 0.1], vignette: 0.22, grain: 0.035, grainSize: 1,
     curve: [[0, 0], [0.1, 0.045], [0.3, 0.24], [0.55, 0.56], [0.8, 0.85], [1, 0.98]],
     split: { shadow: [0.47, 0.5, 0.54], high: [0.53, 0.5, 0.47], amount: 0.5 },
   },
   {
-    id: 'darkroom', name: 'Darkroom',
+    id: 'darkroom', tone: '#4A4541', name: 'Darkroom',
     mono: [0.52, 0.4, 0.08], vignette: 0.38, grain: 0.075, grainSize: 1.6,
     curve: [[0, 0], [0.15, 0.035], [0.4, 0.29], [0.6, 0.67], [0.85, 0.95], [1, 1]],
   },
   {
-    id: 'warm400', name: 'Warm 400',
+    id: 'warm400', tone: '#D4925A', name: 'Warm 400',
     warmth: 0.28, sat: 0.9, halation: 0.45, vignette: 0.18, grain: 0.03, grainSize: 1.2,
     curve: [[0, 0.04], [0.25, 0.255], [0.5, 0.53], [0.8, 0.82], [1, 0.97]],
     channels: { b: [[0, 0.02], [0.5, 0.48], [1, 0.94]] },
     split: { shadow: [0.5, 0.47, 0.45], high: [0.57, 0.5, 0.41], amount: 0.35 },
   },
   {
-    id: 'sepia', name: 'Sepia Print',
+    id: 'sepia', tone: '#9C7048', name: 'Sepia Print',
     mono: [0.33, 0.55, 0.12], vignette: 0.3, grain: 0.04, grainSize: 1.3,
     curve: [[0, 0.07], [0.3, 0.28], [0.6, 0.62], [1, 0.93]],
     split: { shadow: [0.38, 0.24, 0.15], high: [0.62, 0.55, 0.43], amount: 1.3 },
   },
   {
-    id: 'faded', name: 'Faded',
+    id: 'faded', tone: '#C2B8A8', name: 'Faded',
     warmth: 0.06, sat: 0.72, vignette: 0.12, grain: 0.03, grainSize: 1.1,
     curve: [[0, 0.12], [0.3, 0.33], [0.7, 0.7], [1, 0.92]],
     split: { shadow: [0.46, 0.49, 0.54], high: [0.54, 0.5, 0.46], amount: 0.5 },

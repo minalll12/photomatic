@@ -1,10 +1,10 @@
 /* Booth: the menu card, camera, countdown capture, per-shot retakes,
    upload fallback and the "developing" moment. */
 import { updatePreview } from './menu-preview.js';
-import { $, $$, el, wait, pick, makeCanvas, restartAnimation, reducedMotion, pad2 } from './utils.js';
+import { $, $$, el, wait, pick, makeCanvas, restartAnimation, reducedMotion, pad2, isIOS } from './utils.js';
 import { state } from './state.js';
 import { createLayoutPicker, LAYOUTS } from './layouts.js';
-import { audio, countBeep, shutter, whirr, flashPop, punch, switchClick, thunk } from './sound.js';
+import { audio, countBeep, shutter, whirr, flashPop, punch, switchClick, thunk, click } from './sound.js';
 import { show, toast, confirmDialog } from './ui.js';
 import { icon } from './icons.js';
 import { startCamera, stopCamera as stopStream, capture, cropToCanvas } from './camera.js';
@@ -21,24 +21,68 @@ const PROMPTS = [
   'Think of someone you love', 'Shoulders down, breathe out', 'Now a serious one', 'Close your eyes, then open',
 ];
 
-const CAMERA_ERRORS = {
-  NotAllowedError: 'Camera access is switched off for this site. Allow it from the camera icon in the address bar, or upload photos instead.',
-  SecurityError: 'Your browser blocked the camera for this page. You can upload photos instead.',
-  NotFoundError: "We couldn't find a camera on this device. You can upload photos instead.",
-  NotReadableError: 'Your camera is busy in another app. Close it and try again, or upload photos instead.',
-  OverconstrainedError: "Your camera doesn't support the settings we asked for. Try again, or upload photos instead.",
-  InsecureContext: 'The camera only works over https:// or on localhost. You can upload photos instead.',
-  NotSupportedError: "This browser doesn't support camera access. You can upload photos instead.",
+/* Camera problems, in plain words: what happened, and what to do about it. The browser's own error
+   text is never shown; its error name only picks one of these cards. */
+function allowSteps() {
+  const ua = navigator.userAgent;
+  if (isIOS()) return ['Tap <b>aA</b> in the address bar, then <b>Website Settings</b>.', 'Set <b>Camera</b> to <b>Allow</b>.', 'Come back here and press <b>Try again</b>.'];
+  if (/Android/.test(ua)) return ['Tap the icon to the left of the web address, then <b>Permissions</b>.', 'Turn <b>Camera</b> on.', 'Come back here and press <b>Try again</b>.'];
+  if (/Firefox\//.test(ua)) return ['Click the crossed-out camera in the address bar.', 'Clear the block on <b>Use the camera</b>.', 'Press <b>Try again</b>.'];
+  if (/Safari\//.test(ua) && !/Chrome|Chromium|Edg\//.test(ua)) return ['In the menu bar choose <b>Safari › Settings for This Website</b>.', 'Set <b>Camera</b> to <b>Allow</b>.', 'Press <b>Try again</b>.'];
+  return ['Click the camera or settings icon at the left of the address bar.', 'Set <b>Camera</b> to <b>Allow</b>.', 'Press <b>Try again</b>. If nothing changes, reload the page.'];
+}
+const CAMERA_STATES = {
+  denied: () => ({
+    title: 'Camera access <em>needed</em>',
+    reason: 'The booth uses your camera to take your photos, and right now this browser has it switched off for Photomatic. Nothing is recorded or uploaded: the camera is used only while you’re in the booth.',
+    label: 'How to allow it', steps: allowSteps(),
+  }),
+  missing: () => ({
+    title: 'No camera <em>found</em>',
+    reason: 'We couldn’t find a camera on this device. If you use a separate webcam, it may be unplugged or covered.',
+    label: 'Things to try', steps: ['Plug your camera in, or slide open its privacy cover.', 'Check it’s switched on in your system’s privacy settings.', 'Press <b>Try again</b>.'],
+  }),
+  busy: () => ({
+    title: 'Camera is <em>busy</em>',
+    reason: 'Another app or tab seems to be using your camera, so the booth can’t reach it.',
+    label: 'Things to try', steps: ['Close video calls or other camera apps.', 'Close other tabs that are showing your camera.', 'Press <b>Try again</b>.'],
+  }),
+  unavailable: () => ({
+    title: 'Camera not <em>available</em>',
+    reason: window.isSecureContext ? 'This browser doesn’t offer camera access to websites.' : 'The camera only works when the page is opened over a secure (https) address.',
+    label: 'Things to try', steps: window.isSecureContext ? ['Open Photomatic in an up-to-date Chrome, Edge, Firefox or Safari.', 'Or upload photos you already have.'] : ['Open the https:// address of Photomatic.', 'Or upload photos you already have.'],
+  }),
+  unknown: () => ({
+    title: 'Camera didn’t <em>start</em>',
+    reason: 'Something stopped the camera from starting. This is usually brief.',
+    label: 'Things to try', steps: ['Press <b>Try again</b>.', 'If it keeps happening, reload the page or restart your browser.'],
+  }),
+};
+const CAMERA_STATE_FOR = {
+  NotAllowedError: 'denied', PermissionDeniedError: 'denied', SecurityError: 'denied',
+  NotFoundError: 'missing', DevicesNotFoundError: 'missing', OverconstrainedError: 'missing',
+  NotReadableError: 'busy', TrackStartError: 'busy', AbortError: 'busy',
+  InsecureContext: 'unavailable', NotSupportedError: 'unavailable', TypeError: 'unavailable',
 };
 
 const dom = {
   setup: $('#booth-setup'), live: $('#booth-live'), review: $('#booth-review'), develop: $('#booth-develop'),
   form: $('#booth-form'), frame: $('#camera'), video: $('#video'), status: $('#camera-status'),
   counter: $('#shot-counter'), prompt: $('#pose-line'), countdown: $('#countdown'), countNum: $('#countdown-num'),
-  flash: $('#flash'), snap: $('#btn-snap'), error: $('#cam-error'), errorMsg: $('#cam-error-msg'),
+  flash: $('#flash'), snap: $('#btn-snap'), error: $('#cam-error'),
   announcer: $('#booth-announce'), thumbs: $('#review-grid'), file: $('#file-input'),
-  ring: $('#ring-toggle'), tray: $('#shot-tray'), sweep: $('#countdown-sweep'),
+  flashBtn: $('#flash-toggle'), tray: $('#shot-tray'), sweep: $('#countdown-sweep'),
+  machine: $('#develop-machine'), lampText: $('#develop-lamp-text'),
 };
+
+function showCameraProblem(kind) {
+  const s = CAMERA_STATES[kind] ? CAMERA_STATES[kind]() : CAMERA_STATES.unknown();
+  dom.error.dataset.kind = kind;
+  $('#cam-error-title').innerHTML = s.title;
+  $('#cam-error-msg').textContent = s.reason;
+  $('#cam-error-label').textContent = s.label;
+  $('#cam-error-steps').replaceChildren(...s.steps.map(html => el('li', { html })));
+}
 
 export const stopCamera = () => stopStream(dom.video);
 window.addEventListener('pagehide', stopCamera);
@@ -57,7 +101,7 @@ function setPhase(phase) {
   dom.snap.disabled = phase !== 'live' && phase !== 'shooting';
   dom.snap.setAttribute('aria-disabled', String(phase === 'shooting'));
   dom.error.hidden = phase !== 'error';
-  dom.frame.hidden = phase === 'error';
+  dom.live.classList.toggle('is-error', phase === 'error');
   if (phase === 'loading') dom.status.textContent = 'Warming up the camera…';
   if (phase === 'live') dom.counter.innerHTML = `<span class="num">${state.settings.shots}</span> shots · <span class="num">${state.settings.timer}</span>s timer`;
   if (phase === 'loading' || phase === 'live') fillTray([]);
@@ -152,8 +196,9 @@ async function startLive() {
   } catch (err) {
     if (err.name === 'Superseded' || state.screen !== 'booth') return;
     stopCamera();
-    dom.errorMsg.textContent = CAMERA_ERRORS[err.name] || "We couldn't reach your camera. Try again, or upload photos instead.";
+    showCameraProblem(CAMERA_STATE_FOR[err && err.name] || 'unknown');
     setPhase('error');
+    $('#btn-retry').focus({ preventScroll: true });
   }
 }
 
@@ -169,20 +214,33 @@ export async function boothBack() {
 }
 
 /* =========================================================
-   Ring light: a cream glow round the frame, remembered per browser
+   Screen flash: like a phone's front flash, the whole screen turns white
+   round the live preview just before each capture, so it lights the face
+   in a dim room. On by default, remembered per browser.
    ========================================================= */
-const RING_KEY = 'photomatic-ringlight';
-let ringOn = false;
-try { ringOn = localStorage.getItem(RING_KEY) === '1'; } catch { /* storage blocked */ }
-function setRing(on) {
-  ringOn = on;
-  dom.ring.setAttribute('aria-pressed', String(on));
-  dom.ring.querySelector('.ring-state').textContent = on ? 'On' : 'Off';
-  dom.live.classList.toggle('ring-on', on);
-  try { localStorage.setItem(RING_KEY, on ? '1' : '0'); } catch { /* storage blocked */ }
+const FLASH_KEY = 'photomatic-flash';
+const FLASH_LEAD = 350;          // ms from the white starting to fade in until the frame is taken
+let flashOn = true;
+try { flashOn = localStorage.getItem(FLASH_KEY) !== '0'; } catch { /* storage blocked */ }
+function setFlash(on) {
+  flashOn = on;
+  dom.flashBtn.setAttribute('aria-pressed', String(on));
+  dom.flashBtn.querySelector('.flash-state').textContent = on ? 'On' : 'Off';
+  try { localStorage.setItem(FLASH_KEY, on ? '1' : '0'); } catch { /* storage blocked */ }
 }
-setRing(ringOn);
-dom.ring.addEventListener('click', () => { audio(); switchClick(); setRing(!ringOn); });
+setFlash(flashOn);
+dom.flashBtn.addEventListener('click', () => { audio(); switchClick(); setFlash(!flashOn); });
+
+// a white sheet over the whole viewport with the preview cut out of it (a huge spread shadow)
+const screenFlash = el('div', { className: 'screen-flash', attrs: { 'aria-hidden': 'true' } });
+document.body.append(screenFlash);
+async function raiseFlash() {
+  const r = dom.frame.getBoundingClientRect();
+  Object.assign(screenFlash.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
+  screenFlash.classList.add('is-up');
+  await wait(FLASH_LEAD);
+}
+const dropFlash = () => screenFlash.classList.remove('is-up');
 
 /* =========================================================
    Shot tray: one empty print per shot under the shutter
@@ -220,6 +278,7 @@ const failedPhoto = i => ({ src: faceHere(1440, 1080, i), seed: i + 1, failed: t
 
 function cancelCountdown() {
   state.booth.session++;
+  dropFlash();
   dom.countdown.classList.remove('is-on');
   dom.prompt.classList.remove('is-on');
 }
@@ -246,12 +305,17 @@ async function shoot(i, total) {
   }
   dom.countdown.classList.remove('is-on');
   dom.prompt.classList.remove('is-on');
-  restartAnimation(dom.flash, 'go');
-  if (ringOn) restartAnimation(dom.live, 'is-boost');
+  // with the screen flash, the frame is taken while the screen is fully white, then it fades;
+  // without it, the preview gives its own small white blink
+  const lit = flashOn;
+  if (lit) {
+    await raiseFlash();
+    if (!alive()) { dropFlash(); return null; }
+  } else restartAnimation(dom.flash, 'go');
   shutter();
   flashPop();
   // the still develops in the background so the next countdown isn't held up
-  const pending = capture(dom.video, { aspect: ASPECT, mirror: state.settings.mirror })
+  const pending = capture(dom.video, { aspect: ASPECT, mirror: state.settings.mirror, still: !lit, onGrab: dropFlash })
     .then(c => (c ? makePhoto(c) : failedPhoto(i)))
     .catch(() => failedPhoto(i));
   pending.then(p => { if (my === state.booth.session) dropIntoTray(i, p); });
@@ -394,10 +458,13 @@ dom.file.addEventListener('change', async () => {
 });
 
 /* =========================================================
-   Developing: the strip prints out of the slot while the photos
-   come up from grey paper, then a strip of film advances to the editor
+   Developing: the booth's print side. The strip feeds down out of the
+   PRINTS slot while the photos come up from grey paper; the lamp on the
+   sign turns from warm to a green READY, the strip drops free, and a
+   strip of film advances to the editor
    ========================================================= */
 let developTimer = 0;
+const DEVELOPED_AT = 4000, LEAVE_AFTER = 1000;
 
 async function develop() {
   await newDesign();
@@ -417,10 +484,12 @@ async function develop() {
   if ('filter' in g) g.filter = 'grayscale(1) contrast(.65) brightness(1.12)';
   g.drawImage(full, 0, 0);
 
-  const wrap = $('#develop-strip');
-  wrap.style.setProperty('--ar', `${L.W} / ${L.H}`);
-  wrap.style.setProperty('--arn', (L.W / L.H).toFixed(4));
-  wrap.classList.toggle('is-wide', L.W > L.H);
+  const wrap = $('#develop-strip'), m = dom.machine;
+  m.style.setProperty('--ar', `${L.W} / ${L.H}`);
+  m.style.setProperty('--arn', (L.W / L.H).toFixed(4));
+  m.classList.toggle('is-wide', L.W > L.H);
+  m.classList.remove('is-done');
+  dom.lampText.textContent = 'Developing';
   blank.className = 'develop-paper';
   grey.className = 'develop-grey';
   full.className = 'develop-photo';
@@ -432,7 +501,13 @@ async function develop() {
   restartAnimation(wrap, 'is-printing');
   if (!quick) whirr(2.4);
   clearTimeout(developTimer);
-  developTimer = setTimeout(finishDeveloping, quick ? 1200 : 4300);
+  developTimer = setTimeout(() => {
+    m.classList.add('is-done');
+    dom.lampText.textContent = 'Ready';
+    announce('Your strip is ready');
+    if (!quick) click();
+    developTimer = setTimeout(finishDeveloping, quick ? 600 : LEAVE_AFTER);
+  }, quick ? 900 : DEVELOPED_AT);
 }
 
 function finishDeveloping() {

@@ -212,6 +212,7 @@ function confetti() {
    On-screen playback (stops when it ends: nothing runs while idle)
    ========================================================= */
 const canvas = $('#reveal-canvas');
+const stage = $('#reveal-stage');
 const actions = $('#reveal-actions');
 let raf = 0, t0 = 0, lastStep = -1, pinned = false, landed = false, confettiDone = false;
 const alignment = () => (window.innerWidth > 960 ? 'end' : 'center');
@@ -223,11 +224,15 @@ function size() {
   return { W: r.width, H: r.height, dpr };
 }
 
-// line the action column up with the strip: same top, same height
+// the warm spotlight sits on the strip's centre; beside it (desktop), the action column is centred
+// on the strip: its own height measured, so a taller or shorter column stays centred
 function alignActions(W, H) {
   const g = geometry(W, H, state.output.canvas, alignment());
-  actions.style.setProperty('--strip-top', `${Math.round(g.restTop)}px`);
-  actions.style.setProperty('--strip-h', `${Math.round(g.sh)}px`);
+  const mid = g.restTop + g.sh / 2;
+  stage.style.setProperty('--spot-x', `${Math.round(g.cx)}px`);
+  stage.style.setProperty('--spot-y', `${Math.round(mid)}px`);
+  const beside = alignment() === 'end';
+  actions.style.setProperty('--strip-top', beside ? `${Math.round(Math.max(0, mid - actions.offsetHeight / 2))}px` : '0px');
 }
 
 function drawAt(t) {
@@ -255,6 +260,8 @@ function frame(now) {
 }
 
 function done() {
+  const { W, H } = size();
+  alignActions(W, H);
   actions.classList.add('is-visible');
   if (!done.played) { chime(); done.played = true; }
   $('#btn-download').focus({ preventScroll: true });

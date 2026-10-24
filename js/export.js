@@ -1,8 +1,9 @@
 /* Exports: strip PNG, sharing/downloading, and the reveal video. */
-import { el, makeCanvas, canvasToBlob, fileStamp, fontsReady, isCoarse } from './utils.js';
+import { el, makeCanvas, canvasToBlob, fileStamp, fontsReady, isCoarse, isIOS } from './utils.js';
 import { state } from './state.js';
 import { computeLayout, render } from './render.js';
 import { ensureArt } from './stickers.js';
+import { confirmDialog } from './ui.js';
 
 const EXPORT_SCALE = 2;
 
@@ -19,15 +20,23 @@ export async function exportStrip() {
 
 export const fileName = (kind = '', ext = 'png', d = new Date()) => `photomatic-${kind ? `${kind}-` : ''}${fileStamp(d)}.${ext}`;
 
-// On phones the share sheet saves to the camera roll; elsewhere, a normal download
+// On iPhone, iPad and other phones the share sheet saves to the camera roll ("Save Image" /
+// "Save Video"); elsewhere, a normal download. iOS ignores download links for blobs, so it always shares.
 export async function deliver(blob, name, title = 'My Photomatic strip') {
   const file = new File([blob], name, { type: blob.type });
-  if (isCoarse() && navigator.canShare && navigator.canShare({ files: [file] })) {
+  if ((isIOS() || isCoarse()) && navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
       await navigator.share({ files: [file], title });
       return true;
     } catch (e) {
       if (e.name === 'AbortError') return false;
+      // Safari only opens the share sheet straight from a tap; after a long task (recording a video)
+      // ask for one more tap, then share from inside it
+      if (e.name === 'NotAllowedError') {
+        const video = blob.type.startsWith('video/');
+        if (!(await confirmDialog({ title: video ? 'Your video is ready' : 'Your file is ready', body: 'Tap Save to open the share sheet, then choose where to keep it.', ok: 'Save' }))) return false;
+        try { await navigator.share({ files: [file], title }); return true; } catch (e2) { if (e2.name === 'AbortError') return false; }
+      }
     }
   }
   const url = URL.createObjectURL(blob);
