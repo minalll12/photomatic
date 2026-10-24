@@ -37,7 +37,7 @@ const dom = {
   counter: $('#shot-counter'), prompt: $('#pose-line'), countdown: $('#countdown'), countNum: $('#countdown-num'),
   flash: $('#flash'), snap: $('#btn-snap'), error: $('#cam-error'), errorMsg: $('#cam-error-msg'),
   announcer: $('#booth-announce'), thumbs: $('#review-grid'), file: $('#file-input'),
-  ring: $('#ring-toggle'), tray: $('#shot-tray'),
+  ring: $('#ring-toggle'), tray: $('#shot-tray'), sweep: $('#countdown-sweep'),
 };
 
 export const stopCamera = () => stopStream(dom.video);
@@ -53,7 +53,9 @@ function setPhase(phase) {
   dom.live.hidden = !['loading', 'live', 'shooting', 'error'].includes(phase);
   dom.review.hidden = phase !== 'review';
   dom.develop.hidden = phase !== 'developing';
-  dom.snap.disabled = phase !== 'live';
+  // during a countdown the shutter stays pressed in rather than greyed out
+  dom.snap.disabled = phase !== 'live' && phase !== 'shooting';
+  dom.snap.setAttribute('aria-disabled', String(phase === 'shooting'));
   dom.error.hidden = phase !== 'error';
   dom.frame.hidden = phase === 'error';
   if (phase === 'loading') dom.status.textContent = 'Warming up the camera…';
@@ -175,6 +177,7 @@ try { ringOn = localStorage.getItem(RING_KEY) === '1'; } catch { /* storage bloc
 function setRing(on) {
   ringOn = on;
   dom.ring.setAttribute('aria-pressed', String(on));
+  dom.ring.querySelector('.ring-state').textContent = on ? 'On' : 'Off';
   dom.live.classList.toggle('ring-on', on);
   try { localStorage.setItem(RING_KEY, on ? '1' : '0'); } catch { /* storage blocked */ }
 }
@@ -196,7 +199,7 @@ function trayThumb(li, p) {
 // the tray for this session, with any photos already taken (photos[i] may be empty)
 function fillTray(photos) {
   dom.tray.replaceChildren(...Array.from({ length: photos.length || state.settings.shots }, (_, i) => {
-    const li = el('li');
+    const li = el('li', { text: String(i + 1) });
     if (photos[i]) trayThumb(li, photos[i]);
     return li;
   }));
@@ -226,6 +229,7 @@ async function shoot(i, total) {
   const my = state.booth.session;
   const alive = () => my === state.booth.session && state.booth.stream;
   dom.counter.innerHTML = `Shot <span class="num">${i + 1}</span> of <span class="num">${total}</span>`;
+  [...dom.tray.children].forEach((li, j) => li.classList.toggle('is-current', j === i));
   announce(`Shot ${i + 1} of ${total}`);
   if (state.settings.prompts) {
     dom.prompt.textContent = pick(PROMPTS);
@@ -235,6 +239,7 @@ async function shoot(i, total) {
   for (let c = state.settings.timer; c >= 1; c--) {
     dom.countNum.textContent = c;
     restartAnimation(dom.countNum, 'pop');
+    restartAnimation(dom.sweep, 'go');
     countBeep(c === 1);
     await wait(1000);
     if (!alive()) return null;
@@ -288,7 +293,7 @@ export function snapKey() {
   if (state.booth.phase === 'live') runAll();
 }
 
-dom.snap.addEventListener('click', () => { audio(); thunk(); runAll(); });
+dom.snap.addEventListener('click', () => { if (state.booth.phase !== 'live') return; audio(); thunk(); runAll(); });
 $('#btn-live-back').addEventListener('click', boothBack);
 $('#btn-retry').addEventListener('click', startLive);
 

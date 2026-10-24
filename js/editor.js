@@ -285,6 +285,10 @@ $('#filter-grid').replaceChildren(...FILTERS.map(f => el('button', {
   className: 'filter-card', attrs: { type: 'button', 'aria-pressed': 'false' }, dataset: { value: f.id },
   on: { click: () => edit(() => { D.filter = f.id; }) },
 }, [el('span', { className: 'filter-thumb' }), el('span', { text: f.name })])));
+// sliders fill gold up to the knob
+function fillRange(r) { r.style.setProperty('--fill', `${((r.value - r.min) / (r.max - r.min)) * 100}%`); }
+$$('#tp-filter input[type="range"]').forEach(r => r.addEventListener('input', () => fillRange(r)));
+
 bindUndoable($('#intensity'), i => {
   D.intensity = +i.value / 100;
   $('#intensity-out').textContent = `${i.value}%`;
@@ -533,6 +537,7 @@ function syncUI() {
   $('#intensity-out').textContent = `${Math.round(D.intensity * 100)}%`;
   $('#brightness').value = D.brightness;
   $('#brightness-out').textContent = D.brightness > 0 ? `+${D.brightness}` : String(D.brightness);
+  $$('#tp-filter input[type="range"]').forEach(fillRange);
   $('#opt-date').checked = D.date.show;
   $$('#date-style input').forEach(r => { r.checked = r.value === D.date.style; r.disabled = !D.date.show; });
   $('#ds-typewriter').textContent = dateTypewriter(D.shotDate).replace("'", '’');

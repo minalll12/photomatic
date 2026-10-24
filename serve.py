@@ -19,6 +19,15 @@ class NoCacheHandler(SimpleHTTPRequestHandler):
         path = Path(self.translate_path(self.path))
         if path.is_dir():
             path = path / 'index.html'
+        if not path.exists():
+            # unknown paths get the custom 404 page, as a static host would serve it
+            body = (Path(self.directory) / '404.html').read_bytes()
+            self.send_response(404)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
         if 'gzip' not in self.headers.get('Accept-Encoding', '') or path.suffix not in self.TEXT or not path.is_file():
             return super().do_GET()
         body = gzip.compress(path.read_bytes(), 6)

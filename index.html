@@ -28,13 +28,13 @@
   <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-25u","/js/booth.js":"/js/booth.js?v=2026-10-25u","/js/camera.js":"/js/camera.js?v=2026-10-25u","/js/editor.js":"/js/editor.js?v=2026-10-25u","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-25u","/js/export.js":"/js/export.js?v=2026-10-25u","/js/filters.js":"/js/filters.js?v=2026-10-25u","/js/frames.js":"/js/frames.js?v=2026-10-25u","/js/hero.js":"/js/hero.js?v=2026-10-25u","/js/icons.js":"/js/icons.js?v=2026-10-25u","/js/layouts.js":"/js/layouts.js?v=2026-10-25u","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-25u","/js/main.js":"/js/main.js?v=2026-10-25u","/js/patterns.js":"/js/patterns.js?v=2026-10-25u","/js/placeholders.js":"/js/placeholders.js?v=2026-10-25u","/js/ransom.js":"/js/ransom.js?v=2026-10-25u","/js/render.js":"/js/render.js?v=2026-10-25u","/js/reveal.js":"/js/reveal.js?v=2026-10-25u","/js/sound.js":"/js/sound.js?v=2026-10-25u","/js/state.js":"/js/state.js?v=2026-10-25u","/js/stickers.js":"/js/stickers.js?v=2026-10-25u","/js/story.js":"/js/story.js?v=2026-10-25u","/js/textures.js":"/js/textures.js?v=2026-10-25u","/js/transitions.js":"/js/transitions.js?v=2026-10-25u","/js/ui.js":"/js/ui.js?v=2026-10-25u","/js/utils.js":"/js/utils.js?v=2026-10-25u"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-25u">
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-25v","/js/booth.js":"/js/booth.js?v=2026-10-25v","/js/camera.js":"/js/camera.js?v=2026-10-25v","/js/editor.js":"/js/editor.js?v=2026-10-25v","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-25v","/js/export.js":"/js/export.js?v=2026-10-25v","/js/filters.js":"/js/filters.js?v=2026-10-25v","/js/frames.js":"/js/frames.js?v=2026-10-25v","/js/hero.js":"/js/hero.js?v=2026-10-25v","/js/icons.js":"/js/icons.js?v=2026-10-25v","/js/layouts.js":"/js/layouts.js?v=2026-10-25v","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-25v","/js/main.js":"/js/main.js?v=2026-10-25v","/js/patterns.js":"/js/patterns.js?v=2026-10-25v","/js/placeholders.js":"/js/placeholders.js?v=2026-10-25v","/js/ransom.js":"/js/ransom.js?v=2026-10-25v","/js/render.js":"/js/render.js?v=2026-10-25v","/js/reveal.js":"/js/reveal.js?v=2026-10-25v","/js/sound.js":"/js/sound.js?v=2026-10-25v","/js/state.js":"/js/state.js?v=2026-10-25v","/js/stickers.js":"/js/stickers.js?v=2026-10-25v","/js/story.js":"/js/story.js?v=2026-10-25v","/js/textures.js":"/js/textures.js?v=2026-10-25v","/js/transitions.js":"/js/transitions.js?v=2026-10-25v","/js/ui.js":"/js/ui.js?v=2026-10-25v","/js/utils.js":"/js/utils.js?v=2026-10-25v"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-25v">
   <!-- the page is complete without script; the app starts once the fonts have painted (or at the first touch or key) -->
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-25u'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-25v'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
@@ -454,14 +454,14 @@
       <div class="booth-live" id="booth-live" hidden>
         <div class="camera-head">
           <button type="button" class="text-link text-link-light" id="btn-live-back"><span class="i"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Menu</button>
-          <button type="button" class="ring-toggle" id="ring-toggle" aria-pressed="false"><svg class="ring-bulb" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 17.5h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V17.5h5.2v-1.7c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>Ring light<span class="ring-switch" aria-hidden="true"></span></button>
+          <button type="button" class="ring-toggle" id="ring-toggle" aria-pressed="false"><svg class="ring-bulb" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 17.5h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V17.5h5.2v-1.7c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>Ring light <span aria-hidden="true">·</span> <span class="ring-state">Off</span></button>
         </div>
         <div class="booth-interior" id="booth-interior">
           <div class="camera" id="camera" data-state="loading">
             <video id="video" playsinline muted autoplay aria-label="Camera preview"></video>
             <div class="camera-status"><span class="spinner" aria-hidden="true"></span><p id="camera-status">Warming up the camera…</p></div>
             <p class="pose-line" id="pose-line" aria-live="polite"></p>
-            <div class="countdown" id="countdown" aria-hidden="true"><span class="countdown-num num" id="countdown-num"></span></div>
+            <div class="countdown cam-leader" id="countdown" aria-hidden="true"><span class="leader-sweep" id="countdown-sweep"></span><b id="countdown-num"></b></div>
             <div class="flash" id="flash"></div>
           </div>
           <p class="brass-plate" id="shot-counter" aria-hidden="true">Ready</p>
@@ -502,7 +502,7 @@
 
       <!-- developing -->
       <div class="booth-develop" id="booth-develop" hidden>
-        <p class="kicker develop-label">Developing…</p>
+        <p class="kicker develop-label">— Developing… —</p>
         <div class="develop-machine">
           <div class="develop-slot" aria-hidden="true"><span></span></div>
           <div class="develop-window">
@@ -524,8 +524,8 @@
           <h2 class="title" id="editor-title" tabindex="-1" data-focus>Make it <em>yours</em></h2>
         </div>
         <div class="editor-tools" role="toolbar" aria-label="History">
-          <button type="button" class="desk-btn" id="btn-undo" aria-label="Undo" title="Undo (Ctrl+Z)"><span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 14 4.5 9.5 9 5"/><path d="M4.5 9.5H14a5.5 5.5 0 0 1 0 11h-3"/></svg></span></button>
-          <button type="button" class="desk-btn" id="btn-redo" aria-label="Redo" title="Redo (Ctrl+Shift+Z)"><span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 14l4.5-4.5L15 5"/><path d="M19.5 9.5H10a5.5 5.5 0 0 0 0 11h3"/></svg></span></button>
+          <button type="button" class="desk-btn" id="btn-undo" aria-label="Undo" data-tip="Undo · Ctrl+Z"><span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 14 4.5 9.5 9 5"/><path d="M4.5 9.5H14a5.5 5.5 0 0 1 0 11h-3"/></svg></span></button>
+          <button type="button" class="desk-btn" id="btn-redo" aria-label="Redo" data-tip="Redo · Ctrl+Shift+Z"><span class="i"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 14l4.5-4.5L15 5"/><path d="M19.5 9.5H10a5.5 5.5 0 0 0 0 11h3"/></svg></span></button>
           <button type="button" class="tag tag-butter surprise-tag" id="btn-surprise" style="--tilt:-2deg"><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="8.5" cy="8.5" r=".6" fill="currentColor"/><circle cx="15.5" cy="15.5" r=".6" fill="currentColor"/><circle cx="12" cy="12" r=".6" fill="currentColor"/><circle cx="15.5" cy="8.5" r=".6" fill="currentColor"/><circle cx="8.5" cy="15.5" r=".6" fill="currentColor"/></svg></span><span class="btn-text">Surprise me</span></button>
         </div>
       </header>
@@ -685,20 +685,20 @@
       <div class="tin" id="tin">
         <div class="tin-lid" aria-hidden="true"><span class="wordmark">Photomatic</span><small>keepsakes</small></div>
         <div class="tin-body">
-          <header class="tin-head">
-            <div class="heading-block heading-left">
-              <p class="kicker">— Kept on this device —</p>
-              <h2 class="title" id="album-title" tabindex="-1" data-focus>The <em>album</em></h2>
-            </div>
-            <button type="button" class="btn btn-quiet btn-sm" id="btn-album-clear" hidden><span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10.5 11v5.5M13.5 11v5.5"/></svg></span> Clear album</button>
+          <header class="tin-head heading-block">
+            <p class="kicker">— Kept on this device —</p>
+            <h2 class="title" id="album-title" tabindex="-1" data-focus>The <em>album</em></h2>
           </header>
           <ul class="album-grid" id="album-grid"></ul>
           <div class="album-empty" id="album-empty" hidden>
-            <canvas class="album-empty-strip" id="album-empty-strip" width="150" height="460" aria-hidden="true"></canvas>
-            <p class="typed">No strips yet. The ones you save will wait for you here.</p>
+            <span class="album-mount album-mount-empty"><canvas class="album-empty-strip" id="album-empty-strip" width="150" height="460" aria-hidden="true"></canvas></span>
+            <p class="album-empty-line">No strips yet. The ones you save will wait for you here.</p>
             <button type="button" class="btn btn-primary" data-nav="booth">Enter the booth <span class="i"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
           </div>
-          <p class="typed-sm tin-note">Your album lives only on this device.</p>
+          <footer class="album-foot">
+            <p class="tin-note">Your album lives only on this device.</p>
+            <button type="button" class="text-link" id="btn-album-clear" hidden>Clear album</button>
+          </footer>
         </div>
       </div>
     </section>

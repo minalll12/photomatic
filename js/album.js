@@ -60,6 +60,7 @@ export async function renderAlbum() {
   try { items = (await listStrips()).sort((a, b) => b.created - a.created); }
   catch { toast('Your browser is blocking on-device storage, so the album is unavailable.'); }
   $('#album-empty').hidden = items.length > 0;
+  $('#tin').classList.toggle('is-empty', !items.length);
   if (!items.length) {
     const c = $('#album-empty-strip');
     c.getContext('2d').drawImage(faceHereStrip(c.width, c.height, 4), 0, 0);

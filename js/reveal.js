@@ -179,26 +179,33 @@ export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'cen
   }
 }
 
-/* --- paper confetti: falls once when the strip lands, then stays put --- */
+/* --- paper confetti: falls once when the strip lands, fades out within ~2.5s and is removed --- */
 const CONFETTI = [C.cream, C.butter, C.dusty, C.cherry, C.sage];
+let confettiRun = 0;
 function confetti() {
-  const box = $('#confetti');
+  const box = $('#confetti'), run = ++confettiRun;
   box.replaceChildren();
   if (reducedMotion()) return;
   const r = box.getBoundingClientRect(), rnd = mulberry32(Math.floor(performance.now()) % 997);
   const lo = innerWidth > 960 ? 0.4 : 0.14, span = innerWidth > 960 ? 0.56 : 0.72;
+  const falls = [];
   for (let i = 0; i < 18; i++) {
     const w = 5 + rnd() * 6, h = rnd() > 0.5 ? w : w * 1.6;
     const piece = el('i', { style: { width: `${w.toFixed(1)}px`, height: `${h.toFixed(1)}px`, background: CONFETTI[i % CONFETTI.length], 'border-radius': rnd() > 0.7 ? '50%' : '1px' } });
     box.append(piece);
     const x0 = r.width * (lo + rnd() * span), x1 = r.width * (lo + rnd() * span), y1 = r.height * (0.5 + rnd() * 0.36);
     const spin = (rnd() - 0.5) * 720;
-    piece.animate([
+    falls.push(piece.animate([
       { transform: `translate(${x0}px, ${-20 - rnd() * 40}px) rotate(0deg)`, opacity: 0 },
-      { transform: `translate(${(x0 + x1) / 2}px, ${y1 * 0.5}px) rotate(${spin / 2}deg)`, opacity: 1, offset: 0.4 },
-      { transform: `translate(${x1}px, ${y1}px) rotate(${spin}deg)`, opacity: 1 },
-    ], { duration: 1300 + rnd() * 700, delay: rnd() * 250, easing: 'cubic-bezier(.25,.6,.4,1)', fill: 'both' });
+      { transform: `translate(${(x0 + x1) / 2}px, ${y1 * 0.5}px) rotate(${spin / 2}deg)`, opacity: 1, offset: 0.3 },
+      { transform: `translate(${x1}px, ${y1}px) rotate(${spin}deg)`, opacity: 1, offset: 0.65 },
+      { transform: `translate(${x1}px, ${y1 + 6}px) rotate(${spin}deg)`, opacity: 0 },
+    ], { duration: 2000 + rnd() * 200, delay: rnd() * 250, easing: 'cubic-bezier(.25,.6,.4,1)', fill: 'both' }).finished);
   }
+  // nothing stays on the strip: once every piece has faded, the confetti leaves the page
+  const clear = () => { if (run === confettiRun) box.replaceChildren(); };
+  Promise.all(falls).then(clear, clear);
+  setTimeout(clear, 2700);
 }
 
 /* =========================================================
