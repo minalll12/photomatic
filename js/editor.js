@@ -91,7 +91,7 @@ function drawDisplay() {
 // the room for the strip: the page's content width, minus the panel, the gap and the mat's padding
 // (its sides leave room for the props). Measured from the page, not the editor, because the editor
 // shrinks to fit the strip; the panel width, gap and padding come from the stylesheet.
-const MAX = 1200;
+const MAX = 1140;
 const editorGrid = $('#screen-editor .editor');
 new ResizeObserver(() => {
   const vw = document.documentElement.clientWidth;
@@ -139,13 +139,6 @@ function buildProps() {
 }
 $$('.mat-prop').forEach(b => b.addEventListener('click', () => selectTab($(`#${b.dataset.tab}`), true)));
 
-// grids fill every row: a short last row spreads its cards across the row (see .even-grid)
-function evenGrid(grid, n = grid.children.length) {
-  grid.classList.add('even-grid');
-  grid.dataset.r3 = String(n % 3);
-  grid.dataset.r2 = String(n % 2);
-  return grid;
-}
 
 /* =========================================================
    History
@@ -268,7 +261,7 @@ const layoutPicker = createLayoutPicker($('#editor-layouts'), 'editor-layout', i
 const frameButtons = new Map();
 $('#frame-groups').replaceChildren(...FRAME_GROUPS.map(g => el('div', { className: 'frame-group' }, [
   el('span', { className: 'label', text: g.name, attrs: { id: `fg-${g.id}` } }),
-  evenGrid(el('div', { className: 'frame-grid', attrs: { role: 'group', 'aria-labelledby': `fg-${g.id}` } },
+  el('div', { className: 'frame-grid', attrs: { role: 'group', 'aria-labelledby': `fg-${g.id}` } },
     Object.entries(FRAMES).filter(([, f]) => f.group === g.id).map(([id, f]) => {
       const btn = el('button', {
         className: 'frame-opt', attrs: { type: 'button', 'aria-pressed': 'false' }, dataset: { value: id },
@@ -276,7 +269,7 @@ $('#frame-groups').replaceChildren(...FRAME_GROUPS.map(g => el('div', { classNam
       }, [el('span', { className: 'frame-thumb', attrs: { 'aria-hidden': 'true' } }), el('span', { className: 'frame-name', text: f.name })]);
       frameButtons.set(id, btn);
       return btn;
-    }))),
+    })),
 ])));
 
 /* thumbnails: rendered lazily, cached by everything that changes their look */
@@ -418,7 +411,7 @@ function showPack(id) {
   E.pack = pack.id;
   syncPressed(packNav, v => v === pack.id);
   if (!builtPacks.has(pack.id)) {
-    builtPacks.set(pack.id, pack.id === 'type' ? buildComposer() : evenGrid(el('div', { className: 'sticker-grid' }, pack.items.map(stickerButton))));
+    builtPacks.set(pack.id, pack.id === 'type' ? buildComposer() : el('div', { className: 'sticker-grid' }, pack.items.map(stickerButton)));
   }
   packBody.replaceChildren(builtPacks.get(pack.id));
 }
@@ -549,7 +542,7 @@ $('#btn-surprise').addEventListener('click', () => edit(() => {
   if (f.variants.length) D.variants = { ...D.variants, [id]: pick(f.variants)[0] };
   D.filter = pick(f.pairs);
   D.intensity = Math.round(rand(0.75, 1) * 20) / 20;
-  D.filmPaper = id === 'film' && Math.random() > 0.5;
+  D.filmPaper = false;   // the strip stays the hero: letter paper and its pin only when chosen
   D.double = f.canDouble && D.layout === 'strip' && Math.random() > 0.6;
   if (f.paper) D.bg = { color: pick(BG_SWATCHES.slice(0, 6))[0], pattern: pick(['solid', 'solid', 'polka', 'gingham', 'stars']) };
   D.date = { ...D.date, show: true, style: pick(['typewriter', 'serif', 'digital']) };

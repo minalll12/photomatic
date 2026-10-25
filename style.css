@@ -97,7 +97,9 @@
 
   /* edges (masks) */
   --torn-b: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='12' preserveAspectRatio='none'%3E%3Cpath d='M0 0H200V7L191 9 182 5 171 10 160 6 151 11 140 6 128 10 119 5 108 9 97 6 86 11 75 7 64 10 53 5 42 9 31 6 20 10 9 6 0 7Z'/%3E%3C/svg%3E");
-  --torn-t: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='6' preserveAspectRatio='none'%3E%3Cpath d='M0 6V2L8 3.5 17 1 26 3 34 .5 43 2.5 52 1 61 3.5 70 1.5 79 3 88 .5 97 2.5 106 1.5 115 3.5 124 1 133 3 142 1.5 151 3 160 2V6Z'/%3E%3C/svg%3E");
+  /* the hero note's tear: irregular teeth and a few fibres, 400px tiles; the top edge is shallower */
+  --tear-top: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='6' preserveAspectRatio='none'%3E%3Cpath d='M0 6 L0 1.1 L3.8 1.3 L9.4 0.4 L15.6 0.4 L25.1 0.5 L35.7 1.2 L47.2 1.7 L50.7 0.3 L58.1 1.3 L61.2 0.4 L67.3 0.8 L72.3 2.3 L79.7 1.2 L84.7 1.9 L93.6 0.5 L101.8 1.5 L116.2 1.4 L122.6 2.5 L130.8 0.2 L141.7 1.6 L149.9 0.3 L153.4 0.2 L158.0 0.6 L164.3 1.3 L184.8 0.7 L194.8 1.8 L199.3 0.7 L204.0 0.3 L211.3 3.0 L219.1 1.4 L238.7 2.7 L244.6 0.2 L247.6 0.6 L250.6 0.3 L256.2 0.2 L259.9 0.7 L263.5 2.6 L270.1 0.4 L274.8 1.6 L285.4 1.1 L288.1 1.2 L306.8 0.7 L315.9 1.2 L320.3 2.4 L340.1 2.4 L347.0 0.9 L351.9 0.2 L367.8 2.9 L382.8 0.7 L387.1 1.6 L397 1.7 L400 1.1 L400 6 Z'/%3E%3Cpath d='M42.2 0.8 l0.8 -2.4 l0.96 2.4 Z'/%3E%3Cpath d='M295.1 1.2 l0.9 -1.5 l0.83 1.5 Z'/%3E%3Cpath d='M136.4 0.7 l-0.3 -2.5 l1.06 2.5 Z'/%3E%3Cpath d='M162.5 0.7 l-1.0 -2.2 l1.16 2.2 Z'/%3E%3C/svg%3E");
+  --tear-bottom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='12' preserveAspectRatio='none'%3E%3Cpath d='M0 0 L0 9.0 L21.4 7.3 L27.5 8.9 L33.8 10.2 L37.0 8.1 L45.8 9.6 L53.3 7.3 L68.3 7.9 L76.4 9.8 L85.0 8.6 L89.0 10.4 L102.2 10.6 L107.0 8.2 L112.7 9.9 L119.9 10.0 L128.4 7.6 L138.7 8.0 L149.5 10.9 L158.8 6.9 L180.3 8.6 L185.7 7.0 L188.9 9.1 L210.3 10.2 L214.3 8.5 L220.3 7.3 L230.4 5.5 L236.4 6.9 L241.0 9.9 L248.2 8.4 L256.1 9.7 L269.8 7.1 L276.9 10.1 L283.2 8.1 L292.4 11.8 L300.7 10.4 L303.9 8.2 L311.0 8.8 L321.1 11.8 L337.6 5.9 L342.6 9.8 L353.2 9.7 L362.7 9.1 L367.5 10.7 L377.3 9.0 L380.8 8.7 L394.6 7.5 L400 9.0 L400 0 Z'/%3E%3Cpath d='M383.4 8.5 l0.9 1.8 l0.94 -1.8 Z'/%3E%3Cpath d='M114.7 9.5 l1.0 2.0 l0.75 -2.0 Z'/%3E%3Cpath d='M44.3 9.7 l0.5 2.4 l1.02 -2.4 Z'/%3E%3Cpath d='M121.4 9.5 l0.5 3.4 l0.55 -3.4 Z'/%3E%3Cpath d='M74.5 9.3 l-1.0 3.3 l1.18 -3.3 Z'/%3E%3Cpath d='M17.3 8.4 l0.7 2.0 l0.93 -2.0 Z'/%3E%3Cpath d='M188.2 8.6 l0.8 2.7 l1.0 -2.7 Z'/%3E%3C/svg%3E");
   --torn-r: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='200' preserveAspectRatio='none'%3E%3Cpath d='M0 0V200H7L9 191 5 182 10 171 6 160 11 151 6 140 10 128 5 119 9 108 6 97 11 86 7 75 10 64 5 53 9 42 6 31 10 20 6 9 7 0Z'/%3E%3C/svg%3E");
 
   /* spacing: 8px scale */
@@ -1146,25 +1148,28 @@ kbd {
   z-index: -1;
   background:
     linear-gradient(90deg, transparent var(--margin-x), rgb(158 27 34 / .45) var(--margin-x) calc(var(--margin-x) + 1.5px), transparent 0),
+    /* the torn fibres catch the light: a little paler right at the tear */
+    linear-gradient(rgb(255 255 255 / .55), rgb(255 255 255 / 0) 6px),
+    linear-gradient(to top, rgb(255 255 255 / .6), rgb(255 255 255 / 0) 10px),
     linear-gradient(transparent calc(var(--rule) - 1px), rgb(177 199 212 / .85) 0) 0 calc(var(--pad-y) - var(--rule) / 2 + .2em + 1px) / 100% var(--rule),
     var(--grain-paper), #FBF6EC;
-  /* a light deckle along the top, the deeper tear along the bottom, a clean cut on the right */
-  -webkit-mask: var(--torn-t) top / 160px 6px repeat-x, linear-gradient(#000 0 0) 0 5px / 100% calc(100% - 15px) no-repeat, var(--torn-b) bottom / 200px 12px repeat-x;
-          mask: var(--torn-t) top / 160px 6px repeat-x, linear-gradient(#000 0 0) 0 5px / 100% calc(100% - 15px) no-repeat, var(--torn-b) bottom / 200px 12px repeat-x;
+  /* a natural tear: subtle along the top, deeper along the bottom, a clean cut on the right */
+  -webkit-mask: var(--tear-top) top / 400px 6px repeat-x, linear-gradient(#000 0 0) 0 5px / 100% calc(100% - 16px) no-repeat, var(--tear-bottom) bottom / 400px 12px repeat-x;
+          mask: var(--tear-top) top / 400px 6px repeat-x, linear-gradient(#000 0 0) 0 5px / 100% calc(100% - 16px) no-repeat, var(--tear-bottom) bottom / 400px 12px repeat-x;
 }
 .torn-note .typed { display: block; font-size: inherit; line-height: var(--rule); }
-/* a short piece of dusty-blue washi across the top-left corner, about half on the paper (over the margin
-   line, which shows through) and half off: see-through, faintly
+/* a short piece of dusty-blue washi holding down the top-left corner: about 60% on the paper (over the
+   margin line, which shows through) and 40% off past the corner: see-through, faintly
    striped, torn zig-zag ends, a little sheen and a soft shadow (on the wrapper, so the clip keeps it) */
 .torn-note .washi {
-  left: -17px; top: -5px;
+  left: -28px; top: -1px;
   width: 70px; height: 20px;
   opacity: 1;
   background: none;
   box-shadow: none;
   clip-path: none;
   filter: drop-shadow(0 1px 1.5px rgb(60 40 20 / .28));
-  transform: rotate(-18deg);
+  transform: rotate(-14deg);
 }
 .torn-note .washi::before {
   content: "";
@@ -1300,19 +1305,22 @@ kbd {
   filter: blur(5px);
 }
 
-/* a velvet-rope queue to the left of the booth, ~45% of its height, standing a little forward on the floor */
+/* a velvet-rope queue leading to the booth: the rear post stands 30px left of the booth's front-left corner,
+   just in front of its base; the front post is further forward and left. (In the 300 x 320 drawing the rear
+   base is centred at x 250, half 21.6 wide, its foot at y 263.) */
 .stanchion {
+  --s: calc(var(--booth-w) * 1.35 / 300);
   position: absolute;
-  right: calc(var(--booth-right) + var(--booth-w) * 1.06);
-  bottom: calc(var(--floor-h) * .42);
-  width: calc(var(--booth-w) * .78);
+  right: calc(var(--booth-right) + var(--booth-w) + 30px + var(--s) * 21.6 - var(--s) * 50);
+  bottom: calc(var(--floor-h) - 16px - var(--s) * 57);
+  width: calc(var(--s) * 300);
   height: auto;
   overflow: visible;
   pointer-events: none;
   will-change: transform;   /* the rope's swing repaints only this layer */
 }
-.stanchion .rope { transform-box: view-box; transform-origin: 120px 70px; }
-.stanchion .st-card { transform-box: view-box; transform-origin: 120px 129px; }
+.stanchion .rope { transform-box: view-box; transform-origin: 157px 117px; }
+.stanchion .st-card { transform-box: view-box; transform-origin: 144px 173px; }
 .stanchion .rope { pointer-events: visiblePainted; }
 .stanchion .card-shadow { transform-box: view-box; transform: translate(calc(2px + var(--cx, 0px)), 3px); }
 .stanchion .rope-shadow { transform-box: view-box; transform: translateX(var(--rx, 0px)); }
@@ -1857,6 +1865,10 @@ html:not(.js-develop) .develop-veil { display: none; }
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cg transform='' fill='none' stroke='%23B8934A' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M1 21 V8 Q1 1 8 1 H21'/%3E%3Cpath d='M5 21 V10 Q5 5 10 5 H21' stroke-opacity='.55'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.4' fill='%23B8934A' stroke='none'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 22px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cg transform='translate%2822 0%29 scale%28-1 1%29' fill='none' stroke='%23B8934A' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M1 21 V8 Q1 1 8 1 H21'/%3E%3Cpath d='M5 21 V10 Q5 5 10 5 H21' stroke-opacity='.55'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.4' fill='%23B8934A' stroke='none'/%3E%3C/g%3E%3C/svg%3E") 100% 0 / 22px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cg transform='translate%280 22%29 scale%281 -1%29' fill='none' stroke='%23B8934A' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M1 21 V8 Q1 1 8 1 H21'/%3E%3Cpath d='M5 21 V10 Q5 5 10 5 H21' stroke-opacity='.55'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.4' fill='%23B8934A' stroke='none'/%3E%3C/g%3E%3C/svg%3E") 0 100% / 22px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cg transform='translate%2822 22%29 scale%28-1 -1%29' fill='none' stroke='%23B8934A' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M1 21 V8 Q1 1 8 1 H21'/%3E%3Cpath d='M5 21 V10 Q5 5 10 5 H21' stroke-opacity='.55'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.4' fill='%23B8934A' stroke='none'/%3E%3C/g%3E%3C/svg%3E") 100% 100% / 22px no-repeat;
 }
 .menu-board .bulldog-clip { left: 50%; top: -24px; width: 60px; margin-left: -30px; z-index: 3; }
+/* 32px of wall between the bottom of the heading's swash and the card, so the clip sits clear of it;
+   the card's top padding gives a little back so the menu still fits one desktop screen */
+.booth-setup .menu-board { margin-top: 22px; padding-top: 28px; }
+@media (max-width: 640px) { .booth-setup .menu-board { margin-top: 16px; } }
 .menu-title {
   grid-column: 1 / -1;
   margin-bottom: var(--s3);
@@ -1910,14 +1922,14 @@ html:not(.js-develop) .develop-veil { display: none; }
 .ticket-chip-face small { font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-12); letter-spacing: .06em; color: rgb(244 238 227 / .65); }
 .ticket-chip input:checked + .ticket-chip-face small { color: var(--muted); }
 .menu-layouts .layout-name { color: inherit; }
-.ticket-chips-pair .ticket-chip-face { width: 72px; }
+.ticket-chips-pair .ticket-chip-face { width: 64px; }
 .ticket-chips-pair .ticket-chip-face b { font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-14); }
 @media (hover: hover) {
   .ticket-chip:hover input:not(:checked) + .ticket-chip-face { box-shadow: inset 0 0 0 1px rgb(244 238 227 / .6); transform: translateY(-1px); }
 }
-/* the one selected state: a 2px gold border on full cream, a small gold seal and a soft gold glow */
+/* the one selected state: a 2px gold border on a matte warm off-white (#EFE6D2), a small gold seal and a soft gold glow */
 .ticket-chip input:checked + .ticket-chip-face,
-.menu-layouts .layout-opt input:checked + .layout-card { color: var(--ink); background: var(--grain-subtle), #F4EEE3; box-shadow: inset 0 0 0 2px #B08A3A, 0 0 0 3px rgb(226 194 122 / .22), 0 0 16px rgb(226 194 122 / .32); }
+.menu-layouts .layout-opt input:checked + .layout-card { color: var(--ink); background: #EFE6D2; box-shadow: inset 0 0 0 2px #B08A3A, 0 0 0 3px rgb(226 194 122 / .22), 0 0 16px rgb(226 194 122 / .32); }
 .ticket-chip input:checked + .ticket-chip-face::after,
 .menu-layouts .layout-opt input:checked + .layout-card::after {
   content: "✓";
@@ -1963,7 +1975,7 @@ html:not(.js-develop) .develop-veil { display: none; }
 
 /* options: the setting and a one-line description on the left, the On/Off pair centred to it */
 .opt-list { display: grid; gap: 12px; }
-.opt-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
+.opt-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s1); }
 .opt-text { display: grid; gap: 2px; min-width: 0; }
 .opt-name { font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-14); color: var(--cream); }
 .opt-desc { font-family: var(--font-sans); font-size: var(--fs-14); line-height: 1.45; color: rgb(244 238 227 / .65); }
@@ -1990,7 +2002,7 @@ html:not(.js-develop) .develop-veil { display: none; }
   transition: width 250ms var(--ease-calm), height 250ms var(--ease-calm);
   pointer-events: none;
 }
-.preview-mount { background: var(--grain-subtle), #F4EEE3; box-shadow: 0 10px 22px rgb(0 0 0 / .45), 0 2px 4px rgb(0 0 0 / .3); }
+.preview-mount { background: #EFE6D2; box-shadow: 0 10px 22px rgb(0 0 0 / .45), 0 2px 4px rgb(0 0 0 / .3); }
 .preview-corners {
   z-index: 3;
   --c: #C9A24E;
@@ -2012,7 +2024,7 @@ html:not(.js-develop) .develop-veil { display: none; }
   border: 1.5px solid #C9A24E;
   border-radius: 3px;
   color: var(--ink);
-  background: #F4EEE3;
+  background: #EFE6D2;
   box-shadow: 0 2px 4px rgb(0 0 0 / .35);
   font-family: var(--font-type);
   font-size: var(--fs-12);
@@ -2245,6 +2257,54 @@ html:not(.js-develop) .develop-veil { display: none; }
 .shot-tray li.drop-in { animation: drop-in 420ms var(--ease-out); }
 @keyframes drop-in { from { transform: translateY(-10px) rotate(-4deg); opacity: 0; } 60% { opacity: 1; } }
 
+/* wider screens: the tray becomes a little Midnight photo strip standing to the right of the bulb frame
+   (24px away, centred on it); the frame and strip are centred together, and under the frame only the
+   plate, the shutter and the keyboard hint, 20px apart. Below 900px the tray stays under the shutter. */
+@media (min-width: 901px) {
+  .booth-live {
+    --strip-w: 84px;
+    --frame-w: min(860px, calc(100vw - 2 * var(--gutter) - 2 * (var(--strip-w) + 24px)), calc((100svh - var(--header-h) - 324px) * 4 / 3 + 52px));
+    grid-template-columns: minmax(0, 1fr) var(--frame-w) calc(var(--strip-w) + 24px) minmax(0, 1fr);
+    grid-template-areas: ". head . ." ". frame tray ." ". shutter . ." ". hint . ." "card card card card";
+    gap: 0;
+  }
+  .booth-live .camera-head { grid-area: head; width: 100%; margin-bottom: 0; }
+  .booth-live .booth-interior { grid-area: frame; width: 100%; }
+  .booth-live .cam-card { grid-area: card; justify-self: center; }
+  .booth-live .camera-actions { display: contents; }
+  /* the plate hangs 16px below the frame, then 20px to the shutter and 20px to the hint */
+  .booth-live .shutter-bezel { grid-area: shutter; margin-top: calc(16px + 20px); }
+  .booth-live .kbd-hint { grid-area: hint; margin-top: 20px; }
+  .booth-live.is-error .camera-actions { display: none; }
+  .shot-tray {
+    grid-area: tray;
+    justify-self: end;
+    align-self: center;
+    flex-direction: column;
+    gap: 6px;
+    width: var(--strip-w);
+    margin: 0;
+    padding: 8px 8px 0;
+    background: var(--grain-subtle), #141110;
+    border-radius: 2px;
+    box-shadow: 0 2px 3px rgb(0 0 0 / .4), 4px 12px 22px rgb(0 0 0 / .45);
+  }
+  .shot-tray li { width: 100%; border: 1px dashed rgb(92 75 65 / .55); background: #EFE6D2; color: #5C4B41; }
+  .shot-tray li.is-current { border: 1.5px solid #E2C27A; color: var(--ink); box-shadow: 0 0 0 1px #E2C27A, 0 0 10px rgb(226 194 122 / .45); }
+  .shot-tray li.is-failed { background: rgb(244 238 227 / .6); }
+  /* the strip's foot: a gold hairline and a tiny wordmark, like the Midnight frame */
+  .shot-tray::after {
+    content: "Photomatic";
+    display: block;
+    margin: 2px 6px 0;
+    padding: 4px 0 6px;
+    border-top: 1px solid var(--gold);
+    color: var(--cream);
+    font: 400 12px / 1 var(--font-logo);
+    text-align: center;
+  }
+}
+
 .kbd-hint { color: rgb(244 238 227 / .6); font: 400 var(--fs-14) / 1.4 var(--font-sans); letter-spacing: .01em; }
 .kbd-hint kbd {
   min-width: 0;
@@ -2452,44 +2512,40 @@ html:not(.js-develop) .develop-veil { display: none; }
 /* undo, redo and Surprise me sit on the heading's baseline at the right */
 .editor-tools { display: flex; align-items: center; gap: var(--s0); padding-bottom: 6px; }
 
-/* heading, mat and panel are one centred group, top-aligned */
-#screen-editor { width: fit-content; max-width: min(100%, 1200px); }
+/* heading, mat and panel are one centred group (at most 1140px), mat and panel the same height, top-aligned */
+#screen-editor { width: fit-content; max-width: min(100%, 1140px); }
 .editor {
   --panel-w: 440px;
-  --gap: 48px;
+  --gap: 40px;
   position: relative;
   display: grid;
   grid-template-columns: auto var(--panel-w);
   gap: var(--gap);
   align-items: stretch;
 }
-/* a large oxblood felt cutting mat: soft rounded corners, a faint gold grid (every fifth line a little
-   stronger). Its sides leave room for the props; the strip sits in the middle. */
+/* a calm oxblood felt cutting mat that hugs the strip (56px all round): a soft vignette and a faint gold
+   grid every 32px. The strip is the hero; the mat stretches to the panel's height and centres it. */
 .stage {
-  --mat-side: clamp(116px, 10.5vw, 150px);
-  --grid: rgb(214 178 104 / .16);
-  --grid-major: rgb(214 178 104 / .3);
+  --mat-pad: 56px;
   position: relative;
   display: grid;
   justify-items: center;
   align-content: center;
-  align-self: start;
-  min-height: 460px;
-  padding: 44px var(--mat-side);
-  border-radius: 22px;
+  align-self: stretch;
+  padding: var(--mat-pad);
+  border-radius: 20px;
   background:
-    linear-gradient(var(--grid-major) 1px, transparent 1px) 22px 22px / 120px 120px,
-    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px) 22px 22px / 120px 120px,
-    linear-gradient(var(--grid) 1px, transparent 1px) 22px 22px / 24px 24px,
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 22px 22px / 24px 24px,
-    radial-gradient(80% 70% at 30% 20%, rgb(150 52 62 / .35), transparent 75%),
+    radial-gradient(120% 100% at 50% 45%, transparent 55%, rgb(20 2 6 / .32) 100%),
+    linear-gradient(rgb(214 178 104 / .12) 1px, transparent 1px) 16px 16px / 32px 32px,
+    linear-gradient(90deg, rgb(214 178 104 / .12) 1px, transparent 1px) 16px 16px / 32px 32px,
     var(--grain-subtle),
-    #4E1219;
+    #4A1418;
   box-shadow:
-    inset 0 0 0 1px rgb(255 220 200 / .08), inset 0 2px 10px rgb(0 0 0 / .25),
-    3px 8px 18px rgb(60 30 14 / .28), 1px 2px 3px rgb(60 30 14 / .25);
+    inset 0 0 0 1px rgb(255 220 200 / .06),
+    3px 8px 18px rgb(60 30 14 / .24), 1px 2px 3px rgb(60 30 14 / .22);
 }
-/* props: tucked into the mat's side margins, lit from the top left; hover lifts and swings a touch */
+/* props: small, resting on the table half off the mat's edges (one per corner or edge, well clear of the
+   strip), lit from the top left; hover lifts and swings a touch */
 .mat-prop {
   position: absolute;
   z-index: 1;
@@ -2499,7 +2555,7 @@ html:not(.js-develop) .develop-veil { display: none; }
   background: none;
   color: inherit;
   cursor: pointer;
-  filter: drop-shadow(3px 6px 5px rgb(14 2 4 / .5));
+  filter: drop-shadow(2px 5px 4px rgb(14 2 4 / .45));
   transform: rotate(var(--tilt, 0deg));
   transition: transform 300ms var(--ease-calm), filter 300ms var(--ease-calm);
   /* a layer of its own from the start, so the tilted, shadowed prop is drawn once at full quality
@@ -2507,43 +2563,45 @@ html:not(.js-develop) .develop-veil { display: none; }
   will-change: transform;
 }
 @media (hover: hover) {
-  .mat-prop:hover { transform: translateY(-4px) rotate(calc(var(--tilt, 0deg) + 2deg)); filter: drop-shadow(5px 11px 8px rgb(14 2 4 / .48)); }
+  .mat-prop:hover { transform: translateY(-3px) rotate(calc(var(--tilt, 0deg) + 2deg)); filter: drop-shadow(4px 9px 7px rgb(14 2 4 / .42)); }
 }
-.mat-prop:focus-visible { outline: 2px solid var(--butter); outline-offset: 6px; border-radius: 4px; }
-/* a small sheet of the real stickers, two already peeled off */
-.prop-sheet { --tilt: -7deg; left: calc(var(--mat-side) * .12); top: 34px; width: calc(var(--mat-side) * .74); }
+.mat-prop:focus-visible { outline: 2px solid var(--oxblood); outline-offset: 5px; border-radius: 4px; }
+/* a small sheet of the real stickers, two already peeled off: over the mat's top-left corner */
+.prop-sheet { --tilt: -6deg; left: -54px; top: -20px; width: 72px; }
 .sheet-paper {
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-  padding: 10px 8px 14px;
+  gap: 4px;
+  padding: 7px 6px 10px;
   background: linear-gradient(135deg, rgb(255 255 255 / .5), transparent 40%), var(--grain-paper), #F7F1E4;
   border-radius: 2px;
 }
-/* the bottom right corner lifts off the mat */
-.sheet-paper::after { content: ""; position: absolute; right: 0; bottom: 0; width: 18px; height: 18px; background: linear-gradient(315deg, #4E1219 50%, #E2D6C0 50%, #FBF6EC); box-shadow: -2px -2px 3px rgb(42 33 28 / .18); }
-.sheet-cell { display: grid; place-items: center; aspect-ratio: 1; border-radius: 6px; box-shadow: inset 0 0 0 1px rgb(92 75 65 / .14); }
+/* the bottom right corner lifts off the table */
+.sheet-paper::after { content: ""; position: absolute; right: 0; bottom: 0; width: 12px; height: 12px; background: linear-gradient(315deg, #E9DFCC 50%, #E2D6C0 50%, #FBF6EC); box-shadow: -1px -1px 2px rgb(42 33 28 / .18); }
+.sheet-cell { display: grid; place-items: center; aspect-ratio: 1; border-radius: 4px; box-shadow: inset 0 0 0 1px rgb(92 75 65 / .14); }
 .sheet-cell canvas { width: 92%; height: 92%; object-fit: contain; filter: drop-shadow(0 1px 1px rgb(42 33 28 / .3)); }
-.sheet-cell.is-peeled { background: linear-gradient(160deg, rgb(255 255 255 / .55), rgb(220 212 196 / .55)); box-shadow: inset 0 0 0 1px rgb(92 75 65 / .3); outline: 1px dashed rgb(92 75 65 / .4); outline-offset: -4px; }
-/* a mini paper swatch fan of the film looks, on a brass rivet */
-.prop-fan { --tilt: 4deg; left: calc(var(--mat-side) * .1); bottom: 40px; width: calc(var(--mat-side) * .78); aspect-ratio: 1 / 1.05; }
+.sheet-cell.is-peeled { background: linear-gradient(160deg, rgb(255 255 255 / .55), rgb(220 212 196 / .55)); box-shadow: inset 0 0 0 1px rgb(92 75 65 / .3); outline: 1px dashed rgb(92 75 65 / .4); outline-offset: -3px; }
+/* a mini paper swatch fan of the film looks, on a brass rivet: over the mat's bottom-left corner */
+.prop-fan { --tilt: 4deg; left: -56px; bottom: -12px; width: 76px; aspect-ratio: 1 / 1.05; }
 .fan { position: absolute; inset: 0; }
 .fan-blade {
   position: absolute;
-  left: calc(50% - 9px); bottom: 8px;
-  width: 18px; height: 88%;
-  border-radius: 3px 3px 2px 2px;
+  left: calc(50% - 6px); bottom: 5px;
+  width: 12px; height: 88%;
+  border-radius: 2px 2px 1px 1px;
   background: linear-gradient(transparent 70%, rgb(255 255 255 / .55) 70% 72%, #FBF6EC 72%), var(--c);
   box-shadow: 1px 1px 2px rgb(20 4 6 / .35), inset 0 0 0 1px rgb(255 255 255 / .2);
   transform: rotate(var(--a));
-  transform-origin: 50% calc(100% - 9px);
+  transform-origin: 50% calc(100% - 6px);
 }
-.fan-rivet { position: absolute; left: calc(50% - 5px); bottom: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--seal); box-shadow: 0 1px 2px rgb(20 4 6 / .5); }
-/* a brass date stamper set to today */
-.prop-stamper { --tilt: 6deg; right: calc(var(--mat-side) * .12); top: 42%; width: calc(var(--mat-side) * .64); }
+.fan-rivet { position: absolute; left: calc(50% - 3.5px); bottom: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--seal); box-shadow: 0 1px 2px rgb(20 4 6 / .5); }
+/* a brass date stamper set to today: half off the mat's right edge, at mid-height */
+.prop-stamper { --tilt: 3deg; right: -32px; top: calc(50% - 37px); width: 54px; }
 .stamper { width: 100%; height: auto; overflow: visible; }
 .stamp-date { fill: #E6D9C2; font: 400 9.5px var(--font-type); letter-spacing: .06em; }
+/* narrower desktops: only the sticker sheet stays */
+@media (max-width: 1024px) { .prop-fan, .prop-stamper { display: none; } }
 /* the strip, held at two corners by dusty-blue washi tape you can see through */
 .mat-tape { z-index: 2; width: 70px; height: 22px; opacity: .78; background: repeating-linear-gradient(90deg, rgb(255 255 255 / .28) 0 3px, #0000 3px 11px), rgb(159 180 199 / .86); }
 .mat-tape-tl { left: -24px; top: 4px; transform: rotate(-42deg); }
@@ -2619,7 +2677,7 @@ html:not(.js-develop) .develop-veil { display: none; }
 
 /* the panel: lined index card with file-folder tabs. It is as tall as the blotter (its own content
    never sets the height) and its body scrolls inside, with a slim scrollbar */
-.panel { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-height: 560px; contain: size; }
+.panel { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-height: 420px; contain: size; }
 .sheet-handle { display: none; }
 .tabs { display: flex; gap: 4px; padding-left: var(--s1); position: relative; z-index: 1; }
 .tab {
@@ -2660,7 +2718,7 @@ html:not(.js-develop) .develop-veil { display: none; }
 .panel-body::-webkit-scrollbar-thumb { border-radius: 3px; background: rgb(176 138 58 / .6); }
 .panel-body::-webkit-scrollbar-track { background: transparent; }
 .tabpanel:focus-visible { outline: none; }
-.tabpanel > * + * { margin-top: var(--s4); }
+.tabpanel > * + * { margin-top: var(--s3); }
 .panel-actions {
   display: flex;
   align-items: center;
@@ -2674,14 +2732,10 @@ html:not(.js-develop) .develop-veil { display: none; }
 .panel-actions .btn { white-space: nowrap; }
 .panel-actions .btn-primary { flex: 1; }
 
-/* every grid: three equal columns, 16px apart, and every row full: a short last row spreads its cards
-   (2 left over: two halves; 1 left over: the last four as two pairs). The four layouts: one row of four. */
-.frame-group + .frame-group { margin-top: var(--s4); }
-.frame-grid, .filter-grid, .sticker-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: var(--s2); }
-.even-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-.even-grid > * { grid-column: span 4; }
-.even-grid[data-r3="2"] > :nth-last-child(-n+2) { grid-column: span 6; }
-.even-grid[data-r3="1"] > :nth-last-child(-n+4) { grid-column: span 6; }
+/* every grid: three equal columns of the same card (the same thumbnail height, the names starting on one
+   line), 12px apart, 24px above each section label. The four layouts: one row of four compact cards. */
+.frame-group + .frame-group { margin-top: var(--s3); }
+.frame-grid, .filter-grid, .sticker-grid { --thumb-h: 76px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: var(--s1); }
 .layout-picker-sm { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s1); }
 .layout-picker-sm .layout-card { height: 100%; padding: var(--s0) 4px; }
 .layout-picker-sm .layout-name { font-size: var(--fs-14); line-height: 1.2; overflow-wrap: anywhere; hyphens: auto; }
@@ -2703,14 +2757,14 @@ html:not(.js-develop) .develop-veil { display: none; }
   transition: box-shadow 250ms var(--ease-calm), transform 250ms var(--ease-calm);
 }
 .filter-card { justify-items: stretch; padding: 6px 6px var(--s0); font: 400 var(--fs-14) / 1.25 var(--font-sans); text-align: center; }
-.frame-thumb { display: grid; place-items: center; width: 100%; height: 96px; }
-.frame-thumb canvas { width: auto; height: auto; max-width: 100%; max-height: 96px; box-shadow: 1px 2px 3px rgb(42 33 28 / .35); }
+.frame-thumb { display: grid; place-items: center; width: 100%; height: var(--thumb-h); }
+.frame-thumb canvas { width: auto; height: auto; max-width: 100%; max-height: var(--thumb-h); box-shadow: 1px 2px 3px rgb(42 33 28 / .35); }
 .frame-name { font: 400 var(--fs-14) / 1.25 var(--font-sans); text-align: center; }
 .label-hint { font-family: var(--font-sans); font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--muted); }
 .field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s1); margin-top: var(--s3); }
 .field-pair .field + .field { margin-top: 0; }
-.filter-thumb { display: block; aspect-ratio: 4 / 3; border-radius: 3px; overflow: hidden; background: #CFC3B0; }
-.filter-thumb canvas { width: 100%; height: 100%; }
+.filter-thumb { display: block; height: var(--thumb-h); border-radius: 3px; overflow: hidden; background: #CFC3B0; }
+.filter-thumb canvas { width: 100%; height: 100%; object-fit: cover; }
 
 .pack-nav { display: flex; flex-wrap: wrap; gap: var(--s0); }
 .sticker-btn {
@@ -2726,7 +2780,7 @@ html:not(.js-develop) .develop-veil { display: none; }
   cursor: pointer;
   transition: box-shadow 250ms var(--ease-calm), transform 250ms var(--ease-calm);
 }
-.sticker-face { display: grid; place-items: center; width: 100%; height: 100%; }
+.sticker-face { display: grid; place-items: center; width: 100%; height: var(--thumb-h); }
 .sticker-face img, .sticker-face canvas { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 2px 2px rgb(42 33 28 / .25)); }
 .sticker-empty {
   position: relative;
@@ -3271,7 +3325,7 @@ html:not(.js-develop) .develop-veil { display: none; }
    15. Responsive
    --------------------------------------------------------- */
 @media (max-width: 1100px) {
-  .editor { --panel-w: 360px; --gap: var(--s3); }
+  .editor { --panel-w: 360px; }
 }
 
 /* the hero stacks: text first, then the booth on its floor */
@@ -3287,8 +3341,8 @@ html:not(.js-develop) .develop-veil { display: none; }
 
   .editor { grid-template-columns: 1fr; }
   /* phones: the mat and strip on top, the panel a bottom sheet; only the washi tape stays */
-  .stage { --mat-side: var(--s3); min-height: 0; padding: 28px var(--mat-side); border-radius: 16px; margin-bottom: calc(var(--s10) * 2); }
-  .mat-prop { display: none; }
+  .stage { --mat-pad: var(--s3); padding: 28px var(--mat-pad); border-radius: 16px; margin-bottom: calc(var(--s10) * 2); }
+  .prop-sheet { left: -14px; top: -40px; }
   .panel {
     position: fixed;
     left: 0; right: 0; bottom: 0; top: auto;
@@ -3326,6 +3380,8 @@ html:not(.js-develop) .develop-veil { display: none; }
 @media (max-width: 720px) {
 }
 
+@media (max-width: 768px) { .mat-prop { display: none; } }
+
 @media (max-width: 640px) {
   main { padding-top: var(--s3); }
   .hero { margin-top: calc(var(--s3) * -1); }
@@ -3344,10 +3400,6 @@ html:not(.js-develop) .develop-veil { display: none; }
   .torn-note { font-size: var(--fs-18); }
   .dev-label { white-space: normal; }
   .segmented span { min-width: 56px; }
-  .frame-grid, .filter-grid { grid-template-columns: repeat(2, 1fr); }
-  /* two per row; one left over: the last three share a row */
-  .even-grid[data-r3] > * { grid-column: span 6; }
-  .even-grid[data-r2="1"] > :nth-last-child(-n+3) { grid-column: span 4; }
   .field-pair { grid-template-columns: 1fr; }
 }
 
@@ -3407,7 +3459,7 @@ html:not(.js-develop) .develop-veil { display: none; }
   .hero .kicker { margin-bottom: var(--s-1); font-size: var(--fs-14); }
   .wordmark-hero { margin: 0 0 var(--s0) -.05em; font-size: min(11.5svh, 3rem); }
   .torn-note { --rule: 22px; --pad-y: 9px; --margin-x: 30px; margin-bottom: var(--s1); padding-right: 18px; font-size: .9375rem; transform-origin: 0 50%; }
-  .torn-note .washi { transform: rotate(-18deg) scale(.8); }
+  .torn-note .washi { transform: rotate(-14deg) scale(.8); }
   .hero-actions { flex-wrap: nowrap; justify-content: flex-start; gap: var(--s2); }
   .hero .ticket { min-height: 48px; }
   .hero .ticket-main { padding: 0 var(--s2); font-size: var(--fs-16); }
