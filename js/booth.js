@@ -7,7 +7,9 @@ import { createLayoutPicker, LAYOUTS } from './layouts.js';
 import { audio, countBeep, shutter, whirr, flashPop, punch, switchClick, thunk, click } from './sound.js';
 import { show, onScreen, toast, confirmDialog } from './ui.js';
 import { icon } from './icons.js';
-import { startCamera, stopCamera as stopStream, capture, cropToCanvas } from './camera.js';
+import { startCamera, stopCamera as stopStream, capture } from './camera.js';
+import { makeCroppable, applyCrop, slotAspect, shapeDiffers, MAX_SIDE } from './crop.js';
+import { openAdjuster } from './adjuster.js';
 import { faceHere } from './placeholders.js';
 import { newDesign, openEditor } from './editor.js';
 import { computeLayout, render, eachPhotoFrame } from './render.js';
@@ -247,7 +249,10 @@ function dropIntoTray(i, p) {
 /* =========================================================
    Capture
    ========================================================= */
-const makePhoto = src => ({ src, seed: Math.floor(Math.random() * 1e9) });
+// the shape of a photo slot in the chosen layout (every photo is cropped to it, non-destructively)
+const slotShape = () => slotAspect(state.settings.layout, state.settings.shots);
+// a photo keeps its original image and a crop record; its .src is the crop (see crop.js)
+const makePhoto = img => makeCroppable(img, slotShape());
 // A shot the camera couldn't deliver: never silently blank, it asks for a retake
 const failedPhoto = i => ({ src: faceHere(1440, 1080, i), seed: i + 1, failed: true });
 
@@ -349,19 +354,31 @@ function showReview(focusIndex = 0) {
     tx.imageSmoothingQuality = 'high';
     tx.drawImage(p.src, 0, 0, PREVIEW_W, h);
     const fave = i === state.booth.fave;
-    const label = `Photo ${i + 1}${p.failed ? ", didn't come out" : ''}. Press R to retake.`;
+    const label = `Photo ${i + 1}${p.failed ? ", didn't come out" : ''}. Press R to retake${p.failed ? '' : ', A to adjust'}.`;
     return el('li', { className: `contact-frame${p.failed ? ' is-failed' : ''}${fave ? ' is-fave' : ''}` }, [
       el('div', { className: 'film-cell' }, [
         el('span', { className: 'edge-print', attrs: { 'aria-hidden': 'true' }, text: i === 0 ? 'PHOTOMATIC 400 ▸ 1' : `▸ ${i + 1}` }),
         el('button', {
           className: 'contact-print',
-          attrs: { type: 'button', 'aria-label': label, 'aria-pressed': String(fave), 'aria-keyshortcuts': 'R' },
-          on: { click: () => setFave(i), keydown: e => { if (e.key === 'r' || e.key === 'R') { e.preventDefault(); retakeOne(i); } } },
+          attrs: { type: 'button', 'aria-label': label, 'aria-pressed': String(fave), 'aria-keyshortcuts': p.failed ? 'R' : 'R A' },
+          on: {
+            click: () => setFave(i),
+            keydown: e => {
+              if (e.key === 'r' || e.key === 'R') { e.preventDefault(); retakeOne(i); }
+              else if ((e.key === 'a' || e.key === 'A') && !p.failed) { e.preventDefault(); adjustOne(i); }
+            },
+          },
         }, [thumb]),
-        el('button', {
-          className: 'retake-btn', attrs: { type: 'button', tabindex: '-1', 'aria-label': `Retake photo ${i + 1}` },
-          html: `${icon('retake', { size: 14 })}<span>Retake</span>`, on: { click: () => retakeOne(i) },
-        }),
+        el('span', { className: 'contact-tools' }, [
+          el('button', {
+            className: 'retake-btn', attrs: { type: 'button', tabindex: '-1', 'aria-label': `Retake photo ${i + 1}` },
+            html: `${icon('retake', { size: 14 })}<span>Retake</span>`, on: { click: () => retakeOne(i) },
+          }),
+          ...(p.failed ? [] : [el('button', {
+            className: 'adjust-btn', attrs: { type: 'button', tabindex: '-1', 'aria-label': `Adjust photo ${i + 1}` },
+            html: `${icon('crop', { size: 14 })}<span>Adjust</span>`, on: { click: () => adjustOne(i) },
+          })]),
+        ]),
         el('span', {
           className: 'fave-mark', attrs: { 'aria-hidden': 'true' },
           html: `<svg class="fave-loop" viewBox="0 0 200 150" preserveAspectRatio="none"><path d="${LOOP}" pathLength="1"/></svg><span class="fave-note">fave</span>`,
@@ -380,6 +397,15 @@ function showReview(focusIndex = 0) {
   const firstFailed = photos.findIndex(p => p.failed);
   const btn = dom.thumbs.querySelectorAll('.contact-print')[firstFailed >= 0 ? firstFailed : focusIndex];
   (btn || $('#btn-continue')).focus({ preventScroll: true });
+}
+
+// crop & adjust from the contact sheet; the print redraws with the new crop
+async function adjustOne(i) {
+  const photos = state.design.photos, aspect = slotShape();
+  if (!photos[i] || photos[i].failed) return;
+  const res = await openAdjuster({ photos, index: i, aspect });
+  if (res.applied) { res.crops.forEach((c, j) => applyCrop(photos[j], c, aspect)); showReview(i); }
+  else dom.thumbs.querySelectorAll('.contact-print')[i]?.focus({ preventScroll: true });
 }
 
 // one favourite: the loop draws itself round the new one
@@ -412,9 +438,13 @@ dom.file.addEventListener('change', async () => {
   const photos = [];
   for (const f of files) {
     try {
+      // the whole picture is kept (only scaled down past 4096px); the crop is just a record on top
       const bmp = await createImageBitmap(f);
-      photos.push(makePhoto(cropToCanvas(bmp, bmp.width, bmp.height, ASPECT, false)));
+      const s = Math.min(1, MAX_SIDE / Math.max(bmp.width, bmp.height));
+      const orig = makeCanvas(bmp.width * s, bmp.height * s);
+      const ox = orig.getContext('2d'); ox.imageSmoothingQuality = 'high'; ox.drawImage(bmp, 0, 0, orig.width, orig.height);
       bmp.close && bmp.close();
+      photos.push(makePhoto(orig));
     } catch { toast(`We couldn't read ${f.name}.`); }
   }
   if (!photos.length) return;
@@ -422,6 +452,12 @@ dom.file.addEventListener('change', async () => {
   stopCamera();
   state.design.photos = photos;
   state.output.polaroid = 0;
+  // a photo whose shape differs from the slot: offer the adjuster first (Next photo steps through them)
+  const aspect = slotShape(), first = photos.findIndex(p => shapeDiffers(p.orig, aspect));
+  if (first >= 0) {
+    const res = await openAdjuster({ photos, index: first, aspect });
+    if (res.applied) res.crops.forEach((c, j) => applyCrop(photos[j], c, aspect));
+  }
   develop();
 });
 

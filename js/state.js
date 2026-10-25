@@ -46,6 +46,7 @@ export const state = {
     history: [],
     future: [],
     drag: null,
+    tap: null,                  // a tap on a photo, which opens the adjuster if it doesn't move
     pointers: new Map(),
     view: { scale: 1, k: 1, W: 600, H: 1000 },  // css px / unit, canvas px / unit, logical size
     stageW: 0,

@@ -12,6 +12,8 @@ import { texturesReady } from './textures.js';
 import { computeLayout, render, handlePositions } from './render.js';
 import { openBooth } from './booth.js';
 import { openReveal } from './reveal.js';
+import { applyCrop, reshapeAll, slotAspect } from './crop.js';
+import { openAdjuster } from './adjuster.js';
 
 const MAX_VIEW_SCALE = 0.72;
 const HISTORY_LIMIT = 80;
@@ -23,6 +25,8 @@ const bar = $('#sticker-bar');
 const panel = $('#panel');
 
 let uidSeq = 1;
+// the shape of a photo slot in the current layout; every photo's crop is fitted to it
+const shape = () => slotAspect(D.layout, D.photos.length);
 const selectedSticker = () => D.stickers.find(s => s.uid === E.selected) || null;
 
 /* =========================================================
@@ -37,6 +41,7 @@ export async function newDesign() {
     stickers: [], shotDate: new Date(),
   });
   D.date.text = '';
+  reshapeAll(D.photos, shape());
   E.history = []; E.future = []; E.selected = null;
   state.output.canvas = state.output.blob = null;
   state.output.savedId = null;
@@ -86,6 +91,7 @@ function drawDisplay() {
   }
   render(strip.getContext('2d'), v.k, { ui: true, L });
   placeBar();
+  placeSpots(L, v.scale);
 }
 
 // the room for the strip: the page's content width, minus the panel, the gap and the mat's padding
@@ -146,6 +152,7 @@ $$('.mat-prop').forEach(b => b.addEventListener('click', () => selectTab($(`#${b
 const snapshot = () => JSON.stringify({
   layout: D.layout, frame: D.frame, variants: D.variants, double: D.double, filmPaper: D.filmPaper, filter: D.filter, intensity: D.intensity, brightness: D.brightness,
   bg: D.bg, date: D.date, caption: D.caption, dedication: D.dedication, to: D.to, from: D.from, stickers: D.stickers,
+  crops: D.photos.map(p => p.crop || null),
 });
 
 function pushHistory(snap = snapshot()) {
@@ -156,7 +163,12 @@ function pushHistory(snap = snapshot()) {
   syncHistoryButtons();
 }
 function restore(snap) {
-  Object.assign(D, JSON.parse(snap));
+  const { crops, ...rest } = JSON.parse(snap);
+  Object.assign(D, rest);
+  // photos whose crop differs are rebuilt from their originals; all are fitted to the layout's shape
+  const aspect = shape();
+  D.photos.forEach((p, i) => { if (crops && crops[i] && JSON.stringify(crops[i]) !== JSON.stringify(p.crop)) applyCrop(p, crops[i], aspect); });
+  reshapeAll(D.photos, aspect);
   if (!selectedSticker()) E.selected = null;
   syncUI();
 }
@@ -252,6 +264,7 @@ const layoutPicker = createLayoutPicker($('#editor-layouts'), 'editor-layout', i
   edit(() => {
     const a = computeLayout();
     D.layout = id;
+    reshapeAll(D.photos, shape());
     const b = computeLayout();
     // keep stickers in roughly the same place on the new canvas
     D.stickers.forEach(s => { s.x *= b.W / a.W; s.y *= b.H / a.H; });
@@ -275,7 +288,7 @@ $('#frame-groups').replaceChildren(...FRAME_GROUPS.map(g => el('div', { classNam
 /* thumbnails: rendered lazily, cached by everything that changes their look */
 const thumbCache = new Map();
 let thumbTimer = 0;
-const thumbKey = id => JSON.stringify([id, variantOf(id).id, D.layout, D.filter, Math.round(D.intensity * 20), D.brightness, D.bg, D.photos.length, D.photos[0] && D.photos[0].seed, D.filmPaper, D.date.show]);
+const thumbKey = id => JSON.stringify([id, variantOf(id).id, D.layout, D.filter, Math.round(D.intensity * 20), D.brightness, D.bg, D.photos.length, D.photos.map(p => `${p.seed}:${p.rev || 0}`).join(), D.filmPaper, D.date.show]);
 function renderThumb(id) {
   const key = thumbKey(id);
   if (!thumbCache.has(key)) {
@@ -320,8 +333,9 @@ $('#pattern-chips').replaceChildren(...PATTERNS.map(p => el('button', {
 let filterThumbsFor = null;
 function buildFilterThumbs() {
   const p = D.photos[0];
-  if (!p || filterThumbsFor === p) return;
-  filterThumbsFor = p;
+  const key = p && `${p.seed}:${p.rev || 0}`;
+  if (!p || filterThumbsFor === key) return;
+  filterThumbsFor = key;
   $$('#filter-grid .filter-card').forEach(card => {
     const c = filterThumb(p, card.dataset.value);
     c.setAttribute('aria-hidden', 'true');
@@ -602,6 +616,66 @@ function syncUI() {
 }
 
 /* =========================================================
+   Crop & adjust: an Adjust button on each photo (a pill on hover, a crop circle on touch);
+   clicking or tapping a photo opens the adjuster too. Applying is one undo step.
+   ========================================================= */
+const spots = el('div', { className: 'photo-spots' });
+$('#canvas-wrap').append(spots);
+function placeSpots(L, sc) {
+  const n = D.photos.length;
+  while (spots.children.length > n) spots.lastChild.remove();
+  while (spots.children.length < n) {
+    const i = spots.children.length;
+    spots.append(el('button', {
+      className: 'photo-adjust', attrs: { type: 'button', 'aria-label': `Adjust photo ${i + 1}` },
+      html: `${icon('crop', { size: 15 })}<span>Adjust</span>`, on: { click: () => adjust(i) },
+    }));
+  }
+  const coarse = isCoarse();
+  [...spots.children].forEach((b, i) => {
+    const s = L.slots[i], ok = s && D.photos[i] && D.photos[i].orig;
+    b.hidden = !ok;
+    if (!ok) return;
+    // touch: a circle in the photo's top-right corner; otherwise a pill centred at the photo's foot
+    const x = coarse ? (s.x + s.w) * sc - 6 : (s.x + s.w / 2) * sc;
+    const y = coarse ? s.y * sc + 6 : (s.y + s.h) * sc - 40;
+    b.style.left = `${Math.round(x)}px`;
+    b.style.top = `${Math.round(y)}px`;
+  });
+}
+// which photo is under a point on the strip (either copy of a double strip), or -1
+function slotAt(p) {
+  const L = computeLayout();
+  const x = L.double && p.x > L.W1 ? p.x - L.W1 : p.x;
+  return L.slots.findIndex((s, i) => D.photos[i] && D.photos[i].orig && x >= s.x && x <= s.x + s.w && p.y >= s.y && p.y <= s.y + s.h);
+}
+function hoverSpot(i) {
+  [...spots.children].forEach((b, j) => b.classList.toggle('is-hover', j === i));
+  strip.classList.toggle('is-over-photo', i >= 0);
+}
+// hover is read on the wrapper, so moving onto the pill keeps it showing
+$('#canvas-wrap').addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse' || E.drag || E.pointers.size) return;
+  if (e.target.closest('.photo-adjust, .sticker-bar')) return;
+  const p = toLogical(e);
+  hoverSpot(hitSticker(p) ? -1 : slotAt(p));
+});
+$('#canvas-wrap').addEventListener('pointerleave', () => hoverSpot(-1));
+
+async function adjust(i) {
+  if (!D.photos[i] || !D.photos[i].orig) return;
+  select(null);
+  hoverSpot(-1);
+  const aspect = shape();
+  const res = await openAdjuster({ photos: D.photos, index: i, aspect });
+  if (res.applied && res.crops.some((c, j) => JSON.stringify(c) !== JSON.stringify(D.photos[j].crop))) {
+    edit(() => res.crops.forEach((c, j) => applyCrop(D.photos[j], c, aspect)));
+  }
+  const b = spots.children[i];
+  if (b && !b.hidden) b.focus({ preventScroll: true });
+}
+
+/* =========================================================
    Pointer gestures on the strip
    ========================================================= */
 function toLogical(e) {
@@ -653,7 +727,11 @@ strip.addEventListener('pointerdown', e => {
     E.drag = { type: 'move', s: hit, before, ox: p.x - hit.x, oy: p.y - hit.y };
     e.preventDefault();
   } else {
+    // a tap on a photo (nothing selected, no drag) opens the adjuster for it
+    const had = !!sel;
     select(null);
+    const i = had ? -1 : slotAt(p);
+    E.tap = i >= 0 ? { i, x: e.clientX, y: e.clientY } : null;
   }
 });
 
@@ -681,6 +759,10 @@ strip.addEventListener('pointermove', e => {
 
 function endPointer(e) {
   E.pointers.delete(e.pointerId);
+  if (E.tap) {
+    const t = E.tap; E.tap = null;
+    if (e.type === 'pointerup' && !E.pointers.size && Math.hypot(e.clientX - t.x, e.clientY - t.y) < 8) adjust(t.i);
+  }
   const d = E.drag;
   if (!d) return;
   if (d.type === 'pinch' && E.pointers.size === 1) {

@@ -20,6 +20,8 @@ const P = {
   pencil: '<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
   retake: '<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9"/><path d="M4.5 4.5V9H9"/>',
   check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  crop: '<path d="M7 3v12.5A1.5 1.5 0 0 0 8.5 17H21"/><path d="M3 7h12.5A1.5 1.5 0 0 1 17 8.5V21"/>',
+  rotate: '<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3L19.5 9"/><path d="M19.5 4.5V9H15"/>',
   upload: '<rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9.5" r="1.5"/><path d="m4.5 17 4.5-4.5 3 3 2.5-2.5 5 5"/>',
   replay: '<path d="M8 5.5v13l10-6.5z"/>',
   album: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
