@@ -33,13 +33,13 @@
   <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-26l","/js/adjuster.js":"/js/adjuster.js?v=2026-10-26l","/js/crop.js":"/js/crop.js?v=2026-10-26l","/js/booth.js":"/js/booth.js?v=2026-10-26l","/js/camera.js":"/js/camera.js?v=2026-10-26l","/js/editor.js":"/js/editor.js?v=2026-10-26l","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-26l","/js/export.js":"/js/export.js?v=2026-10-26l","/js/filters.js":"/js/filters.js?v=2026-10-26l","/js/frames.js":"/js/frames.js?v=2026-10-26l","/js/hero.js":"/js/hero.js?v=2026-10-26l","/js/icons.js":"/js/icons.js?v=2026-10-26l","/js/layouts.js":"/js/layouts.js?v=2026-10-26l","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-26l","/js/main.js":"/js/main.js?v=2026-10-26l","/js/patterns.js":"/js/patterns.js?v=2026-10-26l","/js/placeholders.js":"/js/placeholders.js?v=2026-10-26l","/js/ransom.js":"/js/ransom.js?v=2026-10-26l","/js/render.js":"/js/render.js?v=2026-10-26l","/js/reveal.js":"/js/reveal.js?v=2026-10-26l","/js/sound.js":"/js/sound.js?v=2026-10-26l","/js/state.js":"/js/state.js?v=2026-10-26l","/js/stickers.js":"/js/stickers.js?v=2026-10-26l","/js/story.js":"/js/story.js?v=2026-10-26l","/js/textures.js":"/js/textures.js?v=2026-10-26l","/js/transitions.js":"/js/transitions.js?v=2026-10-26l","/js/ui.js":"/js/ui.js?v=2026-10-26l","/js/utils.js":"/js/utils.js?v=2026-10-26l"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-26l">
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-26m","/js/adjuster.js":"/js/adjuster.js?v=2026-10-26m","/js/crop.js":"/js/crop.js?v=2026-10-26m","/js/booth.js":"/js/booth.js?v=2026-10-26m","/js/camera.js":"/js/camera.js?v=2026-10-26m","/js/editor.js":"/js/editor.js?v=2026-10-26m","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-26m","/js/export.js":"/js/export.js?v=2026-10-26m","/js/filters.js":"/js/filters.js?v=2026-10-26m","/js/frames.js":"/js/frames.js?v=2026-10-26m","/js/hero.js":"/js/hero.js?v=2026-10-26m","/js/icons.js":"/js/icons.js?v=2026-10-26m","/js/layouts.js":"/js/layouts.js?v=2026-10-26m","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-26m","/js/main.js":"/js/main.js?v=2026-10-26m","/js/patterns.js":"/js/patterns.js?v=2026-10-26m","/js/placeholders.js":"/js/placeholders.js?v=2026-10-26m","/js/ransom.js":"/js/ransom.js?v=2026-10-26m","/js/render.js":"/js/render.js?v=2026-10-26m","/js/reveal.js":"/js/reveal.js?v=2026-10-26m","/js/sound.js":"/js/sound.js?v=2026-10-26m","/js/state.js":"/js/state.js?v=2026-10-26m","/js/stickers.js":"/js/stickers.js?v=2026-10-26m","/js/story.js":"/js/story.js?v=2026-10-26m","/js/textures.js":"/js/textures.js?v=2026-10-26m","/js/transitions.js":"/js/transitions.js?v=2026-10-26m","/js/ui.js":"/js/ui.js?v=2026-10-26m","/js/utils.js":"/js/utils.js?v=2026-10-26m"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-26m">
   <!-- the page is complete without script; the app starts once the fonts have painted (or at the first touch or key) -->
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-26l'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-26m'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
@@ -291,6 +291,14 @@
             <ellipse cx="113" cy="285" rx="28" ry="5.5" fill="#140C08" opacity=".5" filter="url(#st-soft)"/>
             <ellipse cx="258" cy="263" rx="26" ry="5" fill="#140C08" opacity=".46" filter="url(#st-soft)"/>
             <path class="rope-shadow" d="M120 286 C150 292 210 282 258 264" fill="none" stroke="#140C08" stroke-opacity=".24" stroke-width="6" stroke-linecap="round" filter="url(#st-softer)"/>
+            <!-- the queue's third post, further left and further forward (4% larger than the front post); shown
+                 only where the floor leaves it clear of the hero's text (see .st-third in style.css) -->
+            <g class="st-third">
+              <ellipse cx="-10" cy="358.5" rx="21" ry="3.5" fill="url(#st-refl)" filter="url(#st-blur)"/>
+              <ellipse cx="-2" cy="353" rx="30" ry="6" fill="#140C08" opacity=".5" filter="url(#st-soft)"/>
+              <path d="M6 352 C36 336 74 306 118 288" fill="none" stroke="#140C08" stroke-opacity=".2" stroke-width="6" stroke-linecap="round" filter="url(#st-softer)"/>
+              <use href="#st-post-art" class="st-post" transform="translate(-10 349.44) scale(.7937) translate(-48 -282)"/>
+            </g>
             <!-- the rear post by the booth, then the front post (6% larger, a little lower on the floor) -->
             <use href="#st-post-art" class="st-post" transform="translate(250 259.5) scale(.72) translate(-48 -282)"/>
             <g fill="url(#st-warm)" style="mix-blend-mode: screen"><rect x="245.7" y="89.6" width="8.6" height="164" rx="2"/><circle cx="250" cy="83.8" r="8.6"/><ellipse cx="250" cy="259.5" rx="21.6" ry="5"/></g>
@@ -301,6 +309,13 @@
               <path d="M113 109 C140 132 204 125 239 95.5 L239 103.5 C204 133 140 140.5 113 117.5Z" fill="url(#st-rope)"/>
               <path d="M113 109 C140 132 204 125 239 95.5 L239 103.5 C204 133 140 140.5 113 117.5Z" fill="url(#st-rope-warm)"/>
               <path d="M114 111 C140 133 204 126 238 97.5" fill="none" stroke="#F0A0A6" stroke-opacity=".3" stroke-width="1.8" stroke-linecap="round"/>
+              <!-- the second segment of the queue: from the third post up to the front post, the same gentle sag -->
+              <g class="st-third">
+                <path d="M0 167.25 C28 163.45 65 139.65 93 107.75 L93 116.25 C65 148.15 28 171.95 0 175.75Z" fill="url(#st-rope)"/>
+                <path d="M1 169 C28 165.5 65 141.7 92 110" fill="none" stroke="#F0A0A6" stroke-opacity=".3" stroke-width="1.8" stroke-linecap="round"/>
+                <rect x="-5" y="165.5" width="10" height="12" rx="2.5" fill="url(#st-cyl)"/>
+                <rect x="91" y="106" width="10" height="12" rx="2.5" fill="url(#st-cyl)"/>
+              </g>
               <!-- brass snap hooks -->
               <rect x="108" y="106" width="10" height="12" rx="2.5" fill="url(#st-cyl)"/>
               <rect x="235" y="93" width="9" height="11" rx="2.5" fill="url(#st-cyl)"/>
