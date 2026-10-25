@@ -1323,8 +1323,8 @@ kbd {
   pointer-events: none;
   will-change: transform;   /* the rope's swing repaints only this layer */
 }
-.stanchion .rope { transform-box: view-box; transform-origin: 157px 117px; }
-.stanchion .st-card { transform-box: view-box; transform-origin: 144px 173px; }
+.stanchion .rope { transform-box: view-box; transform-origin: 176px 104px; }
+.stanchion .st-card { transform-box: view-box; transform-origin: 159.5px 126.7px; }
 .stanchion .rope { pointer-events: visiblePainted; }
 .stanchion .card-shadow { transform-box: view-box; transform: translate(calc(2px + var(--cx, 0px)), 3px); }
 .stanchion .rope-shadow { transform-box: view-box; transform: translateX(var(--rx, 0px)); }

@@ -33,13 +33,13 @@
   <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-26h","/js/booth.js":"/js/booth.js?v=2026-10-26h","/js/camera.js":"/js/camera.js?v=2026-10-26h","/js/editor.js":"/js/editor.js?v=2026-10-26h","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-26h","/js/export.js":"/js/export.js?v=2026-10-26h","/js/filters.js":"/js/filters.js?v=2026-10-26h","/js/frames.js":"/js/frames.js?v=2026-10-26h","/js/hero.js":"/js/hero.js?v=2026-10-26h","/js/icons.js":"/js/icons.js?v=2026-10-26h","/js/layouts.js":"/js/layouts.js?v=2026-10-26h","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-26h","/js/main.js":"/js/main.js?v=2026-10-26h","/js/patterns.js":"/js/patterns.js?v=2026-10-26h","/js/placeholders.js":"/js/placeholders.js?v=2026-10-26h","/js/ransom.js":"/js/ransom.js?v=2026-10-26h","/js/render.js":"/js/render.js?v=2026-10-26h","/js/reveal.js":"/js/reveal.js?v=2026-10-26h","/js/sound.js":"/js/sound.js?v=2026-10-26h","/js/state.js":"/js/state.js?v=2026-10-26h","/js/stickers.js":"/js/stickers.js?v=2026-10-26h","/js/story.js":"/js/story.js?v=2026-10-26h","/js/textures.js":"/js/textures.js?v=2026-10-26h","/js/transitions.js":"/js/transitions.js?v=2026-10-26h","/js/ui.js":"/js/ui.js?v=2026-10-26h","/js/utils.js":"/js/utils.js?v=2026-10-26h"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-26h">
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-26i","/js/booth.js":"/js/booth.js?v=2026-10-26i","/js/camera.js":"/js/camera.js?v=2026-10-26i","/js/editor.js":"/js/editor.js?v=2026-10-26i","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-26i","/js/export.js":"/js/export.js?v=2026-10-26i","/js/filters.js":"/js/filters.js?v=2026-10-26i","/js/frames.js":"/js/frames.js?v=2026-10-26i","/js/hero.js":"/js/hero.js?v=2026-10-26i","/js/icons.js":"/js/icons.js?v=2026-10-26i","/js/layouts.js":"/js/layouts.js?v=2026-10-26i","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-26i","/js/main.js":"/js/main.js?v=2026-10-26i","/js/patterns.js":"/js/patterns.js?v=2026-10-26i","/js/placeholders.js":"/js/placeholders.js?v=2026-10-26i","/js/ransom.js":"/js/ransom.js?v=2026-10-26i","/js/render.js":"/js/render.js?v=2026-10-26i","/js/reveal.js":"/js/reveal.js?v=2026-10-26i","/js/sound.js":"/js/sound.js?v=2026-10-26i","/js/state.js":"/js/state.js?v=2026-10-26i","/js/stickers.js":"/js/stickers.js?v=2026-10-26i","/js/story.js":"/js/story.js?v=2026-10-26i","/js/textures.js":"/js/textures.js?v=2026-10-26i","/js/transitions.js":"/js/transitions.js?v=2026-10-26i","/js/ui.js":"/js/ui.js?v=2026-10-26i","/js/utils.js":"/js/utils.js?v=2026-10-26i"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-26i">
   <!-- the page is complete without script; the app starts once the fonts have painted (or at the first touch or key) -->
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-26h'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-26i'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
@@ -286,31 +286,32 @@
               </g>
             </defs>
             <!-- on the floor: faint brass reflections under the bases, then contact shadows falling down-right -->
-            <ellipse cx="62" cy="309" rx="21" ry="3.5" fill="url(#st-refl)" filter="url(#st-blur)"/>
-            <ellipse cx="250" cy="265" rx="19" ry="3" fill="url(#st-refl)" filter="url(#st-blur)"/>
-            <ellipse cx="71" cy="304" rx="30" ry="6" fill="#140C08" opacity=".5" filter="url(#st-soft)"/>
-            <ellipse cx="258" cy="261" rx="26" ry="5" fill="#140C08" opacity=".42" filter="url(#st-soft)"/>
-            <path class="rope-shadow" d="M76 304 C120 314 196 300 254 262" fill="none" stroke="#140C08" stroke-opacity=".26" stroke-width="6" stroke-linecap="round" filter="url(#st-softer)"/>
-            <!-- the rear post by the booth (smaller, higher), then the front post (12% larger, lower) -->
-            <use href="#st-post-art" class="st-post" transform="translate(250 258) scale(.72) translate(-48 -282)"/>
-            <g fill="url(#st-warm)" style="mix-blend-mode: screen"><rect x="245.7" y="89" width="8.6" height="166" rx="2"/><circle cx="250" cy="82.4" r="8.6"/><ellipse cx="250" cy="258" rx="21.6" ry="5"/></g>
-            <use href="#st-post-art" class="st-post" transform="translate(62 300) scale(.806) translate(-48 -282)"/>
+            <ellipse cx="105" cy="290" rx="20" ry="3.3" fill="url(#st-refl)" filter="url(#st-blur)"/>
+            <ellipse cx="250" cy="267" rx="19" ry="3" fill="url(#st-refl)" filter="url(#st-blur)"/>
+            <ellipse cx="113" cy="285" rx="28" ry="5.5" fill="#140C08" opacity=".5" filter="url(#st-soft)"/>
+            <ellipse cx="258" cy="263" rx="26" ry="5" fill="#140C08" opacity=".46" filter="url(#st-soft)"/>
+            <path class="rope-shadow" d="M120 286 C150 292 210 282 258 264" fill="none" stroke="#140C08" stroke-opacity=".24" stroke-width="6" stroke-linecap="round" filter="url(#st-softer)"/>
+            <!-- the rear post by the booth, then the front post (6% larger, a little lower on the floor) -->
+            <use href="#st-post-art" class="st-post" transform="translate(250 259.5) scale(.72) translate(-48 -282)"/>
+            <g fill="url(#st-warm)" style="mix-blend-mode: screen"><rect x="245.7" y="89.6" width="8.6" height="164" rx="2"/><circle cx="250" cy="83.8" r="8.6"/><ellipse cx="250" cy="259.5" rx="21.6" ry="5"/></g>
+            <use href="#st-post-art" class="st-post" transform="translate(105 281.66) scale(.7632) translate(-48 -282)"/>
             <g class="rope">
-              <!-- a heavy velvet rope sagging along the diagonal, a little thicker at the front -->
-              <path d="M70 124.5 C112 191.5 198 179.5 244 101 L244 109 C198 188.5 112 200.5 70 133.5Z" fill="url(#st-rope)"/>
-              <path d="M70 124.5 C112 191.5 198 179.5 244 101 L244 109 C198 188.5 112 200.5 70 133.5Z" fill="url(#st-rope-warm)"/>
-              <path d="M71 126.5 C112 192 198 180.5 243 103" fill="none" stroke="#F0A0A6" stroke-opacity=".3" stroke-width="2" stroke-linecap="round"/>
+              <!-- a short velvet rope with a gentle sag, hooked just under the caps; its lowest point stays
+                   above the wainscot's cap rail, so the rope and card read against the wallpaper -->
+              <path d="M113 109 C140 132 204 125 239 95.5 L239 103.5 C204 133 140 140.5 113 117.5Z" fill="url(#st-rope)"/>
+              <path d="M113 109 C140 132 204 125 239 95.5 L239 103.5 C204 133 140 140.5 113 117.5Z" fill="url(#st-rope-warm)"/>
+              <path d="M114 111 C140 133 204 126 238 97.5" fill="none" stroke="#F0A0A6" stroke-opacity=".3" stroke-width="1.8" stroke-linecap="round"/>
               <!-- brass snap hooks -->
-              <rect x="63" y="122" width="12" height="13" rx="3" fill="url(#st-cyl)"/>
-              <rect x="239" y="99" width="10" height="11" rx="2.5" fill="url(#st-cyl)"/>
+              <rect x="108" y="106" width="10" height="12" rx="2.5" fill="url(#st-cyl)"/>
+              <rect x="235" y="93" width="9" height="11" rx="2.5" fill="url(#st-cyl)"/>
               <!-- the card hangs from the lowest point of the sag, facing out, turned a touch with the rope -->
               <g class="st-card">
-                <g transform="rotate(-3 144 173)">
-                  <rect class="card-shadow" x="117" y="185" width="54" height="26" rx="2" fill="#140C08" opacity=".18" filter="url(#st-soft)"/>
-                  <path d="M144 173 L135 186 M144 173 L153 186" stroke="#7A6A55" stroke-width="1" fill="none"/>
-                  <circle cx="144" cy="173" r="1.6" fill="#7A6A55"/>
-                  <rect x="117" y="185" width="54" height="26" rx="2" fill="#F6F0E4" stroke="#B8A88E" stroke-width=".8"/>
-                  <text x="144" y="202.5" text-anchor="middle" font-family='"Special Elite", "Courier New", monospace' font-size="12" letter-spacing="1.4" fill="#1F1A17">NEXT →</text>
+                <g transform="rotate(-3 159.5 126.7)">
+                  <rect class="card-shadow" x="135.5" y="133.7" width="48" height="22" rx="2" fill="#140C08" opacity=".18" filter="url(#st-soft)"/>
+                  <path d="M159.5 126.7 L151.5 134 M159.5 126.7 L167.5 134" stroke="#7A6A55" stroke-width="1" fill="none"/>
+                  <circle cx="159.5" cy="126.7" r="1.5" fill="#7A6A55"/>
+                  <rect x="135.5" y="133.7" width="48" height="22" rx="2" fill="#F6F0E4" stroke="#B8A88E" stroke-width=".8"/>
+                  <text x="159.5" y="148.6" text-anchor="middle" font-family='"Special Elite", "Courier New", monospace' font-size="11" letter-spacing="1.2" fill="#1F1A17">NEXT →</text>
                 </g>
               </g>
             </g>
