@@ -1158,9 +1158,10 @@ kbd {
           mask: var(--tear-top) top / 400px 6px repeat-x, linear-gradient(#000 0 0) 0 5px / 100% calc(100% - 16px) no-repeat, var(--tear-bottom) bottom / 400px 12px repeat-x;
 }
 .torn-note .typed { display: block; font-size: inherit; line-height: var(--rule); }
-/* desktop: 40px from the line of the note's torn bottom edge to the top of the ticket row, so the wordmark,
-   note and call to action read as one group (the tear sits about 5px inside the note's box) */
-@media (min-width: 769px) { .torn-note { margin-bottom: 35px; } }
+/* desktop: 28px from the line of the note's torn bottom edge to the top of the ticket row, close to the
+   wordmark-to-note gap, so the wordmark, note and call to action read as one group (the tear sits about
+   5px inside the note's box) */
+@media (min-width: 769px) { .torn-note { margin-bottom: 23px; } }
 /* a short piece of dusty-blue washi holding down the top-left corner: about 60% on the paper (over the
    margin line, which shows through) and 40% off past the corner: see-through, faintly
    striped, torn zig-zag ends, a little sheen and a soft shadow (on the wrapper, so the clip keeps it) */
