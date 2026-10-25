@@ -113,7 +113,7 @@ function measure(src) {
 }
 
 // A gentle lift for dark, backlit shots (a gamma curve), and a soft shoulder on the brightest tones
-// when a lot of the frame is near white (a bright ceiling, or the screen flash on a close face),
+// when a lot of the frame is near white (a bright ceiling or window behind a face),
 // so highlights roll off instead of clipping flat
 const KNEE = 0.74, CEIL = 0.955;
 function autoExpose(canvas) {
@@ -136,25 +136,17 @@ function autoExpose(canvas) {
 
 // Take one still. Waits for a real frame, rejects blank frames and retries
 // once; resolves to a canvas, or null if the camera gave us nothing usable.
-// `onGrab` fires as soon as the frame is in hand (the screen flash can let go then);
-// `still: false` keeps that video frame instead of asking for a full-resolution photo,
-// which would only arrive after the flash has faded.
-export async function capture(video, { aspect, mirror, onGrab = () => {}, still = true }) {
-  try {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      await freshFrame(video);
-      const vw = video.videoWidth, vh = video.videoHeight;
-      if (!vw || !vh) { await pause(200); continue; }
-      // grab the frame now, so the moment matches the flash even if takePhoto is slow
-      const frame = cropToCanvas(video, vw, vh, aspect, mirror);
-      if (measure(frame).blank) { await pause(200); continue; }
-      onGrab();
-      return autoExpose(still ? await fullStill(video, frame, vw, vh, aspect, mirror) : frame);
-    }
-    return null;
-  } finally {
-    onGrab();
+export async function capture(video, { aspect, mirror }) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await freshFrame(video);
+    const vw = video.videoWidth, vh = video.videoHeight;
+    if (!vw || !vh) { await pause(200); continue; }
+    // grab the frame now, so the moment matches the flash even if takePhoto is slow
+    const frame = cropToCanvas(video, vw, vh, aspect, mirror);
+    if (measure(frame).blank) { await pause(200); continue; }
+    return autoExpose(await fullStill(video, frame, vw, vh, aspect, mirror));
   }
+  return null;
 }
 
 // The camera's own full-resolution photo, when it is larger than the video frame

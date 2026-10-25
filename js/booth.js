@@ -71,7 +71,7 @@ const dom = {
   counter: $('#shot-counter'), prompt: $('#pose-line'), countdown: $('#countdown'), countNum: $('#countdown-num'),
   flash: $('#flash'), snap: $('#btn-snap'), error: $('#cam-error'),
   announcer: $('#booth-announce'), thumbs: $('#review-grid'), file: $('#file-input'),
-  flashBtn: $('#flash-toggle'), tray: $('#shot-tray'), sweep: $('#countdown-sweep'),
+  tray: $('#shot-tray'), sweep: $('#countdown-sweep'),
   machine: $('#develop-machine'), lampText: $('#develop-lamp-text'),
 };
 
@@ -213,34 +213,9 @@ export async function boothBack() {
   requestAnimationFrame(() => { sameScale($('#booth-layouts')); updatePreview(); });
 }
 
-/* =========================================================
-   Screen flash: like a phone's front flash, the whole screen turns white
-   round the live preview just before each capture, so it lights the face
-   in a dim room. On by default, remembered per browser.
-   ========================================================= */
-const FLASH_KEY = 'photomatic-flash';
-const FLASH_LEAD = 350;          // ms from the white starting to fade in until the frame is taken
-let flashOn = true;
-try { flashOn = localStorage.getItem(FLASH_KEY) !== '0'; } catch { /* storage blocked */ }
-function setFlash(on) {
-  flashOn = on;
-  dom.flashBtn.setAttribute('aria-pressed', String(on));
-  dom.flashBtn.querySelector('.flash-state').textContent = on ? 'On' : 'Off';
-  try { localStorage.setItem(FLASH_KEY, on ? '1' : '0'); } catch { /* storage blocked */ }
-}
-setFlash(flashOn);
-dom.flashBtn.addEventListener('click', () => { audio(); switchClick(); setFlash(!flashOn); });
 
-// a white sheet over the whole viewport with the preview cut out of it (a huge spread shadow)
-const screenFlash = el('div', { className: 'screen-flash', attrs: { 'aria-hidden': 'true' } });
-document.body.append(screenFlash);
-async function raiseFlash() {
-  const r = dom.frame.getBoundingClientRect();
-  Object.assign(screenFlash.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
-  screenFlash.classList.add('is-up');
-  await wait(FLASH_LEAD);
-}
-const dropFlash = () => screenFlash.classList.remove('is-up');
+// settings from earlier versions (the ring light, then the screen flash) are no longer used
+try { ['photomatic-flash', 'photomatic-ringlight'].forEach(k => localStorage.removeItem(k)); } catch { /* storage blocked */ }
 
 /* =========================================================
    Shot tray: one empty print per shot under the shutter
@@ -278,7 +253,6 @@ const failedPhoto = i => ({ src: faceHere(1440, 1080, i), seed: i + 1, failed: t
 
 function cancelCountdown() {
   state.booth.session++;
-  dropFlash();
   dom.countdown.classList.remove('is-on');
   dom.prompt.classList.remove('is-on');
 }
@@ -305,17 +279,11 @@ async function shoot(i, total) {
   }
   dom.countdown.classList.remove('is-on');
   dom.prompt.classList.remove('is-on');
-  // with the screen flash, the frame is taken while the screen is fully white, then it fades;
-  // without it, the preview gives its own small white blink
-  const lit = flashOn;
-  if (lit) {
-    await raiseFlash();
-    if (!alive()) { dropFlash(); return null; }
-  } else restartAnimation(dom.flash, 'go');
+  restartAnimation(dom.flash, 'go');
   shutter();
   flashPop();
   // the still develops in the background so the next countdown isn't held up
-  const pending = capture(dom.video, { aspect: ASPECT, mirror: state.settings.mirror, still: !lit, onGrab: dropFlash })
+  const pending = capture(dom.video, { aspect: ASPECT, mirror: state.settings.mirror })
     .then(c => (c ? makePhoto(c) : failedPhoto(i)))
     .catch(() => failedPhoto(i));
   pending.then(p => { if (my === state.booth.session) dropIntoTray(i, p); });

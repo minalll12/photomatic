@@ -33,13 +33,13 @@
   <link rel="preload" href="assets/fonts/playfair-display-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/special-elite-normal.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting: bump v when deploying, so browsers never mix old and new scripts -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-25z","/js/booth.js":"/js/booth.js?v=2026-10-25z","/js/camera.js":"/js/camera.js?v=2026-10-25z","/js/editor.js":"/js/editor.js?v=2026-10-25z","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-25z","/js/export.js":"/js/export.js?v=2026-10-25z","/js/filters.js":"/js/filters.js?v=2026-10-25z","/js/frames.js":"/js/frames.js?v=2026-10-25z","/js/hero.js":"/js/hero.js?v=2026-10-25z","/js/icons.js":"/js/icons.js?v=2026-10-25z","/js/layouts.js":"/js/layouts.js?v=2026-10-25z","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-25z","/js/main.js":"/js/main.js?v=2026-10-25z","/js/patterns.js":"/js/patterns.js?v=2026-10-25z","/js/placeholders.js":"/js/placeholders.js?v=2026-10-25z","/js/ransom.js":"/js/ransom.js?v=2026-10-25z","/js/render.js":"/js/render.js?v=2026-10-25z","/js/reveal.js":"/js/reveal.js?v=2026-10-25z","/js/sound.js":"/js/sound.js?v=2026-10-25z","/js/state.js":"/js/state.js?v=2026-10-25z","/js/stickers.js":"/js/stickers.js?v=2026-10-25z","/js/story.js":"/js/story.js?v=2026-10-25z","/js/textures.js":"/js/textures.js?v=2026-10-25z","/js/transitions.js":"/js/transitions.js?v=2026-10-25z","/js/ui.js":"/js/ui.js?v=2026-10-25z","/js/utils.js":"/js/utils.js?v=2026-10-25z"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-25z">
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-26d","/js/booth.js":"/js/booth.js?v=2026-10-26d","/js/camera.js":"/js/camera.js?v=2026-10-26d","/js/editor.js":"/js/editor.js?v=2026-10-26d","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-26d","/js/export.js":"/js/export.js?v=2026-10-26d","/js/filters.js":"/js/filters.js?v=2026-10-26d","/js/frames.js":"/js/frames.js?v=2026-10-26d","/js/hero.js":"/js/hero.js?v=2026-10-26d","/js/icons.js":"/js/icons.js?v=2026-10-26d","/js/layouts.js":"/js/layouts.js?v=2026-10-26d","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-26d","/js/main.js":"/js/main.js?v=2026-10-26d","/js/patterns.js":"/js/patterns.js?v=2026-10-26d","/js/placeholders.js":"/js/placeholders.js?v=2026-10-26d","/js/ransom.js":"/js/ransom.js?v=2026-10-26d","/js/render.js":"/js/render.js?v=2026-10-26d","/js/reveal.js":"/js/reveal.js?v=2026-10-26d","/js/sound.js":"/js/sound.js?v=2026-10-26d","/js/state.js":"/js/state.js?v=2026-10-26d","/js/stickers.js":"/js/stickers.js?v=2026-10-26d","/js/story.js":"/js/story.js?v=2026-10-26d","/js/textures.js":"/js/textures.js?v=2026-10-26d","/js/transitions.js":"/js/transitions.js?v=2026-10-26d","/js/ui.js":"/js/ui.js?v=2026-10-26d","/js/utils.js":"/js/utils.js?v=2026-10-26d"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-26d">
   <!-- the page is complete without script; the app starts once the fonts have painted (or at the first touch or key) -->
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-25z'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-26d'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
@@ -198,12 +198,12 @@
 
   <rect x="226" y="182" width="38" height="58" rx="5" fill="url(#metalDark)" stroke="#857F76"></rect>
   <rect x="243" y="192" width="4" height="20" rx="2" fill="#1F1A17"></rect>
-  <text x="245" y="232" text-anchor="middle" font-family="&quot;Playfair Display&quot;, Georgia, serif" font-weight="700" font-size="11" fill="#1F1A17">25¢</text>
+  <text x="245" y="232" text-anchor="middle" font-family="&quot;Playfair Display&quot;, Georgia, serif" class="lbl-coin" font-weight="700" font-size="11" fill="#1F1A17">25¢</text>
 
   <rect x="212" y="258" width="66" height="58" rx="5" fill="url(#metalDark)" stroke="#857F76"></rect>
   <rect x="220" y="272" width="50" height="6" rx="3" fill="#120A08"></rect>
   <rect x="233" y="276" width="24" height="22" fill="#FBF6EC" stroke="#8B7B6D" stroke-width=".6"></rect>
-  <text x="245" y="334" text-anchor="middle" font-family="&quot;Special Elite&quot;, &quot;Courier New&quot;, monospace" font-size="8.5" letter-spacing="1.5" fill="#F4D7D9" opacity=".8">PRINTS</text>
+  <text x="245" y="334" text-anchor="middle" font-family="&quot;Special Elite&quot;, &quot;Courier New&quot;, monospace" class="lbl-prints" font-size="8.5" letter-spacing="1.5" fill="#F4D7D9" opacity=".8">PRINTS</text>
   <!-- the little strip that drops out of the slot after a session -->
   <g clip-path="url(#slotOut)"><g class="mini-strip">
     <rect x="233" y="277" width="24" height="80" fill="#FBF6EC" stroke="#B8A88E" stroke-width=".5"></rect>
@@ -217,7 +217,7 @@
   <rect x="172" y="456" width="20" height="4" rx="2" fill="#1F1A17" opacity=".4"></rect><rect x="200" y="456" width="20" height="4" rx="2" fill="#1F1A17" opacity=".4"></rect><rect x="228" y="456" width="20" height="4" rx="2" fill="#1F1A17" opacity=".4"></rect><rect x="256" y="456" width="20" height="4" rx="2" fill="#1F1A17" opacity=".4"></rect>
   <rect x="26" y="444" width="112" height="32" rx="3" fill="url(#brass)" stroke="#7A5C24"></rect>
   <circle cx="33" cy="460" r="2" fill="#7A5C24"></circle><circle cx="131" cy="460" r="2" fill="#7A5C24"></circle>
-  <text x="82" y="465" text-anchor="middle" font-family="&quot;Special Elite&quot;, &quot;Courier New&quot;, monospace" font-size="12" letter-spacing="2" fill="#3A2A10">EST. 2026</text>
+  <text x="82" y="465" text-anchor="middle" font-family="&quot;Special Elite&quot;, &quot;Courier New&quot;, monospace" class="lbl-est" font-size="12" letter-spacing="2" fill="#3A2A10">EST. 2026</text>
   <rect x="16" y="524" width="26" height="14" rx="2" fill="#1F1A17"></rect><rect x="258" y="524" width="26" height="14" rx="2" fill="#1F1A17"></rect>
 </svg>
                 <svg class="booth-curtains" viewBox="0 0 300 540" aria-hidden="true" focusable="false">
@@ -463,7 +463,6 @@
       <div class="booth-live" id="booth-live" hidden>
         <div class="camera-head">
           <button type="button" class="text-link text-link-light" id="btn-live-back"><span class="i"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Menu</button>
-          <button type="button" class="flash-toggle" id="flash-toggle" aria-pressed="true" title="The screen turns white for a moment to light your face"><svg class="flash-bulb" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 17.5h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V17.5h5.2v-1.7c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>Flash <span aria-hidden="true">·</span> <span class="flash-state">On</span></button>
         </div>
         <div class="booth-interior" id="booth-interior">
           <div class="camera" id="camera" data-state="loading">
