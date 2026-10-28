@@ -26,22 +26,16 @@ let S = null;   // the open session: { photos, index, aspect, work: [crop], reso
 
 // Close adjuster whenever the user navigates to any non-editor screen (back gesture, browser nav, etc.)
 ['home', 'booth', 'reveal', 'album'].forEach(s => onScreen(s, () => { if (S) close(false); }));
+window.addEventListener('popstate', () => { if (S) close(false); });
 
 /* --- drawing --- */
 function view() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const r = canvas.getBoundingClientRect();
-  let W = r.width, H = r.height;
-  if (!H && S) {
-    // On mobile Safari, .adj-stage has height:auto inside a CSS grid cell so getBoundingClientRect()
-    // returns 0 height. Derive height from the image's natural aspect ratio scaled to fit the viewport.
-    const img = S.photos[S.index].orig;
-    W = W || window.innerWidth;
-    H = img.naturalWidth && img.naturalHeight
-      ? Math.min(Math.round(W * img.naturalHeight / img.naturalWidth), Math.round(window.innerHeight * 0.55))
-      : Math.round(W * 0.75);
-    canvas.style.height = H + 'px';
-  }
+  // On mobile Safari, getBoundingClientRect inside a <dialog> can return 0×0 even after layout.
+  // Fall back to the canvas backing-store size (pre-set before showModal) or the viewport.
+  const W = r.width || (canvas.width ? canvas.width / dpr : window.innerWidth);
+  const H = r.height || (canvas.height ? canvas.height / dpr : 0);
   if (!W || !H) return null;
   const tw = Math.round(W * dpr), th = Math.round(H * dpr);
   if (canvas.width !== tw || canvas.height !== th) { canvas.width = tw; canvas.height = th; }
@@ -224,6 +218,13 @@ export function openAdjuster({ photos, index = 0, aspect }) {
   if (!usable) return Promise.resolve({ applied: false, crops: photos.map(p => p.crop) });
   return new Promise(resolve => {
     S = { photos, index, aspect, work: photos.map(p => ({ ...defaultCrop(), ...p.crop })), resolve, guides: false, pointers: new Map(), pinch: null };
+    // Pre-size the canvas backing store before showModal so view() always has non-zero dimensions,
+    // even when getBoundingClientRect() returns 0×0 on iOS Safari inside a <dialog>.
+    if (window.innerWidth <= 640) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width  = Math.round(window.innerWidth * dpr);
+      canvas.height = Math.round(window.innerHeight * 0.55 * dpr);
+    }
     dlg.showModal();
     // Wait for the image to be decoded before drawing; fall back to a load-event path for older browsers.
     // Then defer two frames so the dialog has finished layout (getBoundingClientRect returns 0 synchronously).
