@@ -3354,12 +3354,14 @@ html:not(.js-develop) .develop-veil { display: none; }
 @media (max-width: 640px) {
   .adjust-dialog {
     width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0;
-    display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
     padding: calc(var(--s2) + env(safe-area-inset-top)) 0 0;
     border-radius: 0;
     box-shadow: none;
   }
-  .adjust-dialog[open] { animation: none; }
+  .adjust-dialog[open] {
+    display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+    animation: none;
+  }
   .adj-head { margin-bottom: var(--s1); }
   .adj-title { font-size: var(--fs-28); }
   .adj-stage { height: 55dvh; min-height: 200px; border-radius: 0; }
