@@ -192,11 +192,11 @@ async function startLive() {
   setPhase('loading');
   try {
     await startCamera(dom.video);
-    if (state.screen !== 'booth') return stopCamera();
+    if (state.screen !== 'booth' || state.booth.phase !== 'loading') return stopCamera();
     setPhase('live');
     dom.snap.focus();
   } catch (err) {
-    if (err.name === 'Superseded' || state.screen !== 'booth') return;
+    if (err.name === 'Superseded' || state.screen !== 'booth' || state.booth.phase !== 'loading') return;
     stopCamera();
     showCameraProblem(CAMERA_STATE_FOR[err && err.name] || 'unknown');
     setPhase('error');

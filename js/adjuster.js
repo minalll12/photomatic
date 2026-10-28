@@ -26,6 +26,7 @@ let S = null;   // the open session: { photos, index, aspect, work: [crop], reso
 /* --- drawing --- */
 function view() {
   const r = canvas.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (!r.width || !r.height) return null;
   if (canvas.width !== Math.round(r.width * dpr) || canvas.height !== Math.round(r.height * dpr)) { canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr); }
   // the crop window: as large as fits with a margin round it to show what is being cut away
   const m = Math.min(56, r.width * 0.1), aw = r.width - 2 * m, ah = r.height - 2 * m;
@@ -36,6 +37,7 @@ function view() {
 function draw() {
   if (!S) return;
   const p = S.photos[S.index], img = p.orig, v = view(), ctx = canvas.getContext('2d');
+  if (!v) return;
   const g = cropGeometry(img, S.work[S.index], S.aspect);
   S.work[S.index] = g.crop;
   const k = v.win.h / g.h, pre = preview(img), pf = img.width / pre.width;
@@ -184,6 +186,8 @@ dlg.addEventListener('keydown', e => {
 });
 
 new ResizeObserver(() => { if (S) draw(); }).observe(canvas);
+// redraw after orientation change — canvas may have been resized by the browser
+window.addEventListener('orientationchange', () => { requestAnimationFrame(() => { if (S) draw(); }); });
 
 /* --- open / close --- */
 function close(applied) {
@@ -203,7 +207,11 @@ export function openAdjuster({ photos, index = 0, aspect }) {
   return new Promise(resolve => {
     S = { photos, index, aspect, work: photos.map(p => ({ ...defaultCrop(), ...p.crop })), resolve, guides: false, pointers: new Map(), pinch: null };
     dlg.showModal();
-    draw();
-    canvas.focus({ preventScroll: true });
+    // defer until after the dialog has laid out — getBoundingClientRect() returns 0×0 on mobile
+    // Safari if called synchronously after showModal()
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      draw();
+      canvas.focus({ preventScroll: true });
+    }));
   });
 }
