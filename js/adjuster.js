@@ -5,6 +5,7 @@
 import { $, makeCanvas, reducedMotion } from './utils.js';
 import { cropGeometry, imageFrame, defaultCrop, ZOOM_MAX, ANGLE_MAX } from './crop.js';
 import { switchClick } from './sound.js';
+import { onScreen } from './ui.js';
 
 const dlg = $('#adjust-dialog');
 const canvas = $('#adj-canvas');
@@ -23,15 +24,31 @@ const preview = img => {
 
 let S = null;   // the open session: { photos, index, aspect, work: [crop], resolve, guides, pointers, drag }
 
+// Close adjuster whenever the user navigates to any non-editor screen (back gesture, browser nav, etc.)
+['home', 'booth', 'reveal', 'album'].forEach(s => onScreen(s, () => { if (S) close(false); }));
+
 /* --- drawing --- */
 function view() {
-  const r = canvas.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
-  if (!r.width || !r.height) return null;
-  if (canvas.width !== Math.round(r.width * dpr) || canvas.height !== Math.round(r.height * dpr)) { canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr); }
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const r = canvas.getBoundingClientRect();
+  let W = r.width, H = r.height;
+  if (!H && S) {
+    // On mobile Safari, .adj-stage has height:auto inside a CSS grid cell so getBoundingClientRect()
+    // returns 0 height. Derive height from the image's natural aspect ratio scaled to fit the viewport.
+    const img = S.photos[S.index].orig;
+    W = W || window.innerWidth;
+    H = img.naturalWidth && img.naturalHeight
+      ? Math.min(Math.round(W * img.naturalHeight / img.naturalWidth), Math.round(window.innerHeight * 0.55))
+      : Math.round(W * 0.75);
+    canvas.style.height = H + 'px';
+  }
+  if (!W || !H) return null;
+  const tw = Math.round(W * dpr), th = Math.round(H * dpr);
+  if (canvas.width !== tw || canvas.height !== th) { canvas.width = tw; canvas.height = th; }
   // the crop window: as large as fits with a margin round it to show what is being cut away
-  const m = Math.min(56, r.width * 0.1), aw = r.width - 2 * m, ah = r.height - 2 * m;
+  const m = Math.min(56, W * 0.1), aw = W - 2 * m, ah = H - 2 * m;
   const winH = Math.min(ah, aw / S.aspect), winW = winH * S.aspect;
-  return { W: r.width, H: r.height, dpr, win: { x: (r.width - winW) / 2, y: (r.height - winH) / 2, w: winW, h: winH } };
+  return { W, H, dpr, win: { x: (W - winW) / 2, y: (H - winH) / 2, w: winW, h: winH } };
 }
 
 function draw() {
@@ -194,6 +211,7 @@ function close(applied) {
   if (!S) return;
   const { resolve, work } = S;
   S = null;
+  canvas.style.height = '';
   dlg.close();
   resolve({ applied, crops: work });
 }
@@ -207,11 +225,13 @@ export function openAdjuster({ photos, index = 0, aspect }) {
   return new Promise(resolve => {
     S = { photos, index, aspect, work: photos.map(p => ({ ...defaultCrop(), ...p.crop })), resolve, guides: false, pointers: new Map(), pinch: null };
     dlg.showModal();
-    // defer until after the dialog has laid out — getBoundingClientRect() returns 0×0 on mobile
-    // Safari if called synchronously after showModal()
-    requestAnimationFrame(() => requestAnimationFrame(() => {
+    // Wait for the image to be decoded before drawing; fall back to a load-event path for older browsers.
+    // Then defer two frames so the dialog has finished layout (getBoundingClientRect returns 0 synchronously).
+    const img = photos[index].orig;
+    const ready = typeof img.decode === 'function' ? img.decode().catch(() => {}) : Promise.resolve();
+    ready.then(() => requestAnimationFrame(() => requestAnimationFrame(() => {
       draw();
       canvas.focus({ preventScroll: true });
-    }));
+    })));
   });
 }

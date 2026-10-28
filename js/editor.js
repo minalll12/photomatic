@@ -81,7 +81,8 @@ function drawDisplay() {
   const maxH = window.innerWidth <= 860
     ? Math.max(140, panel.getBoundingClientRect().top - 26 - top - 2 * padY)
     : Math.max(280, window.innerHeight - top - 2 * padY - 24);
-  v.scale = Math.min(E.stageW / L.W, maxH / L.H, MAX_VIEW_SCALE);
+  const maxViewScale = window.innerWidth <= 860 ? 0.62 : MAX_VIEW_SCALE;
+  v.scale = Math.min(E.stageW / L.W, maxH / L.H, maxViewScale);
   v.k = v.scale * dpr; v.W = L.W; v.H = L.H;
   const pw = Math.round(L.W * v.k), ph = Math.round(L.H * v.k);
   if (strip.width !== pw || strip.height !== ph) {
