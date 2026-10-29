@@ -3571,6 +3571,27 @@ html:not(.js-develop) .develop-veil { display: none; }
   .booth-stand { right: auto; left: 50%; margin-left: calc(var(--booth-w) / -2); }
   .floor-tiles { background-size: 52px 52px; }
   .ticket { display: none; }
+  .booth-tap-cta:not([hidden]) {
+    position: absolute;
+    bottom: 172px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--burgundy);
+    color: var(--cream);
+    border: none;
+    border-radius: 8px;
+    padding: 14px 28px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    letter-spacing: .04em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgb(42 7 11 / .5);
+    z-index: 2;
+  }
 }
 /* phones and small tablets: text first, centred; then the booth on its own floor */
 @media (max-width: 768px) {
