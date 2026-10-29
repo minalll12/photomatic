@@ -21,11 +21,6 @@ export async function initHero({ onEnter }) {
   hangingThings(hero);
   if (!photo) boothSession(hero);
   $('#hero-cta').addEventListener('click', onEnter);
-  const tapCta = $('#booth-tap-cta');
-  if (tapCta) {
-    if (window.innerWidth >= 769 && window.innerWidth <= 860) tapCta.hidden = false;
-    tapCta.addEventListener('click', onEnter);
-  }
 
   // idle motion only while the hero is on screen
   if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => hero.classList.toggle('is-paused', !en.isIntersecting)).observe(hero);
