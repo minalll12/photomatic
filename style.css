@@ -3549,18 +3549,27 @@ html:not(.js-develop) .develop-veil { display: none; }
   .hero { --booth-scale: .85; }
   .film-wall { display: none; }
 }
-/* iPad portrait (769–860px): two-column, capped height, text takes 7 cols so it reads closer to booth */
+/* iPad portrait (769–860px): stacked layout designed for tablet — big centred booth, wide text */
 @media (max-width: 860px) and (min-width: 769px) {
   .hero {
-    --hero-h: min(660px, calc(100svh - var(--header-h)));
-    --booth-scale: .9;
+    --art-h: min(680px, 92vw);
+    --floor-h: calc(var(--art-h) * .24);
+    --wall-h: calc(var(--art-h) * .76);
+    --booth-w: 260px;
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
   }
-  .hero-copy { grid-column: 1 / 8; }
-  .hero-art  { grid-column: 8 / 13; }
-  .wordmark-hero { font-size: clamp(2.6rem, 5vw, 3.8rem); }
-  .torn-note { font-size: 1rem; }
-  .hero-actions { flex-wrap: wrap; gap: var(--s1) var(--s2); }
+  .hero-copy { grid-column: 1; height: auto; align-items: center; padding-top: var(--s10); text-align: center; }
+  .wordmark-hero { margin-left: 0; font-size: clamp(3.8rem, 7.5vw, 5.2rem); }
+  .torn-note { transform-origin: 50% 50%; font-size: 1.05rem; }
+  .hero-actions { flex-wrap: wrap; justify-content: center; gap: var(--s2) var(--s3); }
+  .hero-art { grid-column: 1; grid-row: 2; height: var(--art-h); }
   .gallery, .stanchion, .pendant, .film-wall { display: none; }
+  .light-pool, .light-warm { right: auto; left: calc(50% - var(--booth-w) * .89); }
+  .wainscot { grid-row: 2; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--s2); margin-inline: calc(50% - 50vw); padding-inline: var(--s2); }
+  .wainscot span:nth-child(n + 13) { display: none; }
+  .booth-stand { right: auto; left: 50%; margin-left: calc(var(--booth-w) / -2); }
+  .floor-tiles { background-size: 52px 52px; }
 }
 /* phones and small tablets: text first, centred; then the booth on its own floor */
 @media (max-width: 768px) {
