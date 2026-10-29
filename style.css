@@ -3549,17 +3549,17 @@ html:not(.js-develop) .develop-veil { display: none; }
   .hero { --booth-scale: .85; }
   .film-wall { display: none; }
 }
-/* iPad portrait (769–860px): stacked layout designed for tablet — big centred booth, wide text */
+/* iPad portrait (769–860px): stacked, fits exactly in one viewport (copy ~350px + art 640px ≈ 990px) */
 @media (max-width: 860px) and (min-width: 769px) {
   .hero {
-    --art-h: min(680px, 92vw);
+    --art-h: 640px;
     --floor-h: calc(var(--art-h) * .24);
     --wall-h: calc(var(--art-h) * .76);
-    --booth-w: 260px;
+    --booth-w: 240px;
     grid-template-columns: minmax(0, 1fr);
     height: auto;
   }
-  .hero-copy { grid-column: 1; height: auto; align-items: center; padding-top: var(--s10); text-align: center; }
+  .hero-copy { grid-column: 1; height: auto; align-items: center; padding: var(--s5) 0 var(--s1); text-align: center; }
   .wordmark-hero { margin-left: 0; font-size: clamp(3.8rem, 7.5vw, 5.2rem); }
   .torn-note { transform-origin: 50% 50%; font-size: 1.05rem; }
   .hero-actions { flex-wrap: wrap; justify-content: center; gap: var(--s2) var(--s3); }
