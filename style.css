@@ -3470,7 +3470,7 @@ html:not(.js-develop) .develop-veil { display: none; }
 
   .editor { grid-template-columns: 1fr; }
   /* phones: the mat and strip on top, the panel a bottom sheet; only the washi tape stays */
-  .stage { --mat-pad: var(--s3); padding: 28px var(--mat-pad); border-radius: 16px; margin-bottom: calc(var(--s10) * 2); }
+  .stage { --mat-pad: var(--s3); padding: 28px var(--mat-pad); border-radius: 16px; margin-bottom: calc(44vh + 52px); }
   .prop-sheet { left: -14px; top: -40px; }
   .panel {
     position: fixed;
@@ -3478,24 +3478,27 @@ html:not(.js-develop) .develop-veil { display: none; }
     padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
     z-index: var(--z-sheet);
     min-height: 0;
-    max-height: 58vh;
+    max-height: 44vh;
     contain: none;
     filter: drop-shadow(0 -8px 24px rgb(70 40 18 / .45));
   }
+  /* full-width drag bar: the entire top edge is tappable */
   .sheet-handle {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    left: 50%; top: -26px;
-    width: 72px; height: 26px;
-    margin-left: -36px;
+    left: 0; right: 0; top: -40px;
+    height: 40px;
     border: 0;
-    border-radius: 12px 12px 0 0;
+    border-radius: 16px 16px 0 0;
     background: #FBF6EC;
-    cursor: pointer;
+    box-shadow: 0 -2px 8px rgb(70 40 18 / .18);
+    cursor: grab;
   }
-  .sheet-handle::after { content: ""; position: absolute; left: 22px; right: 22px; top: 11px; height: 4px; border-radius: 2px; background: var(--line-strong); }
-  /* a 44px touch area round the small handle */
-  .sheet-handle::before { content: ""; position: absolute; inset: -12px -8px -6px; }
+  .sheet-handle::after { content: ""; display: block; width: 40px; height: 4px; border-radius: 2px; background: var(--line-strong); opacity: .5; }
+  /* full touch area */
+  .sheet-handle::before { content: ""; position: absolute; inset: -8px 0 0; }
   .tabs { padding-left: var(--s2); gap: 2px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
   .tab { padding: 0 var(--s1); letter-spacing: .02em; flex: none; scroll-snap-align: start; min-width: 68px; }

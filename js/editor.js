@@ -50,7 +50,7 @@ export async function newDesign() {
 
 export function openEditor({ via = 'fade' } = {}) {
   selectTab($('#tab-frame'));
-  if (window.innerWidth <= 860) setSheetCollapsed(true);
+  if (window.innerWidth <= 860) setSheetCollapsed(false);
   buildProps();
   // everything is drawn before the screen is uncovered: the frame thumbnails here, the strip in the swap
   frameButtons.forEach((_, id) => renderThumb(id));
