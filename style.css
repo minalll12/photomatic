@@ -3570,9 +3570,10 @@ html:not(.js-develop) .develop-veil { display: none; }
   .wainscot span:nth-child(n + 13) { display: none; }
   .booth-stand { right: auto; left: 50%; margin-left: calc(var(--booth-w) / -2); }
   .floor-tiles { background-size: 52px 52px; }
+  .torn-note { margin-bottom: var(--s2); }
   .hero-actions { flex-direction: column; align-items: center; gap: 0; }
-  .ticket { transform: rotate(-1.5deg) scale(0.82); transform-origin: center; margin-bottom: var(--s1); }
-  .hero-link { margin-top: var(--s4); }
+  .ticket { transform: rotate(-1.5deg) scale(0.82); transform-origin: center; margin-bottom: var(--s3); }
+  .hero-link { margin-top: 0; }
 }
 /* phones and small tablets: text first, centred; then the booth on its own floor */
 @media (max-width: 768px) {
