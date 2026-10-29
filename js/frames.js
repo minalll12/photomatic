@@ -7,7 +7,7 @@
      footer(L) + drawText(L)               its own text spots instead of the
                                            standard caption / date / dedication block
    Every hook receives (ctx, L, v) where v is the chosen colour variant. */
-import { C, FONT, rrect, circle, tracking, fitFont, mulberry32, hashString, pad2, MONTHS } from './utils.js';
+import { C, FONT, rrect, circle, tracking, fitFont, mulberry32, hashString, pad2, MONTHS, heartPath, starPath } from './utils.js';
 import { fillBackground } from './patterns.js';
 import { IMG, grainOver, drawLetterPaper, drawSafetyPin, drawWaxSeal } from './textures.js';
 import { state } from './state.js';
@@ -172,13 +172,169 @@ function printMark(ctx, cx, y, w, { date = '', ink = C.cream, scale = 1 } = {}) 
   if (date) text(ctx, date, cx, y + 66 * k, FONT.type(14 * k), ink, { track: 3 * k });
 }
 
+/* ---- occasions drawing helpers ---- */
+function occBorder(ctx, W, H, col) {
+  ctx.save();
+  ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+  ctx.strokeRect(12, 12, W - 24, H - 24);
+  ctx.globalAlpha = 0.4; ctx.lineWidth = 1;
+  ctx.strokeRect(20, 20, W - 40, H - 40);
+  ctx.restore();
+}
+function occRule(ctx, W, y, col) {
+  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(38, y); ctx.lineTo(W - 38, y); ctx.stroke();
+  ctx.restore();
+}
+function occStars(ctx, W, topH, col, seed, n) {
+  const rnd = mulberry32(seed);
+  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 0.8;
+  for (let i = 0; i < n; i++) {
+    const x = 28 + rnd() * (W - 56), y = 28 + rnd() * Math.max(1, topH - 36);
+    const r = 2.5 + rnd() * 3.5, pts = rnd() > 0.4 ? 4 : 6;
+    ctx.beginPath(); ctx.globalAlpha = 0.4 + rnd() * 0.45;
+    for (let j = 0; j < pts * 2; j++) {
+      const ri = j % 2 ? r * 0.38 : r, a = -Math.PI / 2 + j * Math.PI / pts;
+      const px = x + Math.cos(a) * ri, py = y + Math.sin(a) * ri;
+      j === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.closePath(); ctx.stroke();
+  }
+  ctx.restore();
+}
+function occCrescent(ctx, cx, cy, r, col) {
+  ctx.save(); ctx.fillStyle = col;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath(); ctx.arc(cx + r * 0.44, cy - r * 0.08, r * 0.76, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+function occBat(ctx, cx, cy, s, col) {
+  ctx.save(); ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy + s * 0.08);
+  ctx.bezierCurveTo(cx - s * 0.12, cy - s * 0.28, cx - s * 0.52, cy - s * 0.52, cx - s, cy - s * 0.18);
+  ctx.bezierCurveTo(cx - s * 0.7, cy - s * 0.04, cx - s * 0.38, cy + s * 0.1, cx - s * 0.16, cy + s * 0.24);
+  ctx.bezierCurveTo(cx - s * 0.06, cy + s * 0.06, cx, cy + s * 0.08, cx, cy + s * 0.08);
+  ctx.bezierCurveTo(cx, cy + s * 0.08, cx + s * 0.06, cy + s * 0.06, cx + s * 0.16, cy + s * 0.24);
+  ctx.bezierCurveTo(cx + s * 0.38, cy + s * 0.1, cx + s * 0.7, cy - s * 0.04, cx + s, cy - s * 0.18);
+  ctx.bezierCurveTo(cx + s * 0.52, cy - s * 0.52, cx + s * 0.12, cy - s * 0.28, cx, cy + s * 0.08);
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+function occHolly(ctx, cx, cy, s, leafCol, berryCol) {
+  ctx.save(); ctx.strokeStyle = leafCol; ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.bezierCurveTo(cx - s, cy - s * 0.3, cx - s * 1.2, cy + s * 0.55, cx - s * 0.3, cy + s * 0.95);
+  ctx.bezierCurveTo(cx, cy + s * 0.55, cx + s * 0.1, cy + s * 0.1, cx, cy); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.bezierCurveTo(cx + s * 0.75, cy - s * 0.5, cx + s * 1.15, cy + s * 0.15, cx + s * 0.4, cy + s * 0.95);
+  ctx.bezierCurveTo(cx + s * 0.1, cy + s * 0.5, cx - s * 0.05, cy + s * 0.1, cx, cy); ctx.stroke();
+  ctx.fillStyle = berryCol;
+  [[-s * 0.04, -s * 0.12], [s * 0.14, -s * 0.24], [s * 0.05, -s * 0.04]].forEach(([dx, dy]) => {
+    circle(ctx, cx + dx, cy + dy, s * 0.14); ctx.fill();
+  });
+  ctx.restore();
+}
+function occGradCap(ctx, cx, cy, s, col) {
+  ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(cx - s, cy); ctx.lineTo(cx, cy - s * 0.3);
+  ctx.lineTo(cx + s, cy); ctx.lineTo(cx, cy + s * 0.3); ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(cx - s * 0.5, cy + s * 0.06);
+  ctx.lineTo(cx - s * 0.5, cy + s * 0.72);
+  ctx.bezierCurveTo(cx - s * 0.5, cy + s * 0.9, cx + s * 0.5, cy + s * 0.9, cx + s * 0.5, cy + s * 0.72);
+  ctx.lineTo(cx + s * 0.5, cy + s * 0.06); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + s * 0.08, cy - s * 0.04);
+  ctx.lineTo(cx + s * 0.42, cy + s * 0.38);
+  ctx.lineTo(cx + s * 0.42, cy + s * 0.65); ctx.stroke();
+  circle(ctx, cx + s * 0.42, cy + s * 0.68, s * 0.07); ctx.fill();
+  ctx.restore();
+}
+function occRings(ctx, cx, cy, r, col) {
+  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.8;
+  circle(ctx, cx - r * 0.52, cy, r); ctx.stroke();
+  circle(ctx, cx + r * 0.52, cy, r); ctx.stroke();
+  ctx.restore();
+}
+function occBow(ctx, cx, cy, s, col) {
+  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.bezierCurveTo(cx - s * 0.55, cy - s * 0.6, cx - s * 1.4, cy - s * 0.2, cx - s, cy + s * 0.2);
+  ctx.bezierCurveTo(cx - s * 0.65, cy + s * 0.45, cx - s * 0.18, cy + s * 0.16, cx, cy); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.bezierCurveTo(cx + s * 0.55, cy - s * 0.6, cx + s * 1.4, cy - s * 0.2, cx + s, cy + s * 0.2);
+  ctx.bezierCurveTo(cx + s * 0.65, cy + s * 0.45, cx + s * 0.18, cy + s * 0.16, cx, cy); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx, cy); ctx.lineTo(cx - s * 0.5, cy + s * 0.65);
+  ctx.moveTo(cx, cy); ctx.lineTo(cx + s * 0.5, cy + s * 0.65); ctx.stroke();
+  ctx.fillStyle = col; circle(ctx, cx, cy, s * 0.1); ctx.fill();
+  ctx.restore();
+}
+function occCloud(ctx, cx, cy, w, col) {
+  const h = w * 0.48;
+  ctx.save(); ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.arc(cx, cy, h * 0.55, Math.PI, 0);
+  ctx.arc(cx + w * 0.3, cy - h * 0.22, h * 0.42, Math.PI * 0.7, -0.1);
+  ctx.arc(cx - w * 0.28, cy - h * 0.18, h * 0.38, Math.PI * 0.95, 0.05);
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+function occConfetti(ctx, W, topH, cols, seed) {
+  const rnd = mulberry32(seed);
+  ctx.save();
+  for (let i = 0; i < 34; i++) {
+    const x = rnd() * W, y = 26 + rnd() * Math.max(1, topH - 36), s = 2.5 + rnd() * 3.5;
+    ctx.globalAlpha = 0.45 + rnd() * 0.4; ctx.fillStyle = cols[i % cols.length];
+    ctx.save(); ctx.translate(x, y); ctx.rotate(rnd() * Math.PI * 2);
+    if (rnd() > 0.45) ctx.fillRect(-s, -s / 2.2, s * 2, s);
+    else { ctx.beginPath(); circle(ctx, 0, 0, s * 0.7); ctx.fill(); }
+    ctx.restore();
+  }
+  ctx.restore();
+}
+function occPartyHat(ctx, cx, cy, s, col) {
+  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(cx - s * 0.62, cy + s * 0.88); ctx.lineTo(cx, cy - s * 0.48);
+  ctx.lineTo(cx + s * 0.62, cy + s * 0.88); ctx.closePath(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(cx, cy + s * 0.88, s * 0.62, s * 0.14, 0, 0, Math.PI * 2); ctx.stroke();
+  ctx.fillStyle = col; circle(ctx, cx, cy - s * 0.52, s * 0.09); ctx.fill();
+  ctx.save(); ctx.globalAlpha = 0.45; ctx.setLineDash([3, 4]);
+  ctx.beginPath();
+  ctx.moveTo(cx - s * 0.22, cy + s * 0.06); ctx.lineTo(cx + s * 0.02, cy + s * 0.55);
+  ctx.moveTo(cx + s * 0.14, cy - s * 0.18); ctx.lineTo(cx + s * 0.38, cy + s * 0.38);
+  ctx.stroke(); ctx.restore(); ctx.restore();
+}
+function occBowtie(ctx, cx, cy, s, col) {
+  ctx.save(); ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.moveTo(cx - s * 0.1, cy - s * 0.18);
+  ctx.bezierCurveTo(cx - s * 0.28, cy - s * 0.44, cx - s * 1.1, cy - s * 0.38, cx - s, cy);
+  ctx.bezierCurveTo(cx - s * 1.1, cy + s * 0.38, cx - s * 0.28, cy + s * 0.44, cx - s * 0.1, cy + s * 0.18);
+  ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(cx + s * 0.1, cy - s * 0.18);
+  ctx.bezierCurveTo(cx + s * 0.28, cy - s * 0.44, cx + s * 1.1, cy - s * 0.38, cx + s, cy);
+  ctx.bezierCurveTo(cx + s * 1.1, cy + s * 0.38, cx + s * 0.28, cy + s * 0.44, cx + s * 0.1, cy + s * 0.18);
+  ctx.closePath(); ctx.fill();
+  ctx.beginPath(); rrect(ctx, cx - s * 0.1, cy - s * 0.18, s * 0.2, s * 0.36, s * 0.05); ctx.fill();
+  ctx.restore();
+}
+
 /* =========================================================
    The frames
    ========================================================= */
 export const FRAME_GROUPS = [
   { id: 'classic', name: 'Classic' },
-  { id: 'paper', name: 'Paper goods' },
-  { id: 'film', name: 'Film' },
+  { id: 'occasions', name: 'Occasions' },
 ];
 
 export const FRAMES = {
@@ -627,6 +783,360 @@ export const FRAMES = {
       ctx.save(); ctx.globalAlpha = 0.55;
       text(ctx, 'photomatic', L.W / 2, L.H - 40, FONT.logo(18), L.ink);
       ctx.restore();
+    },
+  },
+
+  /* ---------------- Occasions ---------------- */
+  newyear: {
+    name: 'New Year', category: 'occasions', group: 'occasions',
+    ink: C.cream, pairs: ['darkroom', 'silver'],
+    hints: { caption: 'a name or message', dedication: 'a wish for the year' },
+    variants: [['navy', 'Midnight navy', '#1A2338'], ['black', 'Jet black', '#141110'], ['oxblood', 'Oxblood', '#2E0A0D']],
+    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
+    footer: () => 48 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.5);
+      occBorder(ctx, W, H, 'rgba(184,147,74,1)');
+      occStars(ctx, W, 138, 'rgba(184,147,74,1)', 31, 20);
+      occRule(ctx, W, 126, 'rgba(184,147,74,.4)');
+      text(ctx, 'HAPPY NEW YEAR', W / 2, 60, FONT.serif(20, 700), C.gold, { track: 3, max: W - 80 });
+      text(ctx, String(D().shotDate.getFullYear()), W / 2, 100, FONT.type(18), C.cream, { track: 8 });
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(184,147,74,.3)'); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.type(16), C.cream, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.gold, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
+    },
+  },
+
+  valentine: {
+    name: "Valentine's Day", category: 'occasions', group: 'occasions',
+    ink: C.ink, pairs: ['warm400', 'faded'],
+    hints: { caption: 'a name', dedication: 'a message' },
+    variants: [['blush', 'Blush', '#F2D0D2'], ['cream', 'Cream', '#F8F2E8'], ['rose', 'Deep rose', '#DDACB4']],
+    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
+    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L) {
+      const { W, H } = L;
+      ctx.fillStyle = L.v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.7);
+      ctx.save(); ctx.strokeStyle = 'rgba(179,32,42,.32)'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(12, 12, W - 24, H - 24);
+      ctx.strokeStyle = 'rgba(184,147,74,.22)'; ctx.lineWidth = 1;
+      ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
+      ctx.save(); ctx.strokeStyle = C.cherry; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.65;
+      heartPath(ctx, W / 2, 50, 36); ctx.stroke(); ctx.restore();
+      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.48)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(W / 2 - 58, 84); ctx.lineTo(W / 2 + 58, 84); ctx.stroke(); ctx.restore();
+      text(ctx, 'Be Mine', W / 2, 114, FONT.script(30), C.cherry, { max: W - 80 });
+      occRule(ctx, W, 134, 'rgba(179,32,42,.22)');
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(179,32,42,.25)'); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.ink, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), 'rgba(179,32,42,.65)', { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
+    },
+  },
+
+  halloween: {
+    name: 'Halloween', category: 'occasions', group: 'occasions',
+    ink: C.cream, pairs: ['darkroom', 'sepia'],
+    hints: { caption: 'a name', dedication: 'a message' },
+    variants: [['oxblood', 'Oxblood', '#2E0A0D'], ['black', 'Jet black', '#141110'], ['navy', 'Dark navy', '#141C2E']],
+    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
+    footer: () => 48 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.6);
+      occBorder(ctx, W, H, 'rgba(201,169,122,1)');
+      occCrescent(ctx, W / 2 - 28, 54, 26, C.kraft);
+      occBat(ctx, W / 2 + 44, 50, 18, C.kraft);
+      text(ctx, 'BOO.', W / 2, 106, FONT.serif(26, 700), C.kraft, { track: 2 });
+      occRule(ctx, W, 126, 'rgba(201,169,122,.32)');
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(201,169,122,.28)'); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.type(16), C.cream, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.kraft, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
+    },
+  },
+
+  christmas: {
+    name: 'Christmas', category: 'occasions', group: 'occasions',
+    ink: C.ink, pairs: ['warm400', 'natural'],
+    hints: { caption: 'a name', dedication: 'a message' },
+    variants: [['sage', 'Sage', '#CAD5C2'], ['cream', 'Cream', '#F6F0E4'], ['navy', 'Night navy', '#1A2338']],
+    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
+    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L, dark = v.id === 'navy';
+      const accentCol = dark ? C.gold : C.red;
+      const borderCol = dark ? 'rgba(184,147,74,.5)' : 'rgba(42,33,28,.18)';
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.7);
+      ctx.save(); ctx.strokeStyle = borderCol; ctx.lineWidth = 1.5;
+      ctx.strokeRect(12, 12, W - 24, H - 24);
+      ctx.globalAlpha = 0.4; ctx.lineWidth = 1;
+      ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
+      const leafCol = dark ? 'rgba(167,180,154,.85)' : 'rgba(56,90,56,.65)';
+      occHolly(ctx, W / 2, 32, 22, leafCol, C.cherry);
+      text(ctx, 'Merry Christmas', W / 2, 84, FONT.serifItalic(22, 700), accentCol, { max: W - 80 });
+      text(ctx, String(D().shotDate.getFullYear()), W / 2, 114, FONT.type(13), dark ? C.cream : C.muted, { track: 6 });
+      occRule(ctx, W, 132, dark ? 'rgba(184,147,74,.32)' : 'rgba(42,33,28,.15)');
+    },
+    drawText(ctx, L, v) {
+      const { W } = L, dark = v.id === 'navy';
+      const textCol = dark ? C.cream : C.ink;
+      const ruleCol = dark ? 'rgba(184,147,74,.28)' : 'rgba(42,33,28,.15)';
+      let y = L.photosEnd + 14;
+      occRule(ctx, W, y, ruleCol); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.type(16), textCol, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), textCol, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), textCol, { max: W - 80 });
+    },
+  },
+
+  graduation: {
+    name: 'Graduation', category: 'occasions', group: 'occasions',
+    ink: C.cream, pairs: ['darkroom', 'silver'],
+    hints: { caption: 'the class year e.g. 2025', dedication: 'a congratulations message' },
+    variants: [['oxblood', 'Oxblood', '#2E0A0D'], ['black', 'Jet black', '#141110'], ['navy', 'Navy', '#1A2338']],
+    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
+    footer: () => 48 + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.5);
+      occBorder(ctx, W, H, 'rgba(184,147,74,1)');
+      occGradCap(ctx, W / 2, 48, 30, C.gold);
+      const yr = caption() || String(D().shotDate.getFullYear());
+      text(ctx, 'CLASS OF', W / 2, 96, FONT.type(13), C.gold, { track: 6 });
+      text(ctx, yr, W / 2, 120, FONT.serif(28, 700), C.gold, { track: 2, max: W - 80 });
+      occRule(ctx, W, 138, 'rgba(184,147,74,.38)');
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(184,147,74,.28)'); y += 20;
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.gold, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
+    },
+  },
+
+  anniversary: {
+    name: 'Anniversary', category: 'occasions', group: 'occasions',
+    ink: C.ink, pairs: ['warm400', 'faded'],
+    hints: { caption: "the couple's names", dedication: 'a message' },
+    variants: [['blush', 'Blush', '#F0CCCE'], ['cream', 'Cream', '#F6F0E4'], ['dusty', 'Dusty blue', '#C4D3DF']],
+    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
+    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.7);
+      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.38)'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(12, 12, W - 24, H - 24);
+      ctx.globalAlpha = 0.35; ctx.lineWidth = 1;
+      ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
+      occRings(ctx, W / 2, 54, 22, 'rgba(184,147,74,.75)');
+      text(ctx, 'ANNIVERSARY', W / 2, 96, FONT.serif(18, 700), C.ink, { track: 4, max: W - 80 });
+      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.5)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(W / 2 - 70, 108); ctx.lineTo(W / 2 + 70, 108); ctx.stroke(); ctx.restore();
+      text(ctx, caption() || '♥', W / 2, 128, FONT.script(22), C.ink, { max: W - 80 });
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(184,147,74,.28)'); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.ink, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
+    },
+  },
+
+  wedding: {
+    name: 'Wedding', category: 'occasions', group: 'occasions',
+    ink: C.ink, pairs: ['warm400', 'faded'],
+    hints: { caption: "names or 'Mr & Mrs'", dedication: 'date and venue' },
+    variants: [['cream', 'Ivory cream', '#FAFAF4'], ['blush', 'Blush white', '#F6ECEE'], ['paper', 'Natural paper', '#F4EEE3']],
+    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 32 }),
+    footer: () => 56 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.7);
+      ctx.save();
+      ctx.strokeStyle = 'rgba(184,147,74,.45)'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(12, 12, W - 24, H - 24);
+      ctx.strokeStyle = 'rgba(184,147,74,.22)'; ctx.lineWidth = 1;
+      ctx.strokeRect(18, 18, W - 36, H - 36);
+      ctx.strokeRect(24, 24, W - 48, H - 48); ctx.restore();
+      text(ctx, 'Mr & Mrs', W / 2, 72, FONT.serifItalic(30, 600), C.ink, { max: W - 80 });
+      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.5)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(W / 2 - 70, 90); ctx.lineTo(W / 2 + 70, 90); ctx.stroke(); ctx.restore();
+      text(ctx, caption() || '♥', W / 2, 116, FONT.script(24), C.muted, { max: W - 80 });
+      occRule(ctx, W, 134, 'rgba(184,147,74,.22)');
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(184,147,74,.22)'); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.serifItalic(18, 400), C.ink, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
+    },
+  },
+
+  bdayA: {
+    name: 'Birthday (A)', category: 'occasions', group: 'occasions',
+    ink: C.ink, pairs: ['warm400', 'faded'],
+    hints: { caption: "the birthday person's name", dedication: 'a message' },
+    variants: [['butter', 'Butter', '#EBD9A0'], ['blush', 'Blush', '#F2D0D2'], ['cream', 'Cream', '#F6F0E4']],
+    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
+    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.7);
+      ctx.save(); ctx.strokeStyle = 'rgba(58,10,14,.22)'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(12, 12, W - 24, H - 24);
+      ctx.strokeStyle = 'rgba(58,10,14,.12)'; ctx.lineWidth = 1;
+      ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
+      occConfetti(ctx, W, 136, [C.cherry, C.gold, C.dusty, C.sage], 13);
+      text(ctx, 'HAPPY BIRTHDAY', W / 2, 96, FONT.serif(19, 800), C.oxblood, { track: 3, max: W - 80 });
+      text(ctx, caption() || '★', W / 2, 120, FONT.script(26), C.oxblood, { max: W - 80 });
+      occRule(ctx, W, 136, 'rgba(58,10,14,.18)');
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(58,10,14,.18)'); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.oxblood, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
+    },
+  },
+
+  bdayB: {
+    name: 'Birthday (B)', category: 'occasions', group: 'occasions',
+    ink: C.cream, pairs: ['silver', 'darkroom'],
+    hints: { caption: "the birthday person's name", dedication: 'a message' },
+    variants: [['dusty', 'Dusty blue', '#5E7A8E'], ['navy', 'Navy', '#1A2338'], ['slate', 'Slate', '#4A5A6A']],
+    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
+    footer: () => 48 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.5);
+      occBorder(ctx, W, H, 'rgba(184,147,74,1)');
+      occPartyHat(ctx, W / 2, 46, 28, C.gold);
+      text(ctx, 'Happy Birthday', W / 2, 104, FONT.serifItalic(22, 600), C.gold, { max: W - 80 });
+      text(ctx, caption() || '★', W / 2, 126, FONT.type(13), C.cream, { track: 4, max: W - 80 });
+      occRule(ctx, W, 138, 'rgba(184,147,74,.35)');
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(184,147,74,.28)'); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.type(16), C.cream, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.gold, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
+    },
+  },
+
+  bridal: {
+    name: 'Bridal Shower', category: 'occasions', group: 'occasions',
+    ink: C.ink, pairs: ['warm400', 'faded'],
+    hints: { caption: "the bride's name", dedication: 'a message' },
+    variants: [['blush', 'Blush', '#F0CCCE'], ['cream', 'Cream', '#F8F4EE'], ['rose', 'Rose', '#E8B8BE']],
+    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
+    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.7);
+      ctx.save(); ctx.strokeStyle = 'rgba(179,32,42,.28)'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(12, 12, W - 24, H - 24);
+      ctx.strokeStyle = 'rgba(184,147,74,.2)'; ctx.lineWidth = 1;
+      ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
+      occBow(ctx, W / 2, 48, 26, 'rgba(179,32,42,.55)');
+      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.55)'; ctx.lineWidth = 1.2;
+      circle(ctx, W / 2, 82, 8); ctx.stroke(); ctx.restore();
+      text(ctx, 'SHE SAID YES', W / 2, 108, FONT.serif(18, 700), C.ink, { track: 4, max: W - 80 });
+      occRule(ctx, W, 128, 'rgba(179,32,42,.2)');
+      text(ctx, caption() || '♥', W / 2, 138, FONT.script(20), C.muted, { max: W - 80 });
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(179,32,42,.2)'); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.ink, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
+    },
+  },
+
+  baby: {
+    name: 'Baby Shower', category: 'occasions', group: 'occasions',
+    ink: C.ink, pairs: ['natural', 'faded'],
+    hints: { caption: "the baby's name", dedication: 'a message' },
+    variants: [['sage', 'Sage', '#C8D4BE'], ['butter', 'Butter', '#EBD9A0'], ['mist', 'Mist', '#D6E2D4']],
+    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
+    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.7);
+      ctx.save(); ctx.strokeStyle = 'rgba(42,33,28,.16)'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(12, 12, W - 24, H - 24);
+      ctx.globalAlpha = 0.5; ctx.lineWidth = 1;
+      ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
+      occCloud(ctx, W / 2, 58, 80, 'rgba(255,255,255,.7)');
+      ctx.save(); ctx.fillStyle = 'rgba(184,147,74,.55)';
+      [[W / 2 - 55, 40], [W / 2 + 55, 38], [W / 2 + 72, 54]].forEach(([x, y]) => {
+        starPath(ctx, x, y, 5, 2.2, 5); ctx.fill();
+      });
+      ctx.restore();
+      text(ctx, 'WELCOME BABY', W / 2, 88, FONT.serif(17, 700), C.ink, { track: 4, max: W - 80 });
+      text(ctx, caption() || '♡', W / 2, 114, FONT.script(26), C.ink, { max: W - 80 });
+      occRule(ctx, W, 132, 'rgba(42,33,28,.14)');
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(42,33,28,.14)'); y += 20;
+      if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.ink, { max: W - 80 }); y += 28; }
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
+    },
+  },
+
+  prom: {
+    name: 'Prom Night', category: 'occasions', group: 'occasions',
+    ink: C.cream, pairs: ['darkroom', 'silver'],
+    hints: { caption: 'the prom year e.g. 2025', dedication: 'a message' },
+    variants: [['navy', 'Midnight navy', '#1A2338'], ['black', 'Jet black', '#141110'], ['oxblood', 'Oxblood', '#2E0A0D']],
+    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
+    footer: () => 48 + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
+      const { W, H } = L;
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      grainOver(ctx, 0, 0, W, H, 0.5);
+      occBorder(ctx, W, H, 'rgba(184,147,74,1)');
+      occStars(ctx, W, 140, 'rgba(184,147,74,1)', 47, 12);
+      occBowtie(ctx, W / 2, 50, 22, C.gold);
+      text(ctx, 'PROM', W / 2, 86, FONT.serif(22, 700), C.gold, { track: 8 });
+      const yr = caption() || String(D().shotDate.getFullYear());
+      text(ctx, yr, W / 2, 114, FONT.type(18), C.cream, { track: 8 });
+      occRule(ctx, W, 132, 'rgba(184,147,74,.38)');
+    },
+    drawText(ctx, L) {
+      const { W } = L; let y = L.photosEnd + 14;
+      occRule(ctx, W, y, 'rgba(184,147,74,.28)'); y += 20;
+      if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.gold, { track: 3 }); y += 24; }
+      if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
     },
   },
 };

@@ -276,7 +276,7 @@ const frameButtons = new Map();
 $('#frame-groups').replaceChildren(...FRAME_GROUPS.map(g => el('div', { className: 'frame-group' }, [
   el('span', { className: 'label', text: g.name, attrs: { id: `fg-${g.id}` } }),
   el('div', { className: 'frame-grid', attrs: { role: 'group', 'aria-labelledby': `fg-${g.id}` } },
-    Object.entries(FRAMES).filter(([, f]) => f.group === g.id).map(([id, f]) => {
+    Object.entries(FRAMES).filter(([, f]) => (f.category || 'classic') === g.id).map(([id, f]) => {
       const btn = el('button', {
         className: 'frame-opt', attrs: { type: 'button', 'aria-pressed': 'false' }, dataset: { value: id },
         on: { click: () => edit(() => { D.frame = id; }) },
