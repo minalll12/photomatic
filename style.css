@@ -3496,9 +3496,9 @@ html:not(.js-develop) .develop-veil { display: none; }
   .sheet-handle::after { content: ""; position: absolute; left: 22px; right: 22px; top: 11px; height: 4px; border-radius: 2px; background: var(--line-strong); }
   /* a 44px touch area round the small handle */
   .sheet-handle::before { content: ""; position: absolute; inset: -12px -8px -6px; }
-  .tabs { padding-left: 0; gap: 2px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tabs { padding-left: var(--s2); gap: 2px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
-  .tab { padding: 0 2px; letter-spacing: .02em; flex: none; scroll-snap-align: start; min-width: 56px; }
+  .tab { padding: 0 var(--s1); letter-spacing: .02em; flex: none; scroll-snap-align: start; min-width: 68px; }
   .panel-body { max-height: 30vh; padding-left: 48px; background-position: -6px 0, 0 0, 0 0; }
   .panel.is-collapsed .panel-body { display: none; }
   .panel-actions { padding: var(--s1) var(--s2) calc(var(--s1) + env(safe-area-inset-bottom)); }
