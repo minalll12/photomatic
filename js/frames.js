@@ -181,11 +181,6 @@ function occBorder(ctx, W, H, col) {
   ctx.strokeRect(20, 20, W - 40, H - 40);
   ctx.restore();
 }
-function occRule(ctx, W, y, col) {
-  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(38, y); ctx.lineTo(W - 38, y); ctx.stroke();
-  ctx.restore();
-}
 function occStars(ctx, W, topH, col, seed, n) {
   const rnd = mulberry32(seed);
   ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 0.8;
@@ -220,22 +215,6 @@ function occBat(ctx, cx, cy, s, col) {
   ctx.bezierCurveTo(cx + s * 0.38, cy + s * 0.1, cx + s * 0.7, cy - s * 0.04, cx + s, cy - s * 0.18);
   ctx.bezierCurveTo(cx + s * 0.52, cy - s * 0.52, cx + s * 0.12, cy - s * 0.28, cx, cy + s * 0.08);
   ctx.closePath(); ctx.fill();
-  ctx.restore();
-}
-function occHolly(ctx, cx, cy, s, leafCol, berryCol) {
-  ctx.save(); ctx.strokeStyle = leafCol; ctx.lineWidth = 1.3;
-  ctx.beginPath();
-  ctx.moveTo(cx, cy);
-  ctx.bezierCurveTo(cx - s, cy - s * 0.3, cx - s * 1.2, cy + s * 0.55, cx - s * 0.3, cy + s * 0.95);
-  ctx.bezierCurveTo(cx, cy + s * 0.55, cx + s * 0.1, cy + s * 0.1, cx, cy); ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx, cy);
-  ctx.bezierCurveTo(cx + s * 0.75, cy - s * 0.5, cx + s * 1.15, cy + s * 0.15, cx + s * 0.4, cy + s * 0.95);
-  ctx.bezierCurveTo(cx + s * 0.1, cy + s * 0.5, cx - s * 0.05, cy + s * 0.1, cx, cy); ctx.stroke();
-  ctx.fillStyle = berryCol;
-  [[-s * 0.04, -s * 0.12], [s * 0.14, -s * 0.24], [s * 0.05, -s * 0.04]].forEach(([dx, dy]) => {
-    circle(ctx, cx + dx, cy + dy, s * 0.14); ctx.fill();
-  });
   ctx.restore();
 }
 function occGradCap(ctx, cx, cy, s, col) {
@@ -278,13 +257,13 @@ function occBow(ctx, cx, cy, s, col) {
   ctx.restore();
 }
 function occCloud(ctx, cx, cy, w, col) {
-  const h = w * 0.48;
+  const r = w * 0.2;
   ctx.save(); ctx.fillStyle = col;
   ctx.beginPath();
-  ctx.arc(cx, cy, h * 0.55, Math.PI, 0);
-  ctx.arc(cx + w * 0.3, cy - h * 0.22, h * 0.42, Math.PI * 0.7, -0.1);
-  ctx.arc(cx - w * 0.28, cy - h * 0.18, h * 0.38, Math.PI * 0.95, 0.05);
-  ctx.closePath(); ctx.fill();
+  [[-0.30, 0.05, 0.76], [-0.15, -0.05, 0.92], [0.02, -0.11, 1], [0.19, -0.03, 0.88], [0.32, 0.06, 0.72]]
+    .forEach(([dx, dy, k]) => { const x = cx + dx * w, y = cy + dy * w; ctx.moveTo(x + r * k, y); ctx.arc(x, y, r * k, 0, Math.PI * 2); });
+  ctx.rect(cx - w * 0.36, cy, w * 0.72, r * 0.6);
+  ctx.fill();
   ctx.restore();
 }
 function occConfetti(ctx, W, topH, cols, seed) {
@@ -326,6 +305,132 @@ function occBowtie(ctx, cx, cy, s, col) {
   ctx.bezierCurveTo(cx + s * 1.1, cy + s * 0.38, cx + s * 0.28, cy + s * 0.44, cx + s * 0.1, cy + s * 0.18);
   ctx.closePath(); ctx.fill();
   ctx.beginPath(); rrect(ctx, cx - s * 0.1, cy - s * 0.18, s * 0.2, s * 0.36, s * 0.05); ctx.fill();
+  ctx.restore();
+}
+
+/* In late December the new year being celebrated is the one about to start, not the one ending. */
+const occYear = () => { const s = D().shotDate; return s.getMonth() === 11 ? s.getFullYear() + 1 : s.getFullYear(); };
+/* Frames with a year in the headline (Class of, Prom) let the caption override it, but only when the
+   caption actually reads as a year — otherwise it is a name and belongs in the footer like anywhere else. */
+const YEARISH = /^'?\d{2}$|^\d{4}$/;
+const occHeadYear = () => (YEARISH.test(caption()) ? caption().replace(/^'/, '') : String(D().shotDate.getFullYear()));
+const occFreeCaption = () => (YEARISH.test(caption()) ? '' : caption());
+
+/* edges fall off into the paper, so a flat fill reads as a print rather than a swatch */
+function occVignette(ctx, W, H, col, amount) {
+  const g = ctx.createRadialGradient(W / 2, H * 0.42, Math.min(W, H) * 0.28, W / 2, H * 0.5, Math.max(W, H) * 0.72);
+  g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, col);
+  ctx.save(); ctx.globalAlpha = amount; ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore();
+}
+/* an L-rule with an inward curl; sx/sy flip the same shape into each corner */
+function occCornerFlourish(ctx, x, y, s, col, sx, sy) {
+  ctx.save();
+  ctx.translate(x, y); ctx.scale(sx, sy);
+  ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(0, s); ctx.lineTo(0, 0); ctx.lineTo(s, 0); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, s * 0.6);
+  ctx.bezierCurveTo(s * 0.32, s * 0.54, s * 0.54, s * 0.32, s * 0.6, 0);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(s * 0.22, s * 0.22);
+  ctx.bezierCurveTo(s * 0.46, s * 0.22, s * 0.54, s * 0.34, s * 0.36, s * 0.38);
+  ctx.bezierCurveTo(s * 0.21, s * 0.41, s * 0.21, s * 0.28, s * 0.32, s * 0.28);
+  ctx.stroke();
+  ctx.restore();
+}
+function occFrameCorners(ctx, W, H, inset, s, col) {
+  occCornerFlourish(ctx, inset, inset, s, col, 1, 1);
+  occCornerFlourish(ctx, W - inset, inset, s, col, -1, 1);
+  occCornerFlourish(ctx, inset, H - inset, s, col, 1, -1);
+  occCornerFlourish(ctx, W - inset, H - inset, s, col, -1, -1);
+}
+/* hairline — open diamond — hairline */
+function occDivider(ctx, W, y, col, half = 84) {
+  ctx.save();
+  ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(W / 2 - half, y); ctx.lineTo(W / 2 - 13, y);
+  ctx.moveTo(W / 2 + 13, y); ctx.lineTo(W / 2 + half, y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(W / 2, y - 4.5); ctx.lineTo(W / 2 + 5.2, y); ctx.lineTo(W / 2, y + 4.5); ctx.lineTo(W / 2 - 5.2, y);
+  ctx.closePath(); ctx.stroke();
+  ctx.restore();
+}
+/* a banner with folded tails; the caller draws the title over it */
+function occRibbon(ctx, cx, cy, w, h, fill, edge) {
+  const half = w / 2, t = h * 0.5;
+  ctx.save();
+  ctx.fillStyle = edge;
+  [-1, 1].forEach(d => {
+    ctx.beginPath();
+    ctx.moveTo(cx + d * half, cy - t * 0.62);
+    ctx.lineTo(cx + d * (half + h * 0.46), cy - t * 0.24);
+    ctx.lineTo(cx + d * (half + h * 0.46), cy + t * 0.8);
+    ctx.lineTo(cx + d * half, cy + t * 0.42);
+    ctx.closePath(); ctx.fill();
+  });
+  ctx.fillStyle = fill;
+  ctx.beginPath();
+  ctx.moveTo(cx - half, cy - t); ctx.lineTo(cx + half, cy - t); ctx.lineTo(cx + half, cy + t);
+  ctx.lineTo(cx, cy + t * 0.72); ctx.lineTo(cx - half, cy + t);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = edge; ctx.lineWidth = 1; ctx.stroke();
+  ctx.restore();
+}
+/* firework burst: alternating long/short rays with dotted tips */
+function occBurst(ctx, cx, cy, r, col, rays = 12) {
+  ctx.save();
+  ctx.strokeStyle = ctx.fillStyle = col; ctx.lineWidth = 0.9; ctx.lineCap = 'round';
+  for (let i = 0; i < rays; i++) {
+    const a = (i / rays) * Math.PI * 2, rr = i % 2 ? r * 0.6 : r;
+    ctx.globalAlpha = 0.72;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * r * 0.24, cy + Math.sin(a) * r * 0.24);
+    ctx.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr);
+    ctx.stroke();
+    ctx.globalAlpha = 0.95;
+    circle(ctx, cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, 1.3); ctx.fill();
+  }
+  ctx.globalAlpha = 0.28;
+  circle(ctx, cx, cy, r * 0.36); ctx.stroke();
+  ctx.restore();
+}
+/* a ring of holly leaves with berry clusters */
+function occWreath(ctx, cx, cy, r, leafCol, berryCol) {
+  ctx.save();
+  ctx.strokeStyle = leafCol; ctx.lineWidth = 1.1;
+  for (let i = 0; i < 14; i++) {
+    const a = (i / 14) * Math.PI * 2;
+    ctx.save();
+    ctx.translate(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+    ctx.rotate(a + Math.PI / 2);
+    ctx.beginPath();
+    ctx.moveTo(0, -r * 0.21);
+    ctx.bezierCurveTo(r * 0.23, -r * 0.1, r * 0.21, r * 0.14, 0, r * 0.21);
+    ctx.bezierCurveTo(-r * 0.21, r * 0.14, -r * 0.23, -r * 0.1, 0, -r * 0.21);
+    ctx.stroke();
+    ctx.restore();
+  }
+  ctx.fillStyle = berryCol;
+  for (let i = 0; i < 5; i++) {
+    const a = (i / 5) * Math.PI * 2 + 0.3;
+    [[0, 0], [r * 0.09, r * 0.05], [-r * 0.04, r * 0.09]].forEach(([dx, dy]) => {
+      circle(ctx, cx + Math.cos(a) * r + dx, cy + Math.sin(a) * r + dy, r * 0.055); ctx.fill();
+    });
+  }
+  ctx.restore();
+}
+/* a keyline with corner ticks around a photo slot (drawn in the slot's own frame) */
+function occSlotKeyline(ctx, s, col, tickCol) {
+  const m = 5, x = -s.w / 2 - m, y = -s.h / 2 - m, w = s.w + m * 2, h = s.h + m * 2, t = 9;
+  ctx.save();
+  ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
+  ctx.strokeStyle = tickCol; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+  [[x, y, 1, 1], [x + w, y, -1, 1], [x, y + h, 1, -1], [x + w, y + h, -1, -1]].forEach(([px, py, dx, dy]) => {
+    ctx.beginPath(); ctx.moveTo(px, py + dy * t); ctx.lineTo(px, py); ctx.lineTo(px + dx * t, py); ctx.stroke();
+  });
   ctx.restore();
 }
 
@@ -792,21 +897,27 @@ export const FRAMES = {
     ink: C.cream, pairs: ['darkroom', 'silver'],
     hints: { caption: 'a name or message', dedication: 'a wish for the year' },
     variants: [['navy', 'Midnight navy', '#1A2338'], ['black', 'Jet black', '#141110'], ['oxblood', 'Oxblood', '#2E0A0D']],
-    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
-    footer: () => 48 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 186, gap: 18, footerGap: 0, bottom: 32 }),
+    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
-      const { W, H } = L;
+      const { W, H } = L, G = 'rgba(184,147,74,';
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(0,0,0,.55)', 0.8);
       grainOver(ctx, 0, 0, W, H, 0.5);
-      occBorder(ctx, W, H, 'rgba(184,147,74,1)');
-      occStars(ctx, W, 138, 'rgba(184,147,74,1)', 31, 20);
-      occRule(ctx, W, 126, 'rgba(184,147,74,.4)');
-      text(ctx, 'HAPPY NEW YEAR', W / 2, 60, FONT.serif(20, 700), C.gold, { track: 3, max: W - 80 });
-      text(ctx, String(D().shotDate.getFullYear()), W / 2, 100, FONT.type(18), C.cream, { track: 8 });
+      occStars(ctx, W, 104, G + '1)', 31, 22);
+      occBurst(ctx, W * 0.22, 52, 26, G + '.9)', 12);
+      occBurst(ctx, W * 0.8, 40, 19, G + '.72)', 10);
+      occBurst(ctx, W * 0.52, 80, 14, G + '.55)', 8);
+      occBorder(ctx, W, H, G + '1)');
+      occFrameCorners(ctx, W, H, 27, 22, G + '.8)');
+      text(ctx, 'HAPPY NEW YEAR', W / 2, 120, FONT.serif(19, 700), C.gold, { track: 3.5, max: W - 92 });
+      text(ctx, String(occYear()), W / 2, 152, FONT.serif(30, 700), C.cream, { track: 10 });
+      occDivider(ctx, W, 174, G + '.5)');
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.5)', 'rgba(184,147,74,.95)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(184,147,74,.3)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(184,147,74,.45)'); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.type(16), C.cream, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.gold, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
@@ -818,26 +929,33 @@ export const FRAMES = {
     ink: C.ink, pairs: ['warm400', 'faded'],
     hints: { caption: 'a name', dedication: 'a message' },
     variants: [['blush', 'Blush', '#F2D0D2'], ['cream', 'Cream', '#F8F2E8'], ['rose', 'Deep rose', '#DDACB4']],
-    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
-    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
-    drawBg(ctx, L) {
+    metrics: () => ({ pad: 32, top: 166, gap: 16, footerGap: 0, bottom: 32 }),
+    footer: () => 56 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    drawBg(ctx, L, v) {
       const { W, H } = L;
-      ctx.fillStyle = L.v.color; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(120,30,40,.22)', 0.7);
       grainOver(ctx, 0, 0, W, H, 0.7);
-      ctx.save(); ctx.strokeStyle = 'rgba(179,32,42,.32)'; ctx.lineWidth = 1.5;
+      ctx.save(); ctx.strokeStyle = 'rgba(179,32,42,.34)'; ctx.lineWidth = 1.5;
       ctx.strokeRect(12, 12, W - 24, H - 24);
-      ctx.strokeStyle = 'rgba(184,147,74,.22)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(184,147,74,.26)'; ctx.lineWidth = 1;
       ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
-      ctx.save(); ctx.strokeStyle = C.cherry; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.65;
-      heartPath(ctx, W / 2, 50, 36); ctx.stroke(); ctx.restore();
-      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.48)'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(W / 2 - 58, 84); ctx.lineTo(W / 2 + 58, 84); ctx.stroke(); ctx.restore();
-      text(ctx, 'Be Mine', W / 2, 114, FONT.script(30), C.cherry, { max: W - 80 });
-      occRule(ctx, W, 134, 'rgba(179,32,42,.22)');
+      occFrameCorners(ctx, W, H, 27, 21, 'rgba(179,32,42,.42)');
+      ctx.save(); ctx.strokeStyle = C.cherry; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.68;
+      heartPath(ctx, W / 2, 56, 40); ctx.stroke();
+      ctx.globalAlpha = 0.3; ctx.lineWidth = 1.1;
+      heartPath(ctx, W / 2 - 78, 50, 17); ctx.stroke();
+      heartPath(ctx, W / 2 + 78, 50, 17); ctx.stroke();
+      ctx.globalAlpha = 0.16;
+      heartPath(ctx, W / 2, 56, 56); ctx.stroke();
+      ctx.restore();
+      text(ctx, 'Be Mine', W / 2, 120, FONT.script(32), C.cherry, { max: W - 88 });
+      occDivider(ctx, W, 150, 'rgba(184,147,74,.5)');
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(179,32,42,.34)', 'rgba(179,32,42,.75)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(179,32,42,.25)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(179,32,42,.34)'); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.ink, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), 'rgba(179,32,42,.65)', { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
@@ -849,21 +967,29 @@ export const FRAMES = {
     ink: C.cream, pairs: ['darkroom', 'sepia'],
     hints: { caption: 'a name', dedication: 'a message' },
     variants: [['oxblood', 'Oxblood', '#2E0A0D'], ['black', 'Jet black', '#141110'], ['navy', 'Dark navy', '#141C2E']],
-    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
-    footer: () => 48 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 172, gap: 18, footerGap: 0, bottom: 32 }),
+    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
-      const { W, H } = L;
+      const { W, H } = L, K = 'rgba(201,169,122,';
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(0,0,0,.62)', 0.85);
       grainOver(ctx, 0, 0, W, H, 0.6);
-      occBorder(ctx, W, H, 'rgba(201,169,122,1)');
-      occCrescent(ctx, W / 2 - 28, 54, 26, C.kraft);
-      occBat(ctx, W / 2 + 44, 50, 18, C.kraft);
-      text(ctx, 'BOO.', W / 2, 106, FONT.serif(26, 700), C.kraft, { track: 2 });
-      occRule(ctx, W, 126, 'rgba(201,169,122,.32)');
+      occStars(ctx, W, 96, K + '1)', 73, 14);
+      ctx.save(); ctx.globalAlpha = 0.22; ctx.fillStyle = C.kraft;
+      circle(ctx, W / 2 - 30, 58, 40); ctx.fill(); ctx.restore();
+      occCrescent(ctx, W / 2 - 34, 56, 28, C.kraft);
+      occBat(ctx, W / 2 + 52, 42, 26, C.kraft);
+      ctx.save(); ctx.globalAlpha = 0.62; occBat(ctx, W / 2 + 18, 88, 16, C.kraft); ctx.globalAlpha = 0.4;
+      occBat(ctx, W * 0.16, 96, 12, C.kraft); ctx.restore();
+      occBorder(ctx, W, H, K + '1)');
+      occFrameCorners(ctx, W, H, 27, 21, K + '.62)');
+      text(ctx, 'BOO.', W / 2, 128, FONT.serif(30, 700), C.kraft, { track: 4 });
+      occDivider(ctx, W, 158, K + '.42)');
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(201,169,122,.42)', 'rgba(201,169,122,.9)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(201,169,122,.28)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(201,169,122,.4)'); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.type(16), C.cream, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.kraft, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
@@ -875,30 +1001,36 @@ export const FRAMES = {
     ink: C.ink, pairs: ['warm400', 'natural'],
     hints: { caption: 'a name', dedication: 'a message' },
     variants: [['sage', 'Sage', '#CAD5C2'], ['cream', 'Cream', '#F6F0E4'], ['navy', 'Night navy', '#1A2338']],
-    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
-    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 180, gap: 16, footerGap: 0, bottom: 32 }),
+    footer: () => 56 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
       const { W, H } = L, dark = v.id === 'navy';
       const accentCol = dark ? C.gold : C.red;
       const borderCol = dark ? 'rgba(184,147,74,.5)' : 'rgba(42,33,28,.18)';
+      const leafCol = dark ? 'rgba(167,180,154,.9)' : 'rgba(56,90,56,.7)';
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, dark ? 'rgba(0,0,0,.5)' : 'rgba(60,70,55,.16)', 0.72);
       grainOver(ctx, 0, 0, W, H, 0.7);
       ctx.save(); ctx.strokeStyle = borderCol; ctx.lineWidth = 1.5;
       ctx.strokeRect(12, 12, W - 24, H - 24);
       ctx.globalAlpha = 0.4; ctx.lineWidth = 1;
       ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
-      const leafCol = dark ? 'rgba(167,180,154,.85)' : 'rgba(56,90,56,.65)';
-      occHolly(ctx, W / 2, 32, 22, leafCol, C.cherry);
-      text(ctx, 'Merry Christmas', W / 2, 84, FONT.serifItalic(22, 700), accentCol, { max: W - 80 });
-      text(ctx, String(D().shotDate.getFullYear()), W / 2, 114, FONT.type(13), dark ? C.cream : C.muted, { track: 6 });
-      occRule(ctx, W, 132, dark ? 'rgba(184,147,74,.32)' : 'rgba(42,33,28,.15)');
+      occFrameCorners(ctx, W, H, 27, 21, dark ? 'rgba(184,147,74,.6)' : 'rgba(56,90,56,.42)');
+      occWreath(ctx, W / 2, 64, 44, leafCol, C.cherry);
+      text(ctx, String(D().shotDate.getFullYear()), W / 2, 64, FONT.type(15), dark ? C.cream : C.muted, { track: 4 });
+      text(ctx, 'Merry Christmas', W / 2, 132, FONT.serifItalic(23, 700), accentCol, { max: W - 88 });
+      occDivider(ctx, W, 162, dark ? 'rgba(184,147,74,.42)' : 'rgba(42,33,28,.2)');
+    },
+    backing(ctx, s, i, L, v) {
+      const dark = v.id === 'navy';
+      occSlotKeyline(ctx, s, dark ? 'rgba(184,147,74,.4)' : 'rgba(42,33,28,.22)', dark ? 'rgba(184,147,74,.9)' : 'rgba(179,32,42,.7)');
     },
     drawText(ctx, L, v) {
       const { W } = L, dark = v.id === 'navy';
       const textCol = dark ? C.cream : C.ink;
-      const ruleCol = dark ? 'rgba(184,147,74,.28)' : 'rgba(42,33,28,.15)';
-      let y = L.photosEnd + 14;
-      occRule(ctx, W, y, ruleCol); y += 20;
+      const ruleCol = dark ? 'rgba(184,147,74,.4)' : 'rgba(42,33,28,.2)';
+      let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, ruleCol); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.type(16), textCol, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), textCol, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), textCol, { max: W - 80 });
@@ -910,22 +1042,27 @@ export const FRAMES = {
     ink: C.cream, pairs: ['darkroom', 'silver'],
     hints: { caption: 'the class year e.g. 2025', dedication: 'a congratulations message' },
     variants: [['oxblood', 'Oxblood', '#2E0A0D'], ['black', 'Jet black', '#141110'], ['navy', 'Navy', '#1A2338']],
-    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
-    footer: () => 48 + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 192, gap: 18, footerGap: 0, bottom: 32 }),
+    footer: () => 52 + (occFreeCaption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
-      const { W, H } = L;
+      const { W, H } = L, G = 'rgba(184,147,74,';
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(0,0,0,.5)', 0.78);
       grainOver(ctx, 0, 0, W, H, 0.5);
-      occBorder(ctx, W, H, 'rgba(184,147,74,1)');
-      occGradCap(ctx, W / 2, 48, 30, C.gold);
-      const yr = caption() || String(D().shotDate.getFullYear());
-      text(ctx, 'CLASS OF', W / 2, 96, FONT.type(13), C.gold, { track: 6 });
-      text(ctx, yr, W / 2, 120, FONT.serif(28, 700), C.gold, { track: 2, max: W - 80 });
-      occRule(ctx, W, 138, 'rgba(184,147,74,.38)');
+      occBurst(ctx, W / 2, 58, 46, G + '.3)', 16);
+      occGradCap(ctx, W / 2, 56, 31, C.gold);
+      occBorder(ctx, W, H, G + '1)');
+      occFrameCorners(ctx, W, H, 27, 22, G + '.78)');
+      occRibbon(ctx, W / 2, 120, 132, 27, 'rgba(58,10,14,.55)', C.gold);
+      text(ctx, 'CLASS OF', W / 2, 120, FONT.type(13), C.gold, { track: 6 });
+      text(ctx, occHeadYear(), W / 2, 160, FONT.serif(31, 700), C.gold, { track: 3, max: W - 92 });
+      occDivider(ctx, W, 182, G + '.5)');
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.5)', 'rgba(184,147,74,.95)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(184,147,74,.28)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(184,147,74,.45)'); y += 22;
+      if (occFreeCaption()) { text(ctx, occFreeCaption(), W / 2, y, FONT.type(16), C.cream, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.gold, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
     },
@@ -936,8 +1073,8 @@ export const FRAMES = {
     ink: C.ink, pairs: ['warm400', 'faded'],
     hints: { caption: "the couple's names", dedication: 'a message' },
     variants: [['blush', 'Blush', '#F0CCCE'], ['cream', 'Cream', '#F6F0E4'], ['dusty', 'Dusty blue', '#C4D3DF']],
-    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
-    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 186, gap: 16, footerGap: 0, bottom: 32 }),
+    footer: () => 56 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
       const { W, H } = L;
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
@@ -946,15 +1083,17 @@ export const FRAMES = {
       ctx.strokeRect(12, 12, W - 24, H - 24);
       ctx.globalAlpha = 0.35; ctx.lineWidth = 1;
       ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
-      occRings(ctx, W / 2, 54, 22, 'rgba(184,147,74,.75)');
-      text(ctx, 'ANNIVERSARY', W / 2, 96, FONT.serif(18, 700), C.ink, { track: 4, max: W - 80 });
-      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.5)'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(W / 2 - 70, 108); ctx.lineTo(W / 2 + 70, 108); ctx.stroke(); ctx.restore();
-      text(ctx, caption() || '♥', W / 2, 128, FONT.script(22), C.ink, { max: W - 80 });
+      occFrameCorners(ctx, W, H, 27, 21, 'rgba(184,147,74,.55)');
+      occBurst(ctx, W / 2, 58, 44, 'rgba(184,147,74,.3)', 16);
+      occRings(ctx, W / 2, 58, 23, 'rgba(184,147,74,.85)');
+      text(ctx, 'ANNIVERSARY', W / 2, 114, FONT.serif(18, 700), C.ink, { track: 5, max: W - 88 });
+      occDivider(ctx, W, 140, 'rgba(184,147,74,.5)');
+      text(ctx, caption() || '♥', W / 2, 166, FONT.script(23), C.ink, { max: W - 88 });
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.42)', 'rgba(184,147,74,.85)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(184,147,74,.28)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(184,147,74,.42)'); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.ink, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
@@ -966,27 +1105,29 @@ export const FRAMES = {
     ink: C.ink, pairs: ['warm400', 'faded'],
     hints: { caption: "names or 'Mr & Mrs'", dedication: 'date and venue' },
     variants: [['cream', 'Ivory cream', '#FAFAF4'], ['blush', 'Blush white', '#F6ECEE'], ['paper', 'Natural paper', '#F4EEE3']],
-    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 32 }),
-    footer: () => 56 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 178, gap: 16, footerGap: 0, bottom: 34 }),
+    footer: () => 60 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
       const { W, H } = L;
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(120,100,60,.14)', 0.7);
       grainOver(ctx, 0, 0, W, H, 0.7);
       ctx.save();
-      ctx.strokeStyle = 'rgba(184,147,74,.45)'; ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(184,147,74,.5)'; ctx.lineWidth = 1.5;
       ctx.strokeRect(12, 12, W - 24, H - 24);
-      ctx.strokeStyle = 'rgba(184,147,74,.22)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(184,147,74,.24)'; ctx.lineWidth = 1;
       ctx.strokeRect(18, 18, W - 36, H - 36);
       ctx.strokeRect(24, 24, W - 48, H - 48); ctx.restore();
-      text(ctx, 'Mr & Mrs', W / 2, 72, FONT.serifItalic(30, 600), C.ink, { max: W - 80 });
-      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.5)'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(W / 2 - 70, 90); ctx.lineTo(W / 2 + 70, 90); ctx.stroke(); ctx.restore();
-      text(ctx, caption() || '♥', W / 2, 116, FONT.script(24), C.muted, { max: W - 80 });
-      occRule(ctx, W, 134, 'rgba(184,147,74,.22)');
+      occFrameCorners(ctx, W, H, 32, 22, 'rgba(184,147,74,.6)');
+      occRings(ctx, W / 2, 50, 15, 'rgba(184,147,74,.7)');
+      text(ctx, 'Mr & Mrs', W / 2, 104, FONT.serifItalic(32, 600), C.ink, { max: W - 92 });
+      occDivider(ctx, W, 132, 'rgba(184,147,74,.55)', 72);
+      text(ctx, caption() || '♥', W / 2, 158, FONT.script(25), C.muted, { max: W - 92 });
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.42)', 'rgba(184,147,74,.8)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(184,147,74,.22)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(184,147,74,.42)', 72); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.serifItalic(18, 400), C.ink, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
@@ -998,24 +1139,28 @@ export const FRAMES = {
     ink: C.ink, pairs: ['warm400', 'faded'],
     hints: { caption: "the birthday person's name", dedication: 'a message' },
     variants: [['butter', 'Butter', '#EBD9A0'], ['blush', 'Blush', '#F2D0D2'], ['cream', 'Cream', '#F6F0E4']],
-    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
-    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 192, gap: 16, footerGap: 0, bottom: 32 }),
+    footer: () => 56 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
       const { W, H } = L;
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(90,50,20,.14)', 0.7);
       grainOver(ctx, 0, 0, W, H, 0.7);
-      ctx.save(); ctx.strokeStyle = 'rgba(58,10,14,.22)'; ctx.lineWidth = 1.5;
+      occConfetti(ctx, W, 96, [C.cherry, C.gold, C.dusty, C.sage], 13);
+      ctx.save(); ctx.strokeStyle = 'rgba(58,10,14,.24)'; ctx.lineWidth = 1.5;
       ctx.strokeRect(12, 12, W - 24, H - 24);
-      ctx.strokeStyle = 'rgba(58,10,14,.12)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(58,10,14,.13)'; ctx.lineWidth = 1;
       ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
-      occConfetti(ctx, W, 136, [C.cherry, C.gold, C.dusty, C.sage], 13);
-      text(ctx, 'HAPPY BIRTHDAY', W / 2, 96, FONT.serif(19, 800), C.oxblood, { track: 3, max: W - 80 });
-      text(ctx, caption() || '★', W / 2, 120, FONT.script(26), C.oxblood, { max: W - 80 });
-      occRule(ctx, W, 136, 'rgba(58,10,14,.18)');
+      occFrameCorners(ctx, W, H, 27, 21, 'rgba(58,10,14,.4)');
+      occRibbon(ctx, W / 2, 122, 196, 30, 'rgba(179,32,42,.9)', C.gold);
+      text(ctx, 'HAPPY BIRTHDAY', W / 2, 122, FONT.serif(18, 800), C.cream, { track: 3, max: 182 });
+      text(ctx, caption() || '★', W / 2, 160, FONT.script(27), C.oxblood, { max: W - 88 });
+      occDivider(ctx, W, 182, 'rgba(58,10,14,.2)');
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(58,10,14,.2)', 'rgba(179,32,42,.7)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(58,10,14,.18)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(58,10,14,.2)'); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.oxblood, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
@@ -1027,21 +1172,26 @@ export const FRAMES = {
     ink: C.cream, pairs: ['silver', 'darkroom'],
     hints: { caption: "the birthday person's name", dedication: 'a message' },
     variants: [['dusty', 'Dusty blue', '#5E7A8E'], ['navy', 'Navy', '#1A2338'], ['slate', 'Slate', '#4A5A6A']],
-    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
-    footer: () => 48 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 180, gap: 18, footerGap: 0, bottom: 32 }),
+    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
-      const { W, H } = L;
+      const { W, H } = L, G = 'rgba(184,147,74,';
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(0,0,0,.42)', 0.75);
       grainOver(ctx, 0, 0, W, H, 0.5);
-      occBorder(ctx, W, H, 'rgba(184,147,74,1)');
-      occPartyHat(ctx, W / 2, 46, 28, C.gold);
-      text(ctx, 'Happy Birthday', W / 2, 104, FONT.serifItalic(22, 600), C.gold, { max: W - 80 });
-      text(ctx, caption() || '★', W / 2, 126, FONT.type(13), C.cream, { track: 4, max: W - 80 });
-      occRule(ctx, W, 138, 'rgba(184,147,74,.35)');
+      occBurst(ctx, W / 2, 56, 40, G + '.32)', 14);
+      occStars(ctx, W, 96, G + '1)', 91, 10);
+      occPartyHat(ctx, W / 2, 54, 29, C.gold);
+      occBorder(ctx, W, H, G + '1)');
+      occFrameCorners(ctx, W, H, 27, 21, G + '.7)');
+      text(ctx, 'Happy Birthday', W / 2, 122, FONT.serifItalic(24, 600), C.gold, { max: W - 88 });
+      text(ctx, caption() || '★', W / 2, 150, FONT.type(13), C.cream, { track: 4, max: W - 88 });
+      occDivider(ctx, W, 170, G + '.45)');
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.45)', 'rgba(184,147,74,.9)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(184,147,74,.28)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(184,147,74,.42)'); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.type(16), C.cream, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.gold, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
@@ -1053,26 +1203,31 @@ export const FRAMES = {
     ink: C.ink, pairs: ['warm400', 'faded'],
     hints: { caption: "the bride's name", dedication: 'a message' },
     variants: [['blush', 'Blush', '#F0CCCE'], ['cream', 'Cream', '#F8F4EE'], ['rose', 'Rose', '#E8B8BE']],
-    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
-    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 190, gap: 16, footerGap: 0, bottom: 32 }),
+    footer: () => 56 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
       const { W, H } = L;
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(140,50,70,.18)', 0.7);
       grainOver(ctx, 0, 0, W, H, 0.7);
-      ctx.save(); ctx.strokeStyle = 'rgba(179,32,42,.28)'; ctx.lineWidth = 1.5;
+      ctx.save(); ctx.strokeStyle = 'rgba(179,32,42,.3)'; ctx.lineWidth = 1.5;
       ctx.strokeRect(12, 12, W - 24, H - 24);
-      ctx.strokeStyle = 'rgba(184,147,74,.2)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(184,147,74,.22)'; ctx.lineWidth = 1;
       ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
-      occBow(ctx, W / 2, 48, 26, 'rgba(179,32,42,.55)');
-      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.55)'; ctx.lineWidth = 1.2;
-      circle(ctx, W / 2, 82, 8); ctx.stroke(); ctx.restore();
-      text(ctx, 'SHE SAID YES', W / 2, 108, FONT.serif(18, 700), C.ink, { track: 4, max: W - 80 });
-      occRule(ctx, W, 128, 'rgba(179,32,42,.2)');
-      text(ctx, caption() || '♥', W / 2, 138, FONT.script(20), C.muted, { max: W - 80 });
+      occFrameCorners(ctx, W, H, 27, 21, 'rgba(179,32,42,.4)');
+      occBow(ctx, W / 2, 48, 34, 'rgba(179,32,42,.62)');
+      ctx.save(); ctx.strokeStyle = 'rgba(184,147,74,.65)'; ctx.lineWidth = 1.4;
+      circle(ctx, W / 2, 98, 11); ctx.stroke();
+      ctx.fillStyle = 'rgba(184,147,74,.8)';
+      starPath(ctx, W / 2, 82, 4.5, 2, 4); ctx.fill(); ctx.restore();
+      text(ctx, 'SHE SAID YES', W / 2, 130, FONT.serif(18, 700), C.ink, { track: 5, max: W - 88 });
+      occDivider(ctx, W, 154, 'rgba(179,32,42,.26)');
+      text(ctx, caption() || '♥', W / 2, 176, FONT.script(21), C.muted, { max: W - 88 });
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(179,32,42,.26)', 'rgba(179,32,42,.65)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(179,32,42,.2)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(179,32,42,.26)'); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.ink, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
@@ -1084,29 +1239,34 @@ export const FRAMES = {
     ink: C.ink, pairs: ['natural', 'faded'],
     hints: { caption: "the baby's name", dedication: 'a message' },
     variants: [['sage', 'Sage', '#C8D4BE'], ['butter', 'Butter', '#EBD9A0'], ['mist', 'Mist', '#D6E2D4']],
-    metrics: () => ({ pad: 32, top: 144, gap: 16, footerGap: 0, bottom: 30 }),
-    footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 186, gap: 16, footerGap: 0, bottom: 32 }),
+    footer: () => 56 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
       const { W, H } = L;
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(60,70,55,.14)', 0.7);
       grainOver(ctx, 0, 0, W, H, 0.7);
-      ctx.save(); ctx.strokeStyle = 'rgba(42,33,28,.16)'; ctx.lineWidth = 1.5;
+      ctx.save(); ctx.strokeStyle = 'rgba(42,33,28,.18)'; ctx.lineWidth = 1.5;
       ctx.strokeRect(12, 12, W - 24, H - 24);
       ctx.globalAlpha = 0.5; ctx.lineWidth = 1;
       ctx.strokeRect(20, 20, W - 40, H - 40); ctx.restore();
-      occCloud(ctx, W / 2, 58, 80, 'rgba(255,255,255,.7)');
-      ctx.save(); ctx.fillStyle = 'rgba(184,147,74,.55)';
-      [[W / 2 - 55, 40], [W / 2 + 55, 38], [W / 2 + 72, 54]].forEach(([x, y]) => {
-        starPath(ctx, x, y, 5, 2.2, 5); ctx.fill();
+      occFrameCorners(ctx, W, H, 27, 20, 'rgba(42,33,28,.28)');
+      ctx.save(); ctx.globalAlpha = 0.45; occCloud(ctx, W / 2 - 62, 44, 50, 'rgba(255,255,255,.9)');
+      occCloud(ctx, W / 2 + 68, 38, 42, 'rgba(255,255,255,.9)'); ctx.restore();
+      occCloud(ctx, W / 2, 66, 92, 'rgba(255,255,255,.82)');
+      ctx.save(); ctx.fillStyle = 'rgba(184,147,74,.6)';
+      [[W / 2 - 74, 86, 5.5], [W / 2 + 76, 74, 5], [W / 2 + 52, 100, 3.6], [W / 2 - 46, 24, 3.6]].forEach(([x, y, r]) => {
+        starPath(ctx, x, y, r, r * 0.44, 5); ctx.fill();
       });
       ctx.restore();
-      text(ctx, 'WELCOME BABY', W / 2, 88, FONT.serif(17, 700), C.ink, { track: 4, max: W - 80 });
-      text(ctx, caption() || '♡', W / 2, 114, FONT.script(26), C.ink, { max: W - 80 });
-      occRule(ctx, W, 132, 'rgba(42,33,28,.14)');
+      text(ctx, 'WELCOME BABY', W / 2, 124, FONT.serif(17, 700), C.ink, { track: 5, max: W - 88 });
+      text(ctx, caption() || '♡', W / 2, 152, FONT.script(27), C.ink, { max: W - 88 });
+      occDivider(ctx, W, 174, 'rgba(42,33,28,.18)');
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(42,33,28,.18)', 'rgba(42,33,28,.5)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(42,33,28,.14)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(42,33,28,.18)'); y += 22;
       if (caption()) { text(ctx, caption(), W / 2, y, FONT.script(22), C.ink, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.muted, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.ink, { max: W - 80 });
@@ -1118,23 +1278,27 @@ export const FRAMES = {
     ink: C.cream, pairs: ['darkroom', 'silver'],
     hints: { caption: 'the prom year e.g. 2025', dedication: 'a message' },
     variants: [['navy', 'Midnight navy', '#1A2338'], ['black', 'Jet black', '#141110'], ['oxblood', 'Oxblood', '#2E0A0D']],
-    metrics: () => ({ pad: 32, top: 144, gap: 18, footerGap: 0, bottom: 30 }),
-    footer: () => 48 + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
+    metrics: () => ({ pad: 32, top: 190, gap: 18, footerGap: 0, bottom: 32 }),
+    footer: () => 52 + (occFreeCaption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
-      const { W, H } = L;
+      const { W, H } = L, G = 'rgba(184,147,74,';
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
+      occVignette(ctx, W, H, 'rgba(0,0,0,.55)', 0.82);
       grainOver(ctx, 0, 0, W, H, 0.5);
-      occBorder(ctx, W, H, 'rgba(184,147,74,1)');
-      occStars(ctx, W, 140, 'rgba(184,147,74,1)', 47, 12);
-      occBowtie(ctx, W / 2, 50, 22, C.gold);
-      text(ctx, 'PROM', W / 2, 86, FONT.serif(22, 700), C.gold, { track: 8 });
-      const yr = caption() || String(D().shotDate.getFullYear());
-      text(ctx, yr, W / 2, 114, FONT.type(18), C.cream, { track: 8 });
-      occRule(ctx, W, 132, 'rgba(184,147,74,.38)');
+      occStars(ctx, W, 100, G + '1)', 47, 16);
+      occBurst(ctx, W / 2, 54, 42, G + '.34)', 14);
+      occBowtie(ctx, W / 2, 54, 30, C.gold);
+      occBorder(ctx, W, H, G + '1)');
+      occFrameCorners(ctx, W, H, 27, 22, G + '.78)');
+      text(ctx, 'PROM', W / 2, 120, FONT.serif(24, 700), C.gold, { track: 10 });
+      text(ctx, occHeadYear(), W / 2, 156, FONT.serif(28, 700), C.cream, { track: 9, max: W - 92 });
+      occDivider(ctx, W, 178, G + '.5)');
     },
+    backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.5)', 'rgba(184,147,74,.95)'); },
     drawText(ctx, L) {
-      const { W } = L; let y = L.photosEnd + 14;
-      occRule(ctx, W, y, 'rgba(184,147,74,.28)'); y += 20;
+      const { W } = L; let y = L.photosEnd + 16;
+      occDivider(ctx, W, y, 'rgba(184,147,74,.45)'); y += 22;
+      if (occFreeCaption()) { text(ctx, occFreeCaption(), W / 2, y, FONT.type(16), C.cream, { max: W - 80 }); y += 28; }
       if (showDate()) { text(ctx, dateOf().toUpperCase(), W / 2, y, FONT.type(13), C.gold, { track: 3 }); y += 24; }
       if (dedication()) text(ctx, dedication(), W / 2, y + 4, FONT.script(24), C.cream, { max: W - 80 });
     },
