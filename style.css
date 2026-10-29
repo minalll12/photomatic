@@ -1334,10 +1334,6 @@ kbd {
 .stanchion .rope { pointer-events: visiblePainted; }
 .stanchion .card-shadow { transform-box: view-box; transform: translate(calc(2px + var(--cx, 0px)), 3px); }
 .stanchion .rope-shadow { transform-box: view-box; transform: translateX(var(--rx, 0px)); }
-/* the queue's third post stands lower on the floor, below the call to action; it needs a viewport at least
-   864px tall to stay 48px clear of the text (checked from 1100px to 2560px wide), so shorter screens hide it */
-.stanchion .st-third { display: none; }
-@media (min-height: 864px) { .stanchion .st-third { display: inline; } }
 /* the whole queue only on screens 1100px and wider */
 @media (max-width: 1099px) { .stanchion { display: none; } }
 
