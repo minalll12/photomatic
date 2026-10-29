@@ -3570,6 +3570,7 @@ html:not(.js-develop) .develop-veil { display: none; }
   .wainscot span:nth-child(n + 13) { display: none; }
   .booth-stand { right: auto; left: 50%; margin-left: calc(var(--booth-w) / -2); }
   .floor-tiles { background-size: 52px 52px; }
+  .ticket { display: none; }
 }
 /* phones and small tablets: text first, centred; then the booth on its own floor */
 @media (max-width: 768px) {
