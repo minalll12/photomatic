@@ -3549,15 +3549,19 @@ html:not(.js-develop) .develop-veil { display: none; }
   .hero { --booth-scale: .85; }
   .film-wall { display: none; }
 }
-/* iPad portrait (769–860px): two-column like desktop, but cap hero height and widen text column */
+/* iPad portrait (769–860px): two-column, cap height, bigger booth, scale back text */
 @media (max-width: 860px) and (min-width: 769px) {
   .hero {
     --hero-h: min(680px, calc(100svh - var(--header-h)));
-    --booth-scale: .82;
+    --booth-scale: .95;
+    /* override the 24%-of-container cap so the booth fills its column properly */
+    --booth-w0: calc(min(var(--wall-h) * .95 / 2.1, var(--cw) * .38) * var(--booth-scale));
   }
   .hero-copy { grid-column: 1 / 7; }
   .hero-art { grid-column: 7 / 13; }
-  .wordmark-hero { font-size: clamp(3rem, 5.8vw, 4.5rem); }
+  .wordmark-hero { font-size: clamp(2.8rem, 5.6vw, 4rem); }
+  .torn-note { font-size: .98rem; --rule: 24px; }
+  .hero .ticket-main { font-size: var(--fs-14); padding: 0 var(--s2); }
   .hero-actions { flex-wrap: wrap; gap: var(--s1) var(--s2); }
   .gallery, .stanchion, .pendant { display: none; }
   .film-wall { display: none; }
