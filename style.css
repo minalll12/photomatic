@@ -3561,19 +3561,17 @@ html:not(.js-develop) .develop-veil { display: none; }
   }
   .hero-copy { grid-column: 1; height: auto; align-items: center; padding: var(--s5) 0 var(--s1); text-align: center; }
   .wordmark-hero { margin-left: 0; font-size: clamp(3.8rem, 7.5vw, 5.2rem); }
-  .torn-note { transform-origin: 50% 50%; font-size: 1.05rem; }
-  .hero-actions { flex-wrap: wrap; justify-content: center; gap: var(--s2) var(--s3); }
+  .torn-note { transform-origin: 50% 50%; font-size: 1.05rem; margin-bottom: 10px; }
+  .hero-actions { flex-direction: column; align-items: center; gap: 0; }
+  .ticket { transform: rotate(-1.5deg) scale(0.82); transform-origin: center; margin-bottom: 18px; }
+  .hero-link { margin-top: 0; }
   .hero-art { grid-column: 1; grid-row: 2; height: var(--art-h); }
-  .gallery, .stanchion, .pendant, .film-wall { display: none; }
+  .gallery, .stanchion, .pendant { display: none; }
   .light-pool, .light-warm { right: auto; left: calc(50% - var(--booth-w) * .89); }
   .wainscot { grid-row: 2; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--s2); margin-inline: calc(50% - 50vw); padding-inline: var(--s2); }
   .wainscot span:nth-child(n + 13) { display: none; }
   .booth-stand { right: auto; left: 50%; margin-left: calc(var(--booth-w) / -2); }
   .floor-tiles { background-size: 52px 52px; }
-  .torn-note { margin-bottom: 10px; }
-  .hero-actions { flex-direction: column; align-items: center; gap: 0; }
-  .ticket { transform: rotate(-1.5deg) scale(0.82); transform-origin: center; margin-bottom: 18px; }
-  .hero-link { margin-top: 0; }
 }
 /* phones and small tablets: text first, centred; then the booth on its own floor */
 @media (max-width: 768px) {
