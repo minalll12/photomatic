@@ -3549,12 +3549,6 @@ html:not(.js-develop) .develop-veil { display: none; }
   .hero { --booth-scale: .85; }
   .film-wall { display: none; }
 }
-/* Only where the hero is one full viewport tall: .hero is pulled up by -s4, so without this it ends
-   s4 short of the bottom and the next section bleeds in while the copy is still on screen. Below 861px
-   the hero is height:auto and stacked, so it must not apply there. */
-@media (min-width: 861px) {
-  .hero { --hero-h: max(560px, calc(100svh - var(--header-h) + var(--s4))); }
-}
 /* iPad portrait (769–860px): stacked, fits exactly in one viewport (copy ~350px + art 640px ≈ 990px) */
 @media (max-width: 860px) and (min-width: 769px) {
   .hero {
