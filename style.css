@@ -1352,6 +1352,13 @@ kbd {
   background: none;
   cursor: pointer;
 }
+/* the coin plate in the drawing is only ~22x34, below the 44px touch minimum; this grows the hit
+   area outwards without moving the art, since the button is absolutely positioned over the booth */
+.coin-slot::after {
+  content: "";
+  position: absolute;
+  inset: -7px -13px;
+}
 .coin-slot::before {
   content: "";
   position: absolute;
@@ -3675,6 +3682,10 @@ html:not(.js-develop) .develop-veil { display: none; }
   .develop-veil, .confetti { display: none; }
   .leader, .leader-sweep, .leader b { animation: none !important; }
   .leader b:nth-of-type(1) { opacity: 1; }
+  /* the Customise demo cross-fades three strips from opacity 0; with animations collapsed they would
+     all stay at 0 and the print would read as empty, so hold the first one open instead */
+  .demo-custom .mini { animation: none !important; }
+  .demo-custom .mini-ticket { opacity: 1; }
   .hero .scene *, .hero-copy > *, .hero-art *, .pendant { animation: none !important; }
 }
 

@@ -1171,7 +1171,7 @@ export const FRAMES = {
     name: 'Birthday (B)', category: 'occasions', group: 'occasions',
     ink: C.cream, pairs: ['silver', 'darkroom'],
     hints: { caption: "the birthday person's name", dedication: 'a message' },
-    variants: [['dusty', 'Dusty blue', '#5E7A8E'], ['navy', 'Navy', '#1A2338'], ['slate', 'Slate', '#4A5A6A']],
+    variants: [['dusty', 'Dusty blue', '#2E4254'], ['navy', 'Navy', '#1A2338'], ['slate', 'Slate', '#333F49']],
     metrics: () => ({ pad: 32, top: 180, gap: 18, footerGap: 0, bottom: 32 }),
     footer: () => 52 + (caption() ? 28 : 0) + (showDate() ? 24 : 0) + (dedication() ? 32 : 0),
     drawBg(ctx, L, v) {
