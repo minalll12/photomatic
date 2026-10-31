@@ -1612,7 +1612,7 @@ export const FRAMES = {
     metrics: occMetrics,
     footer: occFooterH,
     drawBg(ctx, L, v) {
-      const { W, H } = L, G = 'rgba(184,147,74,', g = occHead(L), k = g.h / 192;
+      const { W, H } = L, G = 'rgba(184,147,74,', g = occHead(L), u = g.u, k = g.h / 192;
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
       occVignette(ctx, W, H, 'rgba(0,0,0,.5)', 0.78);
       grainOver(ctx, 0, 0, W, H, 0.5);
@@ -1736,7 +1736,7 @@ export const FRAMES = {
     metrics: occMetrics,
     footer: occFooterH,
     drawBg(ctx, L, v) {
-      const { W, H } = L, G = 'rgba(184,147,74,', g = occHead(L), k = g.h / 180;
+      const { W, H } = L, G = 'rgba(184,147,74,', g = occHead(L), u = g.u, k = g.h / 180;
       ctx.fillStyle = v.color; ctx.fillRect(0, 0, W, H);
       occVignette(ctx, W, H, 'rgba(0,0,0,.42)', 0.75);
       grainOver(ctx, 0, 0, W, H, 0.5);

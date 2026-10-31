@@ -1,4 +1,4 @@
-﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -41,13 +41,13 @@
          - the encode worker, which textures.js builds from its own import.meta.url (so bumping
            /js/encode-worker.js here does nothing; bump textures.js to re-fetch the worker).
        The stylesheet below carries it too. Keep all of them on the same string. -->
-  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-31q","/js/adjuster.js":"/js/adjuster.js?v=2026-10-31q","/js/crop.js":"/js/crop.js?v=2026-10-31q","/js/booth.js":"/js/booth.js?v=2026-10-31q","/js/camera.js":"/js/camera.js?v=2026-10-31q","/js/editor.js":"/js/editor.js?v=2026-10-31q","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-31q","/js/export.js":"/js/export.js?v=2026-10-31q","/js/filters.js":"/js/filters.js?v=2026-10-31q","/js/frames.js":"/js/frames.js?v=2026-10-31q","/js/hero.js":"/js/hero.js?v=2026-10-31q","/js/icons.js":"/js/icons.js?v=2026-10-31q","/js/layouts.js":"/js/layouts.js?v=2026-10-31q","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-31q","/js/main.js":"/js/main.js?v=2026-10-31q","/js/patterns.js":"/js/patterns.js?v=2026-10-31q","/js/placeholders.js":"/js/placeholders.js?v=2026-10-31q","/js/ransom.js":"/js/ransom.js?v=2026-10-31q","/js/render.js":"/js/render.js?v=2026-10-31q","/js/reveal.js":"/js/reveal.js?v=2026-10-31q","/js/sound.js":"/js/sound.js?v=2026-10-31q","/js/state.js":"/js/state.js?v=2026-10-31q","/js/stickers.js":"/js/stickers.js?v=2026-10-31q","/js/story.js":"/js/story.js?v=2026-10-31q","/js/textures.js":"/js/textures.js?v=2026-10-31q","/js/transitions.js":"/js/transitions.js?v=2026-10-31q","/js/ui.js":"/js/ui.js?v=2026-10-31q","/js/utils.js":"/js/utils.js?v=2026-10-31q"}}</script>
-  <link rel="stylesheet" href="style.css?v=2026-10-31q">
+  <script type="importmap">{"imports":{"/js/album.js":"/js/album.js?v=2026-10-31r","/js/adjuster.js":"/js/adjuster.js?v=2026-10-31r","/js/crop.js":"/js/crop.js?v=2026-10-31r","/js/booth.js":"/js/booth.js?v=2026-10-31r","/js/camera.js":"/js/camera.js?v=2026-10-31r","/js/editor.js":"/js/editor.js?v=2026-10-31r","/js/encode-worker.js":"/js/encode-worker.js?v=2026-10-31r","/js/export.js":"/js/export.js?v=2026-10-31r","/js/filters.js":"/js/filters.js?v=2026-10-31r","/js/frames.js":"/js/frames.js?v=2026-10-31r","/js/hero.js":"/js/hero.js?v=2026-10-31r","/js/icons.js":"/js/icons.js?v=2026-10-31r","/js/layouts.js":"/js/layouts.js?v=2026-10-31r","/js/menu-preview.js":"/js/menu-preview.js?v=2026-10-31r","/js/main.js":"/js/main.js?v=2026-10-31r","/js/patterns.js":"/js/patterns.js?v=2026-10-31r","/js/placeholders.js":"/js/placeholders.js?v=2026-10-31r","/js/ransom.js":"/js/ransom.js?v=2026-10-31r","/js/render.js":"/js/render.js?v=2026-10-31r","/js/reveal.js":"/js/reveal.js?v=2026-10-31r","/js/sound.js":"/js/sound.js?v=2026-10-31r","/js/state.js":"/js/state.js?v=2026-10-31r","/js/stickers.js":"/js/stickers.js?v=2026-10-31r","/js/story.js":"/js/story.js?v=2026-10-31r","/js/textures.js":"/js/textures.js?v=2026-10-31r","/js/transitions.js":"/js/transitions.js?v=2026-10-31r","/js/ui.js":"/js/ui.js?v=2026-10-31r","/js/utils.js":"/js/utils.js?v=2026-10-31r"}}</script>
+  <link rel="stylesheet" href="style.css?v=2026-10-31r">
   <!-- the page is complete without script; the app starts once the fonts have painted (or at the first touch or key) -->
   <script>
     (function () {
       var started = false;
-      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-31q'); } };
+      var start = function () { if (!started) { started = true; import('./js/main.js?v=2026-10-31r'); } };
       var afterPaint = function () { requestAnimationFrame(function () { requestAnimationFrame(start); }); };
       var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
       addEventListener('load', function () { fonts.then(afterPaint, afterPaint); }, { once: true });
