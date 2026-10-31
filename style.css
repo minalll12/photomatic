@@ -3661,6 +3661,63 @@ html:not(.js-develop) .develop-veil { display: none; }
   .tag-note { position: relative; right: auto; top: auto; width: auto; max-width: 240px; margin: var(--s6) auto 0; transform: rotate(-2deg); }
 }
 
+/* ---------------------------------------------------------
+   Phones: the whole room on the first screen
+   --------------------------------------------------------- */
+/* The hero becomes exactly one viewport: 100svh (so Safari's address bar cannot push the floor off)
+   less the real height of the sticky header and the marquee band, which --header-h already sums.
+   One column, two rows: the scene takes a measured share off the bottom and the copy centres in
+   whatever is left. It stays a grid rather than a flex column because the wainscot is placed by
+   grid line, not by flow order. Phones shorter than 600px fall through to the stacked rules above
+   and simply scroll, rather than squashing the copy past reading. */
+@media (max-width: 600px) and (min-height: 600px) {
+  .hero {
+    --hero-h: calc(100svh - var(--header-h));
+    /* the scene takes the larger share of the screen, but never so much that the copy drops under
+       290px, which is what the tightened text and the 44px tap targets need on a short phone */
+    --art-h: min(calc(var(--hero-h) - 290px), calc(var(--hero-h) * .58));
+    --floor-h: calc(var(--art-h) * .25);
+    --wall-h: calc(var(--art-h) * .75);
+    /* the booth stands a little forward on the floor, so it can be taller than the wall behind it */
+    --booth-w: calc((var(--art-h) * .875 + 6px) * .94 / 2.14);
+    grid-template-rows: minmax(0, 1fr) var(--art-h);
+    height: var(--hero-h);
+  }
+  .hero-copy { grid-row: 1; height: 100%; min-height: 0; padding: 0 0 var(--s1); justify-content: center; }
+  .hero-art { grid-row: 2; height: var(--art-h); }
+  /* the same group, 30-40% tighter: the title and note give up the most, the tap targets none */
+  .hero .kicker { margin-bottom: var(--s-1); font-size: var(--fs-14); }
+  .wordmark-hero { margin: 0 0 clamp(12px, 2.2svh, 18px); font-size: clamp(2.4rem, min(12svh, 14vw), 3.3rem); }
+  .torn-note {
+    --rule: 23px; --pad-y: 12px; --margin-x: 32px;
+    margin-bottom: clamp(12px, 2.4svh, 20px);
+    padding-right: 20px;
+    font-size: 1rem;
+    transform-origin: 50% 50%;
+  }
+  .torn-note .washi { transform: rotate(-14deg) scale(.86); }
+  .hero-actions { gap: var(--s-1) var(--s2); }
+  .hero .ticket { transform: rotate(-1.5deg) scale(.92); transform-origin: center; }
+  .booth-stand { bottom: calc(var(--floor-h) * .5 - 6px); }
+  .light-pool, .light-warm { bottom: calc(var(--floor-h) * .5 - var(--booth-w) * .39); }
+  /* a smaller sign needs smaller bulb rows and lettering for PHOTOS to still fit */
+  .bulbs { left: 6px; right: 6px; height: 6px; background-size: 12px 6px, 12px 6px; }
+  .sign-word { font-size: calc(var(--booth-w) * .115); line-height: .95; }
+  .floor-tiles { background-size: 40px 40px; }
+}
+
+/* How it works on phones: smaller prints, so the section reads as three cards and not a long scroll.
+   The photo is a square and the demos inside it are drawn in percentages, so the illustration shrinks
+   with the card; the peg line and tacks are placed off the card's own width and follow it. */
+@media (max-width: 600px) {
+  .polaroids { width: 68%; max-width: 300px; gap: var(--s6); }
+  .polaroid { margin-top: 38px; padding: 11px 11px 17px; }
+  .clothespin { top: -26px; width: 14px; height: 44px; margin-left: -7px; }
+  .clothespin::after { top: 15px; height: 6px; }
+  .polaroid::before { top: -22px; }
+  .polaroid::after { top: -27px; }
+}
+
 /* the moment a screen or booth step appears, nothing on it transitions into place (see settleNow) */
 .is-settling, .is-settling *, .is-settling *::before, .is-settling *::after { transition: none !important; }
 
