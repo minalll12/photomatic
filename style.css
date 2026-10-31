@@ -2517,6 +2517,46 @@ html:not(.js-develop) .develop-veil { display: none; }
   .dm-lamp { flex-direction: column; gap: 5px; padding: 0 0 0 var(--s2); border-top: 0; border-left: 1px solid rgb(94 28 35 / .35); font-size: var(--fs-12); letter-spacing: .1em; }
 }
 
+/* Tablet portrait, where the plaque still sits beside the strip but the panel is no longer wide
+   enough to centre the feed and leave the side tracks their width. The plaque is laid out from the
+   start of a track that has been squeezed to nothing, so where it lands is whatever the feed left
+   over: 19.6px from the panel edge on a classic strip at 820px, against 30.7px on a desktop. Laying
+   it out from the end instead puts its right edge on the panel's content box, so the margin is the
+   panel's own padding whatever the feed is doing. */
+@media (min-width: 721px) and (max-width: 960px) {
+  /* Laid out from the end, so the margin is the panel's own 28px padding whatever the feed is doing.
+     Measured against the turned corner that comes nearest the edge it reads as 26.7px, a little
+     under the 30.7px a desktop happens to settle at; closing that last 4px pushes the plaque into
+     the PRINTS slot on the narrowest tablet, so the panel's padding is where it stops. */
+  .develop-machine:not(.is-wide) .dm-sign { justify-self: end; }
+  /* A wide strip leaves no room beside it: at 820px the panel would have to be some 47px wider to
+     hold a centred strip and an inset plaque at once, so any inset that cleared the panel edge would
+     cross the strip instead. The plaque drops under the feed there, the way it does on a phone, and
+     is centred on the same column the strip is. booth.js sets .is-wide from the strip's own W > H,
+     so this follows the shape of the strip rather than the name of a layout. */
+  .develop-machine.is-wide .dm-sign {
+    grid-column: 2; grid-row: 3;
+    justify-self: center;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--s2);
+    width: min(100%, 300px);
+    margin-top: var(--s0);
+    padding: 12px 16px;
+    text-align: left;
+    transform: rotate(-.6deg);
+  }
+  .develop-machine.is-wide .dm-lamp {
+    flex-direction: column;
+    gap: 5px;
+    padding: 0 0 0 var(--s2);
+    border-top: 0;
+    border-left: 1px solid rgb(94 28 35 / .35);
+    font-size: var(--fs-12);
+    letter-spacing: .1em;
+  }
+}
+
 /* Narrow screens: fit the strip to the panel, whatever shape it is. Scoped to the same 720px as the
    block above, which is what narrows the panel to 340px in the first place.
    --sw comes from the strip's own aspect against --sh, a height meant for a tall strip, so a wide
