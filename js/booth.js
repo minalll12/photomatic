@@ -518,6 +518,8 @@ function finishDeveloping() {
   if (state.booth.phase !== 'developing') return;
   clearTimeout(developTimer);
   state.booth.phase = 'leaving';
-  openEditor({ via: 'film' }).then(() => setPhase('setup'));
+  let p;
+  try { p = openEditor({ via: 'film' }); } catch (e) { console.error('openEditor', e); p = Promise.resolve(); }
+  (p || Promise.resolve()).then(() => setPhase('setup')).catch(() => setPhase('setup'));
 }
 $('#develop-skip').addEventListener('click', finishDeveloping);

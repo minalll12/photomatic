@@ -53,7 +53,8 @@ export function openEditor({ via = 'fade' } = {}) {
   if (window.innerWidth <= 860) setSheetCollapsed(false);
   buildProps();
   // everything is drawn before the screen is uncovered: the frame thumbnails here, the strip in the swap
-  frameButtons.forEach((_, id) => renderThumb(id));
+  // wrapped so a single bad frame never blocks the transition
+  frameButtons.forEach((_, id) => { try { renderThumb(id); } catch (e) { console.error('thumb', id, e); } });
   const shown = show('editor', { via });
   syncUI();
   return shown;

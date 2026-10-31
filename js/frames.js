@@ -1369,10 +1369,10 @@ export const FRAMES = {
       const yearY  = safe - yearSize * 0.45;
       const titleY = yearY - yearSize * 0.55 - 5 * u - titleSize * 0.5;
       // a deco fan as a crown above the text, scaled to whatever space remains
-      const fanR = Math.min((titleY - 2 * u) * 0.46, g.w * 0.14);
+      const fanR = Math.max(0, Math.min((titleY - 2 * u) * 0.46, g.w * 0.14));
       const fanY = Math.max(fanR + u, titleY * 0.5);
       ctx.save(); ctx.globalAlpha = 0.5;
-      occDecoFan(ctx, g.cx, fanY, fanR, C.gold);
+      if (fanR > 0) occDecoFan(ctx, g.cx, fanY, fanR, C.gold);
       ctx.restore();
       // firework bursts near the fan
       const bSize = fanR * 0.52;
