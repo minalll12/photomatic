@@ -3732,6 +3732,14 @@ html:not(.js-develop) .develop-veil { display: none; }
   .polaroid::after { top: -27px; }
 }
 
+/* The reveal stage follows the strip: reveal.js sets --stage-h for a strip held by its width (a film
+   row, a 2x2 grid, a stack), which used to keep the tall stage meant for a vertical strip and leave
+   a long empty drop above the label. A vertical strip sets neither and is left exactly as it was. */
+@media (max-width: 600px) {
+  .reveal { row-gap: var(--reveal-gap, var(--s5)); }
+  .reveal-stage { height: var(--stage-h, min(70svh, 640px)); min-height: var(--stage-h, 420px); }
+}
+
 /* the moment a screen or booth step appears, nothing on it transitions into place (see settleNow) */
 .is-settling, .is-settling *, .is-settling *::before, .is-settling *::after { transition: none !important; }
 

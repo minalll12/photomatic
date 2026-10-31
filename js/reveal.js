@@ -78,24 +78,38 @@ function deckledLetter(ctx, x, y, w, h, u) {
   ctx.restore();
 }
 
+const TURN = 0.035;              // the letter sits a couple of degrees off square
+// the unit a width-held spread is drawn at; 330 is set so a strip that fills its box keeps the
+// weight of furniture it already has, and the two regimes meet without a step
+const wideUnit = (sw, sh) => Math.sqrt(sw * sh) / 330;
+
 // Where the strip rests, in canvas units (shared with the action column layout)
-function geometry(W, H, strip, align) {
-  const u = Math.min(W, (H * 9) / 16) / 400;
-  const slotY = Math.max(16 * u, H * 0.03), slitY = slotY + 17 * u, drop = 30 * u;
+function geometry(W, H, strip, align, fit = false) {
+  let u = Math.min(W, (H * 9) / 16) / 400;
   const aspect = strip.width / strip.height;
-  let sh = H - slitY - drop - 70 * u, sw = sh * aspect;
   const maxW = W * (aspect > 1 ? 0.78 : 0.46);
-  if (sw > maxW) { sw = maxW; sh = sw / aspect; }
+  let slotY = Math.max(16 * u, H * 0.03), slitY = slotY + 17 * u, drop = 30 * u;
+  let sh = H - slitY - drop - 70 * u, sw = sh * aspect;
+  if (sw > maxW) {
+    sw = maxW; sh = sw / aspect;
+    /* Held by the width, so the box's height no longer says how big the drawing is: left as it was,
+       `u` would shrink the slot, the letter's margin and the wax seal to specks on a short stage.
+       Take the measure from the strip instead. Only the fitted (phone) path asks for this. */
+    if (fit) {
+      u = wideUnit(sw, sh);
+      slotY = Math.max(16 * u, H * 0.03); slitY = slotY + 17 * u; drop = 30 * u;
+    }
+  }
   const restTop = slitY + drop;
   const pw = Math.min(W * 0.92, sw + (aspect > 1 ? 70 : 150) * u), ph = sh + 64 * u;
   const cx = align === 'end' ? Math.max(W / 2, W - pw / 2 - 40 * u) : W / 2;
-  return { u, slotY, slitY, drop, sw, sh, cx, restTop, pw, ph, aspect };
+  return { u, slotY, slitY, drop, sw, sh, cx, restTop, pw, ph, aspect, wide: sw >= maxW - 0.01 };
 }
 
 // `table: false` leaves the background transparent so the CSS table shows through on screen.
 // `align: 'end'` pushes the spread toward the actions column (desktop screen only).
-export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'center' } = {}) {
-  const g = geometry(W, H, strip, align);
+export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'center', fit = false } = {}) {
+  const g = geometry(W, H, strip, align, fit);
   const { u, slotY, slitY, drop, sw, sh, cx, restTop, pw, ph } = g;
   ctx.clearRect(0, 0, W, H);
   if (bg) table(ctx, W, H);
@@ -113,9 +127,19 @@ export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'cen
   const photo = state.design.photos[state.output.polaroid % Math.max(1, state.design.photos.length)];
   if (pp > 0 && photo) {
     const e = easeOut(pp), pw2 = Math.min(150 * u, sw * 0.9), ph2 = pw2 * 1.2;
+    const turn = 0.05 + e * 0.12;
+    /* It peeks out from behind the strip, which is a fraction of the strip's own width — on a wide
+       strip that lands it past the edge of the canvas, cut in half. Hold it inside instead, so it
+       tucks further behind rather than being clipped. */
+    let px = cx + sw * 0.22 + e * sw * 0.42;
+    if (fit && g.wide) {
+      // its own shadow reaches past the card (offset 4u, blur 14u), so leave that too
+      const reach = (pw2 * Math.cos(turn) + ph2 * Math.sin(turn)) / 2 + 18 * u;
+      px = Math.min(px, W - reach);
+    }
     ctx.save();
-    ctx.translate(cx + sw * 0.22 + e * sw * 0.42, restTop + sh * 0.3 + e * 10 * u);
-    ctx.rotate(0.05 + e * 0.12);
+    ctx.translate(px, restTop + sh * 0.3 + e * 10 * u);
+    ctx.rotate(turn);
     ctx.shadowColor = 'rgba(14,2,4,.35)'; ctx.shadowBlur = 14 * u; ctx.shadowOffsetX = 4 * u; ctx.shadowOffsetY = 8 * u;
     ctx.fillStyle = '#FBFAF6'; ctx.fillRect(-pw2 / 2, -ph2 / 2, pw2, ph2);
     ctx.shadowColor = 'transparent';
@@ -216,6 +240,37 @@ const stage = $('#reveal-stage');
 const actions = $('#reveal-actions');
 let raf = 0, t0 = 0, lastStep = -1, pinned = false, landed = false, confettiDone = false;
 const alignment = () => (window.innerWidth > 960 ? 'end' : 'center');
+const fitted = () => window.matchMedia('(max-width: 600px)').matches;
+
+const GAP_TO_LABEL = 32;         // paper to the "Developed" label, per the design
+const SHADOW = 14;               // room left under the letter for its drop shadow, in units of u
+
+/* On a phone the stage is only as tall as the spread needs. A strip that fills its box (the classic
+   vertical one) already does that and is left exactly as it was; a strip held by the width instead
+   — a film row, a 2x2 grid, a stack — used to keep the tall stage and leave a long empty drop above
+   the label. The room the shadow needs comes back off the row gap, so the distance from the paper
+   to the label reads the same whichever way the stage was sized. */
+function fitStage() {
+  const reveal = stage.parentElement;
+  stage.style.removeProperty('--stage-h');
+  reveal.style.removeProperty('--reveal-gap');
+  const strip = state.output.canvas;
+  if (!fitted() || !strip) return;
+  const r = canvas.getBoundingClientRect();
+  if (!geometry(r.width, r.height, strip, 'center', true).wide) return;
+
+  const W = r.width, aspect = strip.width / strip.height;
+  const sw = W * (aspect > 1 ? 0.78 : 0.46), sh = sw / aspect;
+  const u = wideUnit(sw, sh);
+  const pw = Math.min(W * 0.92, sw + (aspect > 1 ? 70 : 150) * u);
+  // the slot's inset is itself a share of the height, so let it settle
+  let H = sh * 2;
+  for (let i = 0; i < 4; i++) {
+    H = Math.max(16 * u, H * 0.03) + sh + 89 * u + (pw / 2) * Math.sin(TURN) + SHADOW * u;
+  }
+  stage.style.setProperty('--stage-h', `${Math.round(H)}px`);
+  reveal.style.setProperty('--reveal-gap', `${Math.max(0, Math.round(GAP_TO_LABEL - SHADOW * u))}px`);
+}
 
 function size() {
   const r = canvas.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -227,7 +282,7 @@ function size() {
 // the warm spotlight sits on the strip's centre; beside it (desktop), the action column is centred
 // on the strip: its own height measured, so a taller or shorter column stays centred
 function alignActions(W, H) {
-  const g = geometry(W, H, state.output.canvas, alignment());
+  const g = geometry(W, H, state.output.canvas, alignment(), fitted());
   const mid = g.restTop + g.sh / 2;
   stage.style.setProperty('--spot-x', `${Math.round(g.cx)}px`);
   stage.style.setProperty('--spot-y', `${Math.round(mid)}px`);
@@ -239,7 +294,7 @@ function drawAt(t) {
   const { W, H, dpr } = size();
   const ctx = canvas.getContext('2d');
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  drawReveal(ctx, W, H, t, state.output.canvas, { table: false, align: alignment() });
+  drawReveal(ctx, W, H, t, state.output.canvas, { table: false, align: alignment(), fit: fitted() });
 }
 
 function frame(now) {
@@ -307,6 +362,7 @@ export async function openReveal() {
 // swap; only the strip itself (printing, landing, the pin) moves afterwards
 onScreen('reveal', () => {
   if (!state.output.canvas) return;
+  fitStage();
   const { W, H } = size();
   alignActions(W, H);
   drawAt(0);
@@ -315,6 +371,7 @@ onScreen('reveal', () => {
 // redraw the settled frame at the new size
 new ResizeObserver(() => {
   if (state.screen !== 'reveal' || !state.output.canvas) return;
+  fitStage();
   const { W, H } = size();
   alignActions(W, H);
   if (actions.classList.contains('is-done')) drawAt(REVEAL_END);
