@@ -187,9 +187,8 @@ body::before, body::after {
   pointer-events: none;
 }
 body::before { background: var(--grain-subtle), var(--navy); }
-/* on the home screen both fixed overlay layers must start below the header so no navy/vignette seam shows */
-body[data-screen="home"]::before,
-body[data-screen="home"]::after { top: var(--header-h); }
+/* on the home screen extend the wallpaper scene behind the fixed header so there is no seam */
+body[data-screen="home"] .scene { top: calc(-1 * var(--header-h)); }
 body::after { background: radial-gradient(120% 90% at 50% 35%, transparent 50%, rgb(8 10 20 / .55) 100%); }
 /* booth: a deep navy room */
 body[data-screen="booth"]::before {
