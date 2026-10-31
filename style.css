@@ -3673,17 +3673,22 @@ html:not(.js-develop) .develop-veil { display: none; }
 @media (max-width: 600px) and (min-height: 600px) {
   .hero {
     --hero-h: calc(100svh - var(--header-h));
-    /* the scene takes the larger share of the screen, but never so much that the copy drops under
-       290px, which is what the tightened text and the 44px tap targets need on a short phone */
-    --art-h: min(calc(var(--hero-h) - 290px), calc(var(--hero-h) * .58));
+    /* What the text row holds: the gap under the marquee, the text block itself, and the gap down to
+       the sign. The 5.4svh tracks the three svh-clamped pieces inside it (the top gap and the two
+       margins), so the gap to the sign stays even from a 664px-tall screen to a 932px one. */
+    --copy-h: calc(268px + 5.4svh);
+    --art-h: min(calc(var(--hero-h) - var(--copy-h)), calc(var(--hero-h) * .62));
     --floor-h: calc(var(--art-h) * .25);
     --wall-h: calc(var(--art-h) * .75);
-    /* the booth stands a little forward on the floor, so it can be taller than the wall behind it */
-    --booth-w: calc((var(--art-h) * .875 + 6px) * .94 / 2.14);
+    /* sign + booth are 2.095 : 1, so this fills the scene from the top of the row down to the spot on
+       the floor the booth stands on: every pixel left over by the text goes to the illustration */
+    --booth-w: calc((var(--art-h) * .875 + 6px) / 2.095);
     grid-template-rows: minmax(0, 1fr) var(--art-h);
     height: var(--hero-h);
   }
-  .hero-copy { grid-row: 1; height: 100%; min-height: 0; padding: 0 0 var(--s1); justify-content: center; }
+  /* held to the top rather than centred, so the gap under the marquee is a set distance and not
+     whatever half the leftover happens to be */
+  .hero-copy { grid-row: 1; height: 100%; min-height: 0; padding: clamp(28px, 4svh, 36px) 0 0; justify-content: flex-start; }
   .hero-art { grid-row: 2; height: var(--art-h); }
   /* the same group, 30-40% tighter: the title and note give up the most, the tap targets none */
   .hero .kicker { margin-bottom: var(--s-1); font-size: var(--fs-14); }
@@ -3700,9 +3705,18 @@ html:not(.js-develop) .develop-veil { display: none; }
   .hero .ticket { transform: rotate(-1.5deg) scale(.92); transform-origin: center; }
   .booth-stand { bottom: calc(var(--floor-h) * .5 - 6px); }
   .light-pool, .light-warm { bottom: calc(var(--floor-h) * .5 - var(--booth-w) * .39); }
-  /* a smaller sign needs smaller bulb rows and lettering for PHOTOS to still fit */
-  .bulbs { left: 6px; right: 6px; height: 6px; background-size: 12px 6px, 12px 6px; }
-  .sign-word { font-size: calc(var(--booth-w) * .115); line-height: .95; }
+  /* The sign is drawn to the same proportions as on desktop. PHOTOS already scales with the booth,
+     but the bulb rows are a fixed 8px and the sub-line is capped at 9px, so on a small sign both ate
+     into the clear space around the lettering. These are the desktop ratios measured against the
+     booth width: bulbs 2.9%, their pitch 4.35%, inset 3.26%, sub-line 4%. */
+  .bulbs {
+    left: calc(var(--booth-w) * .0326); right: calc(var(--booth-w) * .0326);
+    height: calc(var(--booth-w) * .029);
+    background-size: calc(var(--booth-w) * .0435) calc(var(--booth-w) * .029), calc(var(--booth-w) * .0435) calc(var(--booth-w) * .029);
+  }
+  .sign-sub { font-size: calc(var(--booth-w) * .04); }
+  /* the chase steps one bulb and one shadow along, so it follows the smaller pitch too */
+  @keyframes chase { to { background-position: calc(var(--booth-w) * .0435) 0, calc(var(--booth-w) * .0652) 0; } }
   .floor-tiles { background-size: 40px 40px; }
 }
 
