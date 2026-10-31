@@ -1351,14 +1351,6 @@ export const FRAMES = {
       grainOver(ctx, 0, 0, W, H, 0.5);
       occStars(ctx, W, g.h * 0.55, G + '1)', 31, 22);
 
-      // a deco fan as a crown over the type, kept light so the title stays legible on it
-      ctx.save(); ctx.globalAlpha = 0.5;
-      occDecoFan(ctx, g.cx, g.h * 0.47, Math.min(g.h * 0.4, g.w * 0.27), C.gold);
-      ctx.restore();
-      // firework bursts out in the header's corners
-      occBurst(ctx, g.x + g.w * 0.1, g.h * 0.26, Math.min(g.h * 0.2, g.w * 0.08), G + '.9)', 12);
-      occBurst(ctx, g.x + g.w * 0.9, g.h * 0.2, Math.min(g.h * 0.15, g.w * 0.06), G + '.72)', 10);
-
       // a gold double line with stepped corners around the whole strip
       ctx.save();
       ctx.strokeStyle = G + '.85)'; ctx.lineWidth = 1.6 * u;
@@ -1371,18 +1363,34 @@ export const FRAMES = {
        [14 * u, H - 14 * u, 1, -1], [W - 14 * u, H - 14 * u, -1, -1]]
         .forEach(([x, y, fx, fy]) => occDecoBracket(ctx, x, y, bs, G + '.9)', fx, fy, 1.6 * u));
 
-      // gold confetti and a few streamers down the side margins
-      occConfetti(ctx, W, g.h * 0.6, [C.gold, 'rgba(244,238,227,.9)', G + '.7)'], 31);
+      // lay the type out bottom-up so nothing overflows into the photos whatever the layout
+      const yearSize = g.t.title * 1.1, titleSize = g.t.title * 0.8;
+      const safe = Math.min(g.h * 0.94, occPhotoTop(L) - u);
+      const yearY  = safe - yearSize * 0.45;
+      const titleY = yearY - yearSize * 0.55 - 5 * u - titleSize * 0.5;
+      // a deco fan as a crown above the text, scaled to whatever space remains
+      const fanR = Math.min((titleY - 2 * u) * 0.46, g.w * 0.14);
+      const fanY = Math.max(fanR + u, titleY * 0.5);
       ctx.save(); ctx.globalAlpha = 0.5;
-      [[0.5, 0.26], [W - 0.5 * u - 24 * u, 0.2]].forEach(([x, t], i) => {
-        occStreamer(ctx, i ? W - 30 * u : 30 * u, g.h * 0.2, g.h * 0.9, 5 * u, G + '.8)', 1.2 * u);
+      occDecoFan(ctx, g.cx, fanY, fanR, C.gold);
+      ctx.restore();
+      // firework bursts near the fan
+      const bSize = fanR * 0.52;
+      occBurst(ctx, g.x + g.w * 0.1, fanY * 0.7, Math.min(bSize, g.w * 0.07), G + '.9)', 12);
+      occBurst(ctx, g.x + g.w * 0.9, fanY * 0.6, Math.min(bSize * 0.8, g.w * 0.05), G + '.72)', 10);
+
+      // gold confetti and streamers anchored above the title
+      occConfetti(ctx, W, titleY * 0.8, [C.gold, 'rgba(244,238,227,.9)', G + '.7)'], 31);
+      ctx.save(); ctx.globalAlpha = 0.5;
+      [0, 1].forEach(i => {
+        occStreamer(ctx, i ? W - 30 * u : 30 * u, fanY * 0.3, titleY * 0.92, 5 * u, G + '.8)', 1.2 * u);
       });
       ctx.restore();
 
-      text(ctx, 'Happy New Year', g.cx, g.h * 0.64, FONT.serif(g.t.title * 0.8, 700), C.gold,
-        { track: g.t.title * 0.08, max: g.w * 0.8 });
-      text(ctx, String(occYear()), g.cx, g.h * 0.87, FONT.serif(g.t.title * 1.1, 800), C.cream,
-        { track: g.t.title * 0.26, max: g.w * 0.7 });
+      text(ctx, 'Happy New Year', g.cx, titleY, FONT.serif(titleSize, 700), C.gold,
+        { track: titleSize * 0.08, max: g.w * 0.8 });
+      text(ctx, String(occYear()), g.cx, yearY, FONT.serif(yearSize, 800), C.cream,
+        { track: yearSize * 0.26, max: g.w * 0.7 });
     },
     backing(ctx, s) {
       // stepped deco brackets at each corner of the photo, instead of the old ticks
@@ -1479,8 +1487,8 @@ export const FRAMES = {
       occCobweb(ctx, W - 22 * u, 22 * u, cw, K + '1)', -1, 1);
       ctx.restore();
       occFrameCorners(ctx, W, H, 27, 17, K + '.5)');
-      // a spider dropping down the right margin, below the header so it clears the cobweb
-      occSpider(ctx, W - 26 * u, g.h * 1.02, g.h * 0.62, 10 * u, K + '.85)');
+      // a spider dropping from the right cobweb, kept within the header
+      occSpider(ctx, W - 26 * u, g.h * 0.54, g.h * 0.36, 10 * u, K + '.85)');
 
       // "Boo." on a torn ticket stub, held clear of the photos whatever the header's depth
       const tw = Math.min(g.w * 0.52, g.t.title * 5.4), th = g.t.title * 1.4;
@@ -1612,10 +1620,14 @@ export const FRAMES = {
       occGradCap(ctx, g.cx, 56 * k, 31 * k, C.gold);
       occBorder(ctx, W, H, G + '1)');
       occFrameCorners(ctx, W, H, 27, 22, G + '.78)');
-      occRibbon(ctx, g.cx, g.h * 0.62, 132 * k, 27 * k, 'rgba(58,10,14,.55)', C.gold);
-      text(ctx, 'CLASS OF', g.cx, g.h * 0.62, FONT.type(g.t.small), C.gold, { track: g.t.small * 0.46 });
-      text(ctx, occHeadYear(), g.cx, g.h * 0.83, FONT.serif(g.t.title, 700), C.gold, { track: g.t.title * 0.1, max: g.w * 0.9 });
-      occDivider(ctx, W, g.h * 0.95, G + '.5)');
+      const gradSafe = Math.min(g.h * 0.97, occPhotoTop(L) - 2 * u);
+      const gradDivY = Math.min(g.h * 0.95, gradSafe);
+      const gradYearY = Math.min(g.h * 0.83, gradDivY - g.t.title * 0.6 - 4 * u);
+      const gradRibY  = Math.min(g.h * 0.62, gradYearY - g.t.title * 0.6 - 4 * u);
+      occRibbon(ctx, g.cx, gradRibY, 132 * k, 27 * k, 'rgba(58,10,14,.55)', C.gold);
+      text(ctx, 'CLASS OF', g.cx, gradRibY, FONT.type(g.t.small), C.gold, { track: g.t.small * 0.46 });
+      text(ctx, occHeadYear(), g.cx, gradYearY, FONT.serif(g.t.title, 700), C.gold, { track: g.t.title * 0.1, max: g.w * 0.9 });
+      occDivider(ctx, W, gradDivY, G + '.5)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.5)', 'rgba(184,147,74,.75)'); },
     drawText(ctx, L) {
@@ -1701,10 +1713,14 @@ export const FRAMES = {
       ctx.strokeStyle = 'rgba(58,10,14,.13)'; ctx.lineWidth = 1 * u;
       ctx.strokeRect(20 * u, 20 * u, W - 40 * u, H - 40 * u); ctx.restore();
       occFrameCorners(ctx, W, H, 27, 21, 'rgba(58,10,14,.4)');
-      occRibbon(ctx, g.cx, g.h * 0.63, Math.min(g.w * 0.92, 196 * k), 30 * k, 'rgba(179,32,42,.9)', C.gold);
-      text(ctx, 'HAPPY BIRTHDAY', g.cx, g.h * 0.63, FONT.serif(g.t.title * 0.7, 800), C.cream, { track: g.t.title * 0.1, max: Math.min(g.w * 0.8, 182 * k) });
-      text(ctx, caption() || '★', g.cx, g.h * 0.85, FONT.script(g.t.year * 1.1), C.oxblood, { max: g.w * 0.9 });
-      occDivider(ctx, W, g.h * 0.96, 'rgba(58,10,14,.2)');
+      const bdayASafe = Math.min(g.h * 0.97, occPhotoTop(L) - 2 * u);
+      const bdayADivY  = Math.min(g.h * 0.96, bdayASafe);
+      const bdayASubY  = Math.min(g.h * 0.85, bdayADivY - g.t.year * 0.8 - 3 * u);
+      const bdayARibY  = Math.min(g.h * 0.63, bdayASubY - g.t.year * 0.8 - 5 * u);
+      occRibbon(ctx, g.cx, bdayARibY, Math.min(g.w * 0.92, 196 * k), 30 * k, 'rgba(179,32,42,.9)', C.gold);
+      text(ctx, 'HAPPY BIRTHDAY', g.cx, bdayARibY, FONT.serif(g.t.title * 0.7, 800), C.cream, { track: g.t.title * 0.1, max: Math.min(g.w * 0.8, 182 * k) });
+      text(ctx, caption() || '★', g.cx, bdayASubY, FONT.script(g.t.year * 1.1), C.oxblood, { max: g.w * 0.9 });
+      occDivider(ctx, W, bdayADivY, 'rgba(58,10,14,.2)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(58,10,14,.2)', 'rgba(179,32,42,.55)', 'rgba(252,248,240,.9)'); },
     drawText(ctx, L) {
@@ -1729,9 +1745,13 @@ export const FRAMES = {
       occPartyHat(ctx, g.cx, 54 * k, 29 * k, C.gold);
       occBorder(ctx, W, H, G + '1)');
       occFrameCorners(ctx, W, H, 27, 21, G + '.7)');
-      text(ctx, 'Happy Birthday', g.cx, g.h * 0.68, FONT.serifItalic(g.t.title, 600), C.gold, { max: g.w * 0.9 });
-      text(ctx, caption() || '★', g.cx, g.h * 0.84, FONT.type(g.t.small), C.cream, { track: g.t.small * 0.3, max: g.w * 0.9 });
-      occDivider(ctx, W, g.h * 0.95, G + '.45)');
+      const bdayBSafe = Math.min(g.h * 0.97, occPhotoTop(L) - 2 * u);
+      const bdayBDivY = Math.min(g.h * 0.95, bdayBSafe);
+      const bdayBSubY = Math.min(g.h * 0.84, bdayBDivY - g.t.small * 0.8 - 3 * u);
+      const bdayBTitY = Math.min(g.h * 0.68, bdayBSubY - g.t.small * 0.8 - 5 * u);
+      text(ctx, 'Happy Birthday', g.cx, bdayBTitY, FONT.serifItalic(g.t.title, 600), C.gold, { max: g.w * 0.9 });
+      text(ctx, caption() || '★', g.cx, bdayBSubY, FONT.type(g.t.small), C.cream, { track: g.t.small * 0.3, max: g.w * 0.9 });
+      occDivider(ctx, W, bdayBDivY, G + '.45)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.45)', 'rgba(184,147,74,.7)'); },
     drawText(ctx, L) {
