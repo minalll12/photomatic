@@ -2517,7 +2517,8 @@ html:not(.js-develop) .develop-veil { display: none; }
   .dm-lamp { flex-direction: column; gap: 5px; padding: 0 0 0 var(--s2); border-top: 0; border-left: 1px solid rgb(94 28 35 / .35); font-size: var(--fs-12); letter-spacing: .1em; }
 }
 
-/* Phones: fit the strip to the panel, whatever shape it is.
+/* Narrow screens: fit the strip to the panel, whatever shape it is. Scoped to the same 720px as the
+   block above, which is what narrows the panel to 340px in the first place.
    --sw comes from the strip's own aspect against --sh, a height meant for a tall strip, so a wide
    one (a film row, a 2x2 grid) came out wider than the panel. The slot, the window and the light
    spill are all drawn from --sw, so capping it here fits the whole feed at once; the feed's column
@@ -2526,7 +2527,7 @@ html:not(.js-develop) .develop-veil { display: none; }
    The cap restates the panel's own width, since a percentage inside --sw would resolve against
    whichever element used it. One more min(), so a strip that already fits keeps the size it had:
    this is the strip's shape deciding, not a layout name, and a tall strip is untouched. */
-@media (max-width: 600px) {
+@media (max-width: 720px) {
   .develop-machine {
     --panel-w: min(100vw - 2 * max(var(--gutter), env(safe-area-inset-left, 0px)), 340px);
     /* panel, less its 14px padding, less 30px clear each side of the strip */
