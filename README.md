@@ -7,6 +7,7 @@
 Strike a pose, style your strip, and take it home. No accounts, no uploads, no installs.
 
 [**Try it live →**](https://photomatic-six.vercel.app)
+
 <img width="2842" height="1456" alt="image" src="https://github.com/user-attachments/assets/ead721fa-7f8f-48ae-9ccc-cb237650b604" />
 
 </div>
@@ -85,6 +86,6 @@ Current versions of Chrome, Edge, Firefox and Safari, on desktop and mobile.
 
 <div align="center">
 
-Created by **Minal Bijumon ** · [LinkedIn](https://www.linkedin.com/in/minal-bijumon/)
+Created by Minal Bijumon · [LinkedIn](https://www.linkedin.com/in/minal-bijumon/)
 
 </div>
