@@ -3528,11 +3528,13 @@ html:not(.js-develop) .develop-veil { display: none; }
   .reveal-stage { height: min(70svh, 640px); min-height: 420px; }
   .reveal-actions { justify-self: center; margin-top: 0; min-height: 0; }
 }
-/* A landscape strip (film row, 2×2 grid) is held by the canvas width, leaving most of the tall
-   stage empty: switch to single-column so the stage shrinks to fit and the label sits just below. */
-.reveal[data-wide] { grid-template-columns: 1fr; gap: var(--s5); height: auto; min-height: 0; }
-.reveal[data-wide] .reveal-stage { height: min(70svh, 640px); min-height: 420px; }
-.reveal[data-wide] .reveal-actions { justify-self: center; margin-top: 0; min-height: 0; }
+/* A landscape strip keeps the 2-col layout on desktop but the container height auto-fits to the
+   shorter stage (JS sets --stage-h); on mobile it collapses with the rest of the reveal. */
+.reveal[data-wide] { height: auto; min-height: 0; }
+@media (max-width: 960px) {
+  .reveal[data-wide] .reveal-stage { height: min(70svh, 640px); min-height: 420px; }
+  .reveal[data-wide] .reveal-actions { justify-self: center; margin-top: 0; min-height: 0; }
+}
 
 @media (max-width: 860px) {
   .nav { display: none; }
