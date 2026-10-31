@@ -255,8 +255,11 @@ const STACKED = window.matchMedia('(max-width: 960px)');
    is left where it has always been drawn. The two meet at the width the machine panel stops
    narrowing at, which is where the rest of the booth stops being phone-shaped too. */
 const PHONE = window.matchMedia('(max-width: 720px)');
-const alignment = () => (STACKED.matches ? 'center' : 'end');
-const fitted = () => STACKED.matches;
+/* A landscape strip (film row, 2×2 grid, stack) needs the same single-column treatment as mobile
+   regardless of screen width: the 2-col grid leaves the strip tiny at the bottom of a tall stage. */
+const wideStrip = () => { const c = state.output.canvas; return !!c && c.width > c.height; };
+const alignment = () => (STACKED.matches || wideStrip() ? 'center' : 'end');
+const fitted = () => STACKED.matches || wideStrip();
 const crossable = () => !PHONE.matches;
 
 const GAP_TO_LABEL = 32;         // paper to the "Developed" label, per the design
@@ -272,6 +275,8 @@ function fitStage() {
   stage.style.removeProperty('--stage-h');
   reveal.style.removeProperty('--reveal-gap');
   const strip = state.output.canvas;
+  // keep the data-wide attribute in sync so CSS can switch to 1-column for landscape strips
+  reveal.toggleAttribute('data-wide', wideStrip());
   if (!fitted() || !strip) return;
   const r = canvas.getBoundingClientRect();
   if (!geometry(r.width, r.height, strip, 'center', true).wide) return;

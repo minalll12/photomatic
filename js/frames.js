@@ -317,8 +317,8 @@ function occBowtie(ctx, cx, cy, s, col) {
   ctx.restore();
 }
 
-/* From October on, the new year being celebrated is the one about to start, not the one ending. */
-const occYear = () => { const s = D().shotDate; return s.getMonth() >= 9 ? s.getFullYear() + 1 : s.getFullYear(); };
+/* Only in December do we show the year about to start; every other month shows the current year. */
+const occYear = () => { const s = D().shotDate; return s.getMonth() === 11 ? s.getFullYear() + 1 : s.getFullYear(); };
 /* Frames with a year in the headline (Class of, Prom) let the caption override it, but only when the
    caption actually reads as a year — otherwise it is a name and belongs in the footer like anywhere else. */
 const YEARISH = /^'?\d{2}$|^\d{4}$/;
