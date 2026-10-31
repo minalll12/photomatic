@@ -15,7 +15,7 @@ Strike a pose, style your strip, and take it home. No accounts, no uploads, no i
 
 ## Why I built it
 
-A few photo booth strips had been pinned to the corkboard in my room for months. Every time I looked at them, I wondered how hard it would be to recreate that experience in a browser: the countdown, the flash, and the wait while your strip develops.
+Many photo booth strips have been pinned to the bulletin board in my room for months. Every time I looked at them, I wondered how hard it would be to recreate that experience in a browser: the countdown, the flash, and the wait while your strip develops!
 
 Photomatic is the result. It's a small project, but I wanted every detail to feel right, from the visual style to how it behaves on a phone.
 
@@ -81,14 +81,10 @@ Then open http://localhost:8765. Any static server works too, for example `npx s
 
 Current versions of Chrome, Edge, Firefox and Safari, on desktop and mobile.
 
-## License
-
-[MIT](LICENSE)
-
 ---
 
 <div align="center">
 
-Made by **Minal** · [LinkedIn](https://www.linkedin.com/in/minal-bijumon/)
+Created by **Minal Bijumon ** · [LinkedIn](https://www.linkedin.com/in/minal-bijumon/)
 
 </div>
