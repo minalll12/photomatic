@@ -57,10 +57,11 @@ export function openEditor({ via = 'fade' } = {}) {
   frameButtons.forEach((_, id) => { try { renderThumb(id); } catch (e) { console.error('thumb', id, e); } });
   const shown = show('editor', { via });
   syncUI();
-  (shown || Promise.resolve()).then(() => requestRender());
+  const after = shown || Promise.resolve();
+  after.then(() => requestRender()).catch(() => requestRender());
   return shown;
 }
-onScreen('editor', () => { cancelAnimationFrame(E.rafId); E.rafId = 0; drawDisplay(); });
+onScreen('editor', () => { cancelAnimationFrame(E.rafId); E.rafId = 0; try { drawDisplay(); } catch (e) { console.error('drawDisplay', e); requestRender(); } });
 
 /* =========================================================
    Rendering (dirty flag: one frame per change, nothing while idle)
@@ -92,7 +93,7 @@ function drawDisplay() {
     strip.style.width = `${L.W * v.scale}px`;
     strip.style.height = `${L.H * v.scale}px`;
   }
-  render(strip.getContext('2d'), v.k, { ui: true, L });
+  try { render(strip.getContext('2d'), v.k, { ui: true, L }); } catch (e) { console.error('render', e); }
   placeBar();
   placeSpots(L, v.scale);
 }
