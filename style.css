@@ -161,6 +161,7 @@ html {
   background: var(--navy);
 }
 html, body { margin: 0; }
+body { padding-top: var(--header-h); }
 body {
   /* every page has its own colour set; text and focus colours follow it */
   --fg: var(--cream);
@@ -365,8 +366,10 @@ body[data-screen="booth"] .swash path { stroke: var(--blush); }
    5. Top bar + marquee
    --------------------------------------------------------- */
 .topbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: var(--z-sticky);
   background: #2A070B;
   box-shadow: 0 1px 0 rgb(244 238 227 / .08), 0 8px 24px rgb(14 2 4 / .35);
