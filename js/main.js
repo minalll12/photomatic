@@ -97,7 +97,7 @@ videoBtn.addEventListener('click', async () => {
   try {
     const { blob, ext } = await recordCanvas(1080, 1920, 6, (ctx, t) => {
       ctx.setTransform(scale, 0, 0, scale, 0, 0);
-      drawReveal(ctx, 400, LH, Math.min(t, REVEAL_END), strip);
+      drawReveal(ctx, 400, LH, Math.min(t, REVEAL_END), strip, { hold: true });
     }, p => { label.textContent = `Recording ${Math.round(p * 100)}%`; });
     await deliver(blob, fileName('', ext), 'My Photomatic reveal');
   } catch {

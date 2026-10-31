@@ -108,7 +108,7 @@ function geometry(W, H, strip, align, fit = false) {
 
 // `table: false` leaves the background transparent so the CSS table shows through on screen.
 // `align: 'end'` pushes the spread toward the actions column (desktop screen only).
-export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'center', fit = false } = {}) {
+export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'center', fit = false, hold = false } = {}) {
   const g = geometry(W, H, strip, align, fit);
   const { u, slotY, slitY, drop, sw, sh, cx, restTop, pw, ph } = g;
   ctx.clearRect(0, 0, W, H);
@@ -132,7 +132,9 @@ export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'cen
        strip that lands it past the edge of the canvas, cut in half. Hold it inside instead, so it
        tucks further behind rather than being clipped. */
     let px = cx + sw * 0.22 + e * sw * 0.42;
-    if (fit && g.wide) {
+    /* `hold` is the recorded video, whose frame is fixed at 9:16 and cannot be re-fitted the way
+       the stage is: there, only a landscape strip is pushed far enough out to need moving. */
+    if ((fit && g.wide) || (hold && g.aspect > 1)) {
       // its own shadow reaches past the card (offset 4u, blur 14u), so leave that too
       const reach = (pw2 * Math.cos(turn) + ph2 * Math.sin(turn)) / 2 + 18 * u;
       px = Math.min(px, W - reach);
