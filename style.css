@@ -226,6 +226,12 @@ body[data-screen="album"]::before {
 }
 body[data-screen="editor"]::after { background: radial-gradient(120% 100% at 45% 35%, transparent 60%, rgb(90 60 30 / .14) 100%); }
 body[data-screen="reveal"]::after { background: radial-gradient(105% 88% at 50% 45%, transparent 36%, rgb(14 2 4 / .76) 100%); }
+/* on tablet the viewport is squarer so the vignette corners are more prominent; soften them */
+@media (max-width: 960px) {
+  body[data-screen="reveal"]::after {
+    background: radial-gradient(120% 110% at 50% 42%, transparent 40%, rgb(14 2 4 / .5) 100%);
+  }
+}
 body[data-screen="album"]::after {
   background: radial-gradient(110% 90% at 50% 42%, transparent 48%, rgb(10 2 4 / .6) 100%);
 }
@@ -374,6 +380,9 @@ body[data-screen="booth"] .swash path { stroke: var(--blush); }
   z-index: var(--z-sticky);
   background: #2A070B;
   box-shadow: 0 1px 0 rgb(244 238 227 / .08), 0 8px 24px rgb(14 2 4 / .35);
+  /* iOS Safari: promote to its own GPU layer so the bar stays fixed during momentum scroll */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 .topbar-inner {
   display: flex;
@@ -1066,6 +1075,11 @@ kbd {
   height: calc(var(--cord) + 44px);
   margin-left: 30%;
   pointer-events: none;
+}
+/* the scene was extended to y=0 behind the header; pull the pendant up so the cord reaches the ceiling */
+body[data-screen="home"] .pendant {
+  --cord: calc(var(--hero-h) * .06 + var(--header-h));
+  margin-top: calc(-1 * var(--header-h));
 }
 .pendant-cord { position: absolute; left: 50%; top: 0; width: 2px; height: var(--cord); margin-left: -1px; background: linear-gradient(90deg, #2A1A12, #5A3A20); }
 .pendant-shade {
@@ -2194,7 +2208,7 @@ html:not(.js-develop) .develop-veil { display: none; }
   color: var(--ink);
   /* top-centre, kept clear of the countdown disc in the corner */
   width: max-content;
-  max-width: calc(100% - 2 * (120px + 4.2% + 28px));
+  max-width: max(160px, calc(100% - 2 * (120px + 4.2% + 28px)));
   font-family: var(--font-type);
   font-size: var(--fs-lg);
   line-height: 1.3;
