@@ -832,6 +832,37 @@ function occHeartMark(ctx, cx, cy, s, col) {
   ctx.restore();
 }
 
+/* The top of the keyline drawn around the first photo — where a header's decoration has to stop. */
+function occPhotoTop(L) {
+  const s = L.slots[0];
+  if (!s) return Infinity;
+  const u = Math.max(1, Math.min(s.w, s.h) / 300);
+  return s.y - Math.max(L.mat.t, Math.round(10 * u));
+}
+
+/* The rule under a title: at its usual share of the header, but never closer to the type than the
+   type's own size allows, and dropped altogether when that leaves it on the photos. A share of the
+   header alone drew it through the letters wherever the header is shallow — a 2x2 grid's is 129px
+   and a film row's 114 against a tall strip's 320. Returns the y it used, or the band's top when
+   there was no rule, so the caller can place what follows. */
+function occTitleRule(ctx, W, g, L, share, titleY, titleSize, col, half) {
+  const y = Math.max(g.h * share, titleY + titleSize * 0.5 + 9 * g.u);
+  if (y > occPhotoTop(L) - 6 * g.u) return titleY + titleSize * 0.5;
+  occDivider(ctx, W, y, col, half);
+  return y;
+}
+
+/* Centres the mark in the band left for it and shrinks it to fit. Placed at a fixed share of the
+   header it was drawn behind the photos' keyline wherever the header is shallow — a 2x2 grid's is
+   129px and a film row's 114px against a tall strip's 320 — while the mark itself barely changed
+   size. The gap above the photos decides now, so it sits clear on every layout. */
+function occMark(ctx, g, top, bottom, want, col) {
+  const pad = 7 * g.u;
+  const room = (bottom - pad) - (top + pad);
+  if (room < 6) return;                       // no room worth drawing into
+  occHeartMark(ctx, g.cx, (top + bottom) / 2, Math.min(want, room / 0.78), col);
+}
+
 /* a mat and keyline around a photo slot (drawn in the slot's own frame)
 
    This replaces four corner ticks that read as a rendering fault rather than decoration: a cream
@@ -1396,7 +1427,7 @@ export const FRAMES = {
       heartPath(ctx, g.cx, 56 * k, 56 * k); ctx.stroke();
       ctx.restore();
       text(ctx, 'Be Mine', g.cx, g.h * 0.72, FONT.script(g.t.title * 1.15), C.cherry, { max: g.w * 0.86 });
-      occDivider(ctx, W, g.h * 0.9, 'rgba(184,147,74,.5)');
+      occTitleRule(ctx, W, g, L, 0.9, g.h * 0.72, g.t.title * 0.78, 'rgba(184,147,74,.5)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(179,32,42,.34)', 'rgba(179,32,42,.55)', 'rgba(250,244,238,.9)'); },
     drawText(ctx, L) {
@@ -1611,9 +1642,9 @@ export const FRAMES = {
       occBurst(ctx, g.cx, 58 * k, 44 * k, 'rgba(184,147,74,.3)', 16);
       occRings(ctx, g.cx, 58 * k, 23 * k, 'rgba(184,147,74,.85)');
       text(ctx, 'ANNIVERSARY', g.cx, g.h * 0.61, FONT.serif(g.t.title * 0.74, 700), C.ink, { track: g.t.title * 0.2, max: g.w * 0.9 });
-      occDivider(ctx, W, g.h * 0.75, 'rgba(184,147,74,.5)');
+      const rule = occTitleRule(ctx, W, g, L, 0.75, g.h * 0.61, g.t.title * 0.74, 'rgba(184,147,74,.5)');
       if (caption()) text(ctx, caption(), g.cx, g.h * 0.89, FONT.script(g.t.year), C.ink, { max: g.w * 0.9 });
-      else occHeartMark(ctx, g.cx, g.h * 0.89, g.t.year * 0.85, 'rgba(184,147,74,.85)');
+      else occMark(ctx, g, rule, occPhotoTop(L), g.t.year * 0.85, 'rgba(184,147,74,.85)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.42)', 'rgba(184,147,74,.6)', 'rgba(250,246,238,.85)'); },
     drawText(ctx, L) {
@@ -1642,9 +1673,9 @@ export const FRAMES = {
       occFrameCorners(ctx, W, H, 32, 22, 'rgba(184,147,74,.6)');
       occRings(ctx, g.cx, 50 * k, 15 * k, 'rgba(184,147,74,.7)');
       text(ctx, 'Mr & Mrs', g.cx, g.h * 0.58, FONT.serifItalic(g.t.title, 600), C.ink, { max: g.w * 0.88 });
-      occDivider(ctx, W, g.h * 0.74, 'rgba(184,147,74,.55)', 72);
+      const rule = occTitleRule(ctx, W, g, L, 0.74, g.h * 0.58, g.t.title, 'rgba(184,147,74,.55)', 72);
       if (caption()) text(ctx, caption(), g.cx, g.h * 0.89, FONT.script(g.t.year), C.muted, { max: g.w * 0.88 });
-      else occHeartMark(ctx, g.cx, g.h * 0.89, g.t.year * 0.85, 'rgba(184,147,74,.8)');
+      else occMark(ctx, g, rule, occPhotoTop(L), g.t.year * 0.85, 'rgba(184,147,74,.8)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.42)', 'rgba(184,147,74,.58)', 'rgba(252,250,244,.9)'); },
     drawText(ctx, L) {
@@ -1731,9 +1762,9 @@ export const FRAMES = {
       ctx.fillStyle = 'rgba(184,147,74,.8)';
       starPath(ctx, g.cx, 82 * k, 4.5 * k, 2 * k, 4); ctx.fill(); ctx.restore();
       text(ctx, 'SHE SAID YES', g.cx, g.h * 0.68, FONT.serif(g.t.title * 0.74, 700), C.ink, { track: g.t.title * 0.2, max: g.w * 0.9 });
-      occDivider(ctx, W, g.h * 0.81, 'rgba(179,32,42,.26)');
+      const rule = occTitleRule(ctx, W, g, L, 0.81, g.h * 0.68, g.t.title * 0.74, 'rgba(179,32,42,.26)');
       if (caption()) text(ctx, caption(), g.cx, g.h * 0.93, FONT.script(g.t.year * 0.9), C.muted, { max: g.w * 0.9 });
-      else occHeartMark(ctx, g.cx, g.h * 0.93, g.t.year * 0.78, 'rgba(179,32,42,.6)');
+      else occMark(ctx, g, rule, occPhotoTop(L), g.t.year * 0.78, 'rgba(179,32,42,.6)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(179,32,42,.26)', 'rgba(179,32,42,.5)', 'rgba(252,246,242,.9)'); },
     drawText(ctx, L) {
@@ -1768,7 +1799,8 @@ export const FRAMES = {
       ctx.restore();
       text(ctx, 'WELCOME BABY', g.cx, g.h * 0.67, FONT.serif(g.t.title * 0.7, 700), C.ink, { track: g.t.title * 0.2, max: g.w * 0.9 });
       if (caption()) text(ctx, caption(), g.cx, g.h * 0.82, FONT.script(g.t.year * 1.1), C.ink, { max: g.w * 0.9 });
-      else occHeartMark(ctx, g.cx, g.h * 0.82, g.t.year * 0.9, 'rgba(42,33,28,.5)');
+      // this one has its divider below the mark, so that is what the band stops at
+      else occMark(ctx, g, g.h * 0.74, Math.min(g.h * 0.9, occPhotoTop(L)), g.t.year * 0.9, 'rgba(42,33,28,.5)');
       occDivider(ctx, W, g.h * 0.94, 'rgba(42,33,28,.18)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(42,33,28,.18)', 'rgba(42,33,28,.42)', 'rgba(252,250,244,.9)'); },
