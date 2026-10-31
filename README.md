@@ -38,7 +38,7 @@ Photomatic is the result. It's a small project, but I wanted every detail to fee
 **Saving**
 - High-resolution PNG download
 - A 1080×1920 story collage for Instagram
-- A short video of your session
+- A short video of the printing
 - An album that stays on your device
 - Native sharing on supported phones
 
