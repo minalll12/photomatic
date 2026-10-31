@@ -187,6 +187,8 @@ body::before, body::after {
   pointer-events: none;
 }
 body::before { background: var(--grain-subtle), var(--navy); }
+/* on the home screen the fixed navy layer must not show between the header and the hero wallpaper */
+body[data-screen="home"]::before { top: var(--header-h); }
 body::after { background: radial-gradient(120% 90% at 50% 35%, transparent 50%, rgb(8 10 20 / .55) 100%); }
 /* booth: a deep navy room */
 body[data-screen="booth"]::before {
