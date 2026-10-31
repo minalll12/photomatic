@@ -811,6 +811,20 @@ function occCoupes(ctx, cx, cy, s, col) {
   ctx.restore();
 }
 
+/* The mark a frame shows where a caption would go when none has been written. Drawn as an outline
+   in the same hairline weight as the rest of the frame, in place of the ♥ and ♡ glyphs these four
+   used to set in a script face: a glyph is rendered by whichever font the device substitutes, which
+   on some of them is a full-colour emoji, and it sat heavier than everything around it. */
+function occHeartMark(ctx, cx, cy, s, col) {
+  ctx.save();
+  ctx.strokeStyle = col;
+  ctx.lineWidth = Math.max(1, s * 0.05);
+  ctx.lineJoin = 'round';
+  heartPath(ctx, cx, cy, s);
+  ctx.stroke();
+  ctx.restore();
+}
+
 /* a mat and keyline around a photo slot (drawn in the slot's own frame)
 
    This replaces four corner ticks that read as a rendering fault rather than decoration: a cream
@@ -1577,7 +1591,8 @@ export const FRAMES = {
       occRings(ctx, g.cx, 58 * k, 23 * k, 'rgba(184,147,74,.85)');
       text(ctx, 'ANNIVERSARY', g.cx, g.h * 0.61, FONT.serif(g.t.title * 0.74, 700), C.ink, { track: g.t.title * 0.2, max: g.w * 0.9 });
       occDivider(ctx, W, g.h * 0.75, 'rgba(184,147,74,.5)');
-      text(ctx, caption() || '♥', g.cx, g.h * 0.89, FONT.script(g.t.year), C.ink, { max: g.w * 0.9 });
+      if (caption()) text(ctx, caption(), g.cx, g.h * 0.89, FONT.script(g.t.year), C.ink, { max: g.w * 0.9 });
+      else occHeartMark(ctx, g.cx, g.h * 0.89, g.t.year * 0.85, 'rgba(184,147,74,.85)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.42)', 'rgba(184,147,74,.6)', 'rgba(250,246,238,.85)'); },
     drawText(ctx, L) {
@@ -1607,7 +1622,8 @@ export const FRAMES = {
       occRings(ctx, g.cx, 50 * k, 15 * k, 'rgba(184,147,74,.7)');
       text(ctx, 'Mr & Mrs', g.cx, g.h * 0.58, FONT.serifItalic(g.t.title, 600), C.ink, { max: g.w * 0.88 });
       occDivider(ctx, W, g.h * 0.74, 'rgba(184,147,74,.55)', 72);
-      text(ctx, caption() || '♥', g.cx, g.h * 0.89, FONT.script(g.t.year), C.muted, { max: g.w * 0.88 });
+      if (caption()) text(ctx, caption(), g.cx, g.h * 0.89, FONT.script(g.t.year), C.muted, { max: g.w * 0.88 });
+      else occHeartMark(ctx, g.cx, g.h * 0.89, g.t.year * 0.85, 'rgba(184,147,74,.8)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(184,147,74,.42)', 'rgba(184,147,74,.58)', 'rgba(252,250,244,.9)'); },
     drawText(ctx, L) {
@@ -1695,7 +1711,8 @@ export const FRAMES = {
       starPath(ctx, g.cx, 82 * k, 4.5 * k, 2 * k, 4); ctx.fill(); ctx.restore();
       text(ctx, 'SHE SAID YES', g.cx, g.h * 0.68, FONT.serif(g.t.title * 0.74, 700), C.ink, { track: g.t.title * 0.2, max: g.w * 0.9 });
       occDivider(ctx, W, g.h * 0.81, 'rgba(179,32,42,.26)');
-      text(ctx, caption() || '♥', g.cx, g.h * 0.93, FONT.script(g.t.year * 0.9), C.muted, { max: g.w * 0.9 });
+      if (caption()) text(ctx, caption(), g.cx, g.h * 0.93, FONT.script(g.t.year * 0.9), C.muted, { max: g.w * 0.9 });
+      else occHeartMark(ctx, g.cx, g.h * 0.93, g.t.year * 0.78, 'rgba(179,32,42,.6)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(179,32,42,.26)', 'rgba(179,32,42,.5)', 'rgba(252,246,242,.9)'); },
     drawText(ctx, L) {
@@ -1729,7 +1746,8 @@ export const FRAMES = {
       });
       ctx.restore();
       text(ctx, 'WELCOME BABY', g.cx, g.h * 0.67, FONT.serif(g.t.title * 0.7, 700), C.ink, { track: g.t.title * 0.2, max: g.w * 0.9 });
-      text(ctx, caption() || '♡', g.cx, g.h * 0.82, FONT.script(g.t.year * 1.1), C.ink, { max: g.w * 0.9 });
+      if (caption()) text(ctx, caption(), g.cx, g.h * 0.82, FONT.script(g.t.year * 1.1), C.ink, { max: g.w * 0.9 });
+      else occHeartMark(ctx, g.cx, g.h * 0.82, g.t.year * 0.9, 'rgba(42,33,28,.5)');
       occDivider(ctx, W, g.h * 0.94, 'rgba(42,33,28,.18)');
     },
     backing(ctx, s) { occSlotKeyline(ctx, s, 'rgba(42,33,28,.18)', 'rgba(42,33,28,.42)', 'rgba(252,250,244,.9)'); },
