@@ -57,6 +57,7 @@ export function openEditor({ via = 'fade' } = {}) {
   frameButtons.forEach((_, id) => { try { renderThumb(id); } catch (e) { console.error('thumb', id, e); } });
   const shown = show('editor', { via });
   syncUI();
+  (shown || Promise.resolve()).then(() => requestRender());
   return shown;
 }
 onScreen('editor', () => { cancelAnimationFrame(E.rafId); E.rafId = 0; drawDisplay(); });
