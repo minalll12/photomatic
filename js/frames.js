@@ -1559,23 +1559,34 @@ export const FRAMES = {
       ctx.strokeRect(25 * u, 21 * u, W - 50 * u, H - 42 * u); ctx.restore();
       occFrameCorners(ctx, W, H, 37, 17, dark ? 'rgba(184,147,74,.6)' : 'rgba(56,90,56,.42)');
 
-      // the wreath, with a bow at its foot and the year held inside it
-      const wr = Math.min(g.h * 0.235, g.w * 0.17), wy = g.h * 0.30;
-      occWreath(ctx, g.cx, wy, wr, leafCol, C.cherry);
-      occBow(ctx, g.cx, wy + wr * 1.12, wr * 0.26, C.cherry);
-      text(ctx, String(D().shotDate.getFullYear()), g.cx, wy, FONT.serif(g.t.year * 0.78, 400),
-        dark ? C.cream : C.muted, { track: g.t.year * 0.1 });
-      // a holly sprig tucked into the header's top left corner
-      occHolly(ctx, g.x + g.w * 0.11, g.h * 0.19, wr * 0.8, leafCol, C.cherry, -0.35);
-
-      // baubles on fine gold threads, out at the sides so they clear the title
       const rule = g.h * 0.94;
-      [[-0.4, 0.3, 0.052], [0.41, 0.22, 0.042]].forEach(([dx, drop, rr]) => {
-        occBauble(ctx, g.cx + g.w * dx, g.h * 0.42, g.h * drop, g.h * rr,
+      const landscape = g.w > g.h * 2;
+      if (landscape) {
+        // wide/short header: wreath on the left, title centred on the right
+        const wr = Math.min(g.h * 0.42, g.w * 0.09), wx = g.cx - g.w * 0.24, wy = g.h * 0.46;
+        occWreath(ctx, wx, wy, wr, leafCol, C.cherry);
+        occBow(ctx, wx, wy + wr * 1.06, wr * 0.26, C.cherry);
+        text(ctx, String(D().shotDate.getFullYear()), wx, wy, FONT.serif(g.t.year * 0.76, 400),
+          dark ? C.cream : C.muted, { track: g.t.year * 0.08 });
+        occHolly(ctx, g.x + g.w * 0.05, g.h * 0.28, wr * 0.8, leafCol, C.cherry, -0.35);
+        occBauble(ctx, g.cx + g.w * 0.40, g.h * 0.28, g.h * 0.26, g.h * 0.046,
           'rgba(184,147,74,.75)', dark ? 'rgba(184,147,74,.9)' : 'rgba(179,32,42,.75)', cream);
-      });
-
-      text(ctx, 'Merry Christmas', g.cx, g.h * 0.72, FONT.serifItalic(g.t.title * 1.05, 700), accentCol, { max: g.w * 0.82 });
+        text(ctx, 'Merry Christmas', g.cx + g.w * 0.10, g.h * 0.50,
+          FONT.serifItalic(g.t.title * 1.05, 700), accentCol, { max: g.w * 0.40 });
+      } else {
+        // portrait/square header: vertical stack
+        const wr = Math.min(g.h * 0.235, g.w * 0.17), wy = g.h * 0.30;
+        occWreath(ctx, g.cx, wy, wr, leafCol, C.cherry);
+        occBow(ctx, g.cx, wy + wr * 1.12, wr * 0.26, C.cherry);
+        text(ctx, String(D().shotDate.getFullYear()), g.cx, wy, FONT.serif(g.t.year * 0.78, 400),
+          dark ? C.cream : C.muted, { track: g.t.year * 0.1 });
+        occHolly(ctx, g.x + g.w * 0.11, g.h * 0.19, wr * 0.8, leafCol, C.cherry, -0.35);
+        [[-0.4, 0.3, 0.052], [0.41, 0.22, 0.042]].forEach(([dx, drop, rr]) => {
+          occBauble(ctx, g.cx + g.w * dx, g.h * 0.42, g.h * drop, g.h * rr,
+            'rgba(184,147,74,.75)', dark ? 'rgba(184,147,74,.9)' : 'rgba(179,32,42,.75)', cream);
+        });
+        text(ctx, 'Merry Christmas', g.cx, g.h * 0.72, FONT.serifItalic(g.t.title * 1.05, 700), accentCol, { max: g.w * 0.82 });
+      }
       occCandyStripe(ctx, g.cx - g.w * 0.28, rule, g.w * 0.56, 4 * u, C.cherry, cream);
     },
     backing(ctx, s, i, L, v) {
