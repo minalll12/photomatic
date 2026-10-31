@@ -3752,8 +3752,10 @@ html:not(.js-develop) .develop-veil { display: none; }
 
 /* The reveal stage follows the strip: reveal.js sets --stage-h for a strip held by its width (a film
    row, a 2x2 grid, a stack), which used to keep the tall stage meant for a vertical strip and leave
-   a long empty drop above the label. A vertical strip sets neither and is left exactly as it was. */
-@media (max-width: 600px) {
+   a long empty drop above the label. A vertical strip sets neither and is left exactly as it was.
+   Scoped to the width the reveal stacks at, the same one reveal.js reads: the tall stage only makes
+   sense while the strip is the whole column, so wherever that is true this runs. */
+@media (max-width: 960px) {
   .reveal { row-gap: var(--reveal-gap, var(--s5)); }
   .reveal-stage { height: var(--stage-h, min(70svh, 640px)); min-height: var(--stage-h, 420px); }
 }

@@ -135,7 +135,11 @@ export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'cen
     /* `hold` is the recorded video, whose frame is fixed at 9:16 and cannot be re-fitted the way the
        stage is, so there the card is held in whenever it would leave the frame, whatever the layout:
        a tall strip and a stack are clamped to the same width and put the card in the same place, so
-       no rule drawn from the geometry could treat them differently anyway. */
+       no rule drawn from the geometry could treat them differently anyway.
+       Only a width-held spread is held in on screen. Widening the test to "the card would cross the
+       edge" also catches the classic strip on a 390px phone, which is drawn that way on purpose, so
+       a 2x2 grid on a 820-834px tablet — held by its height by a whisker, yet still putting the card
+       over the edge — is left as it is rather than move a phone. */
     if ((fit && g.wide) || hold) {
       // its own shadow reaches past the card (offset 4u, blur 14u), so leave that too
       const reach = (pw2 * Math.cos(turn) + ph2 * Math.sin(turn)) / 2 + 18 * u;
@@ -243,8 +247,13 @@ const canvas = $('#reveal-canvas');
 const stage = $('#reveal-stage');
 const actions = $('#reveal-actions');
 let raf = 0, t0 = 0, lastStep = -1, pinned = false, landed = false, confettiDone = false;
-const alignment = () => (window.innerWidth > 960 ? 'end' : 'center');
-const fitted = () => window.matchMedia('(max-width: 600px)').matches;
+/* The one breakpoint that matters here: below it the reveal is a single column — strip on top, label
+   and buttons under it — and above it the spread is drawn beside the action column. style.css
+   switches the grid at the same width. Both the alignment and the stage fit read this, so the stage
+   can't go on being sized for a layout the page isn't using. */
+const STACKED = window.matchMedia('(max-width: 960px)');
+const alignment = () => (STACKED.matches ? 'center' : 'end');
+const fitted = () => STACKED.matches;
 
 const GAP_TO_LABEL = 32;         // paper to the "Developed" label, per the design
 const SHADOW = 14;               // room left under the letter for its drop shadow, in units of u
