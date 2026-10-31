@@ -721,16 +721,23 @@ function occPumpkin(ctx, cx, cy, s, col) {
   ctx.restore();
 }
 
-/* a torn ticket stub: a rounded tab each end and a notch bitten out of both sides */
+/* a torn ticket stub: a notch bitten out of each side.
+   The bite is an arc whose ends sit well inside the ticket's own height, so the path has to come
+   back out to the edge after it before running along the bottom — without those two segments the
+   bottom edge is drawn from the end of one arc straight to the far corner and the whole ticket
+   comes out sloping. */
 function occTicket(ctx, cx, cy, w, h, fill, edge) {
-  const r = h * 0.5;
+  const l = cx - w / 2 + h * 0.15, r = cx + w / 2 - h * 0.15, n = h * 0.21;
   ctx.save();
   ctx.beginPath();
-  ctx.moveTo(cx - w / 2 + r * 0.3, cy - h / 2);
-  ctx.lineTo(cx + w / 2 - r * 0.3, cy - h / 2);
-  ctx.arc(cx + w / 2 - r * 0.3, cy, r * 0.42, -Math.PI / 2, Math.PI / 2, true);
-  ctx.lineTo(cx - w / 2 + r * 0.3, cy + h / 2);
-  ctx.arc(cx - w / 2 + r * 0.3, cy, r * 0.42, Math.PI / 2, -Math.PI / 2, true);
+  ctx.moveTo(l, cy - h / 2);
+  ctx.lineTo(r, cy - h / 2);
+  ctx.lineTo(r, cy - n);
+  ctx.arc(r, cy, n, -Math.PI / 2, Math.PI / 2, true);
+  ctx.lineTo(r, cy + h / 2);
+  ctx.lineTo(l, cy + h / 2);
+  ctx.lineTo(l, cy + n);
+  ctx.arc(l, cy, n, Math.PI / 2, -Math.PI / 2, true);
   ctx.closePath();
   ctx.fillStyle = fill; ctx.fill();
   ctx.strokeStyle = edge; ctx.lineWidth = Math.max(0.8, h * 0.035); ctx.stroke();
@@ -1416,10 +1423,16 @@ export const FRAMES = {
       occStars(ctx, W, g.h * 0.5, K + '1)', 73, 16);
 
       // a moon low on the left, with the bats arcing away from it
-      const mr = Math.min(g.h * 0.2, g.w * 0.14), my = g.h * 0.28;
-      ctx.save(); ctx.globalAlpha = 0.2; ctx.fillStyle = C.kraft;
-      circle(ctx, g.cx - g.w * 0.26, my, mr * 1.4); ctx.fill(); ctx.restore();
-      occCrescent(ctx, g.cx - g.w * 0.26, my, mr, C.kraft);
+      const mr = Math.min(g.h * 0.2, g.w * 0.14), my = g.h * 0.28, mx = g.cx - g.w * 0.26;
+      // a halo that falls off, rather than a flat disc whose hard edge read as a blot on the paper
+      ctx.save();
+      const halo = ctx.createRadialGradient(mx, my, mr * 0.7, mx, my, mr * 2.1);
+      halo.addColorStop(0, 'rgba(201,169,122,.26)');
+      halo.addColorStop(1, 'rgba(201,169,122,0)');
+      ctx.fillStyle = halo;
+      circle(ctx, mx, my, mr * 2.1); ctx.fill();
+      ctx.restore();
+      occCrescent(ctx, mx, my, mr, C.kraft);
       ctx.save();
       [[0.02, 0.17, 1], [0.18, 0.3, 0.7], [0.33, 0.2, 0.46]].forEach(([dx, dy, a], i) => {
         ctx.globalAlpha = a;
@@ -1453,8 +1466,16 @@ export const FRAMES = {
     drawFg(ctx, L) {
       const s = L.slots[0];
       if (!s) return;
-      const g = occHead(L), sz = Math.min(s.w * 0.15, s.h * 0.3);
-      occGhost(ctx, s.x + s.w - sz * 0.42, s.y + sz * 0.5, sz, 'rgba(244,238,227,.92)', '#2E0A0D');
+      /* Sized from the photo's own width so it covers the same share of it on every layout: a
+         little over half the card hangs off the corner, leaving 8% of the photo covered, which is
+         the most the decoration is allowed. Drawn in the slot's own frame so it sits on a tilted
+         polaroid the way it sits on a square print. */
+      const sz = s.w * 0.1;
+      ctx.save();
+      ctx.translate(s.x + s.w / 2, s.y + s.h / 2);
+      if (s.rot) ctx.rotate((s.rot * Math.PI) / 180);
+      occGhost(ctx, s.w / 2 - sz * 0.3, -s.h / 2 + sz * 0.34, sz, 'rgba(244,238,227,.92)', '#2E0A0D');
+      ctx.restore();
     },
     backing(ctx, s) {
       occSlotKeyline(ctx, s, 'rgba(201,169,122,.42)', 'rgba(214,122,52,.5)', 'rgba(201,169,122,.16)');
