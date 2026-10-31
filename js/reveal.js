@@ -87,7 +87,7 @@ const wideUnit = (sw, sh) => Math.sqrt(sw * sh) / 330;
 function geometry(W, H, strip, align, fit = false) {
   let u = Math.min(W, (H * 9) / 16) / 400;
   const aspect = strip.width / strip.height;
-  const maxW = W * (aspect > 1 ? 0.78 : 0.46);
+  const maxW = W * (aspect > 1 ? 0.90 : 0.46);
   let slotY = Math.max(16 * u, H * 0.03), slitY = slotY + 17 * u, drop = 30 * u;
   let sh = H - slitY - drop - 70 * u, sw = sh * aspect;
   if (sw > maxW) {
@@ -283,7 +283,7 @@ function fitStage() {
   if (!geometry(r.width, r.height, strip, 'center', true).wide) return;
 
   const W = r.width, aspect = strip.width / strip.height;
-  const sw = W * (aspect > 1 ? 0.78 : 0.46), sh = sw / aspect;
+  const sw = W * (aspect > 1 ? 0.90 : 0.46), sh = sw / aspect;
   const u = wideUnit(sw, sh);
   const pw = Math.min(W * 0.92, sw + (aspect > 1 ? 70 : 150) * u);
   // the slot's inset is itself a share of the height, so let it settle
