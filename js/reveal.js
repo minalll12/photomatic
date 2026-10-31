@@ -108,7 +108,7 @@ function geometry(W, H, strip, align, fit = false) {
 
 // `table: false` leaves the background transparent so the CSS table shows through on screen.
 // `align: 'end'` pushes the spread toward the actions column (desktop screen only).
-export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'center', fit = false, hold = false } = {}) {
+export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'center', fit = false, hold = false, cross = false } = {}) {
   const g = geometry(W, H, strip, align, fit);
   const { u, slotY, slitY, drop, sw, sh, cx, restTop, pw, ph } = g;
   ctx.clearRect(0, 0, W, H);
@@ -132,19 +132,18 @@ export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'cen
        strip that lands it past the edge of the canvas, cut in half. Hold it inside instead, so it
        tucks further behind rather than being clipped. */
     let px = cx + sw * 0.22 + e * sw * 0.42;
-    /* `hold` is the recorded video, whose frame is fixed at 9:16 and cannot be re-fitted the way the
+    // half the turned card, then the room its own shadow needs past it (offset 4u, blur 14u)
+    const half = (pw2 * Math.cos(turn) + ph2 * Math.sin(turn)) / 2, reach = half + 18 * u;
+    /* A width-held spread always pushes the card out, so it is always held in. A spread held by its
+       height can do it too — a 2x2 grid on an 820px tablet misses being width-held by a whisker and
+       still puts the card over the edge — so `cross` catches that as well. It is deliberately not
+       asked on a phone: a classic strip there has always let the card reach the edge, and testing
+       for it would move a drawing nobody asked to change.
+       `hold` is the recorded video, whose frame is fixed at 9:16 and cannot be re-fitted the way the
        stage is, so there the card is held in whenever it would leave the frame, whatever the layout:
        a tall strip and a stack are clamped to the same width and put the card in the same place, so
-       no rule drawn from the geometry could treat them differently anyway.
-       Only a width-held spread is held in on screen. Widening the test to "the card would cross the
-       edge" also catches the classic strip on a 390px phone, which is drawn that way on purpose, so
-       a 2x2 grid on a 820-834px tablet — held by its height by a whisker, yet still putting the card
-       over the edge — is left as it is rather than move a phone. */
-    if ((fit && g.wide) || hold) {
-      // its own shadow reaches past the card (offset 4u, blur 14u), so leave that too
-      const reach = (pw2 * Math.cos(turn) + ph2 * Math.sin(turn)) / 2 + 18 * u;
-      px = Math.min(px, W - reach);
-    }
+       no rule drawn from the geometry could treat them differently anyway. */
+    if (hold || (fit && (g.wide || (cross && px + half > W)))) px = Math.min(px, W - reach);
     ctx.save();
     ctx.translate(px, restTop + sh * 0.3 + e * 10 * u);
     ctx.rotate(turn);
@@ -252,8 +251,13 @@ let raf = 0, t0 = 0, lastStep = -1, pinned = false, landed = false, confettiDone
    switches the grid at the same width. Both the alignment and the stage fit read this, so the stage
    can't go on being sized for a layout the page isn't using. */
 const STACKED = window.matchMedia('(max-width: 960px)');
+/* Above a phone the card is held inside the canvas whenever it would cross the edge; on a phone it
+   is left where it has always been drawn. The two meet at the width the machine panel stops
+   narrowing at, which is where the rest of the booth stops being phone-shaped too. */
+const PHONE = window.matchMedia('(max-width: 720px)');
 const alignment = () => (STACKED.matches ? 'center' : 'end');
 const fitted = () => STACKED.matches;
+const crossable = () => !PHONE.matches;
 
 const GAP_TO_LABEL = 32;         // paper to the "Developed" label, per the design
 const SHADOW = 14;               // room left under the letter for its drop shadow, in units of u
@@ -307,7 +311,7 @@ function drawAt(t) {
   const { W, H, dpr } = size();
   const ctx = canvas.getContext('2d');
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  drawReveal(ctx, W, H, t, state.output.canvas, { table: false, align: alignment(), fit: fitted() });
+  drawReveal(ctx, W, H, t, state.output.canvas, { table: false, align: alignment(), fit: fitted(), cross: crossable() });
 }
 
 function frame(now) {
