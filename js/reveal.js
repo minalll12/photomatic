@@ -132,9 +132,11 @@ export function drawReveal(ctx, W, H, t, strip, { table: bg = true, align = 'cen
        strip that lands it past the edge of the canvas, cut in half. Hold it inside instead, so it
        tucks further behind rather than being clipped. */
     let px = cx + sw * 0.22 + e * sw * 0.42;
-    /* `hold` is the recorded video, whose frame is fixed at 9:16 and cannot be re-fitted the way
-       the stage is: there, only a landscape strip is pushed far enough out to need moving. */
-    if ((fit && g.wide) || (hold && g.aspect > 1)) {
+    /* `hold` is the recorded video, whose frame is fixed at 9:16 and cannot be re-fitted the way the
+       stage is, so there the card is held in whenever it would leave the frame, whatever the layout:
+       a tall strip and a stack are clamped to the same width and put the card in the same place, so
+       no rule drawn from the geometry could treat them differently anyway. */
+    if ((fit && g.wide) || hold) {
       // its own shadow reaches past the card (offset 4u, blur 14u), so leave that too
       const reach = (pw2 * Math.cos(turn) + ph2 * Math.sin(turn)) / 2 + 18 * u;
       px = Math.min(px, W - reach);
