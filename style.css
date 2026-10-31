@@ -158,7 +158,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scrollbar-gutter: stable;
-  background: var(--navy);
+  background: var(--oxblood);
 }
 html, body { margin: 0; }
 body {
