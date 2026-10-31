@@ -58,10 +58,10 @@ export function openEditor({ via = 'fade' } = {}) {
   const shown = show('editor', { via });
   syncUI();
   const after = shown || Promise.resolve();
-  after.then(() => requestRender()).catch(() => requestRender());
+  after.then(() => { measureStageW(); requestRender(); }).catch(() => { measureStageW(); requestRender(); });
   return shown;
 }
-onScreen('editor', () => { cancelAnimationFrame(E.rafId); E.rafId = 0; try { drawDisplay(); } catch (e) { console.error('drawDisplay', e); requestRender(); } });
+onScreen('editor', () => { cancelAnimationFrame(E.rafId); E.rafId = 0; measureStageW(); try { drawDisplay(); } catch (e) { console.error('drawDisplay', e); requestRender(); } });
 
 /* =========================================================
    Rendering (dirty flag: one frame per change, nothing while idle)
@@ -103,15 +103,15 @@ function drawDisplay() {
 // shrinks to fit the strip; the panel width, gap and padding come from the stylesheet.
 const MAX = 1140;
 const editorGrid = $('#screen-editor .editor');
-new ResizeObserver(() => {
+function measureStageW() {
   const vw = document.documentElement.clientWidth;
   const w = Math.min(vw - 2 * Math.min(40, Math.max(16, vw * 0.04)), MAX);
   const cs = getComputedStyle(editorGrid), ss = getComputedStyle(stage);
   const padX = (parseFloat(ss.paddingLeft) || 0) + (parseFloat(ss.paddingRight) || 0);
   const side = window.innerWidth <= 860 ? 0 : (parseFloat(cs.getPropertyValue('--panel-w')) || 0) + (parseFloat(cs.getPropertyValue('--gap')) || 0);
   E.stageW = Math.floor(w - side - padX);
-  requestRender();
-}).observe(document.documentElement);
+}
+new ResizeObserver(() => { measureStageW(); requestRender(); }).observe(document.documentElement);
 
 /* =========================================================
    Props on the mat: a sheet of the real stickers (two already peeled off),
