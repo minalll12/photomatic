@@ -1563,8 +1563,8 @@ export const FRAMES = {
       const wr = Math.min(g.h * 0.235, g.w * 0.17), wy = g.h * 0.30;
       occWreath(ctx, g.cx, wy, wr, leafCol, C.cherry);
       occBow(ctx, g.cx, wy + wr * 1.12, wr * 0.26, C.cherry);
-      text(ctx, String(D().shotDate.getFullYear()), g.cx, wy, FONT.type(g.t.year * 0.66),
-        dark ? C.cream : C.muted, { track: g.t.year * 0.18 });
+      text(ctx, String(D().shotDate.getFullYear()), g.cx, wy, FONT.serif(g.t.year * 0.78, 400),
+        dark ? C.cream : C.muted, { track: g.t.year * 0.1 });
       // a holly sprig tucked into the header's top left corner
       occHolly(ctx, g.x + g.w * 0.11, g.h * 0.19, wr * 0.8, leafCol, C.cherry, -0.35);
 
@@ -1575,7 +1575,7 @@ export const FRAMES = {
           'rgba(184,147,74,.75)', dark ? 'rgba(184,147,74,.9)' : 'rgba(179,32,42,.75)', cream);
       });
 
-      text(ctx, 'Merry Christmas', g.cx, g.h * 0.74, FONT.serifItalic(g.t.title, 700), accentCol, { max: g.w * 0.78 });
+      text(ctx, 'Merry Christmas', g.cx, g.h * 0.72, FONT.serifItalic(g.t.title * 1.05, 700), accentCol, { max: g.w * 0.82 });
       occCandyStripe(ctx, g.cx - g.w * 0.28, rule, g.w * 0.56, 4 * u, C.cherry, cream);
     },
     backing(ctx, s, i, L, v) {
